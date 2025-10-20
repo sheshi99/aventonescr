@@ -74,14 +74,14 @@ function insertarUsuario($nombre, $apellido, $cedula, $fecha_nacimiento, $correo
                                   telefono, fotografia, contrasena, rol, estado, token_activacion)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    $stmt = mysqli_prepare($conexion, $sql);
-    mysqli_stmt_bind_param($stmt, "sssssssssss",
+    $consulta = mysqli_prepare($conexion, $sql);
+    mysqli_stmt_bind_param( $consulta, "sssssssssss",
         $nombre, $apellido, $cedula, $fecha_nacimiento, $correo, $telefono, $fotografia,
         $inicializacion['hash'], $rol, $inicializacion['estado'], $inicializacion['token']
     );
 
-    if (mysqli_stmt_execute($stmt)) {
-        mysqli_stmt_close($stmt);
+    if (mysqli_stmt_execute( $consulta)) {
+        mysqli_stmt_close( $consulta);
 
         // Enviar correo solo si hay token
         if ($inicializacion['token']) {
@@ -91,7 +91,7 @@ function insertarUsuario($nombre, $apellido, $cedula, $fecha_nacimiento, $correo
         return ["success" => true, "token" => $inicializacion['token']];
     } else {
         $error = mysqli_error($conexion);
-        mysqli_stmt_close($stmt);
+        mysqli_stmt_close( $consulta);
         return ["success" => false, "error" => $error];
     }
 }
@@ -100,21 +100,20 @@ function insertarUsuario($nombre, $apellido, $cedula, $fecha_nacimiento, $correo
 function activarUsuarioPorToken($token) {
     $conexion = conexionBD();
     $sql = "SELECT * FROM usuarios WHERE token_activacion = ?";
-    $stmt = mysqli_prepare($conexion, $sql);
-    mysqli_stmt_bind_param($stmt, "s", $token);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
+    $consulta = mysqli_prepare($conexion, $sql);
+    mysqli_stmt_bind_param($consulta, "s", $token);
+    mysqli_stmt_execute($consulta);
+    $result = mysqli_stmt_get_result( $consultat);
     $usuario = mysqli_fetch_assoc($result);
-    mysqli_stmt_close($stmt);
+    mysqli_stmt_close($consulta);
 
     if (!$usuario) return false;
 
-    // Activar cuenta
     $sql = "UPDATE usuarios SET estado = 'Activo', token_activacion = NULL WHERE id_usuario = ?";
-    $stmt = mysqli_prepare($conexion, $sql);
-    mysqli_stmt_bind_param($stmt, "i", $usuario['id_usuario']);
-    mysqli_stmt_execute($stmt);
-    mysqli_stmt_close($stmt);
+     $consulta = mysqli_prepare($conexion, $sql);
+    mysqli_stmt_bind_param($consulta, "i", $usuario['id_usuario']);
+    mysqli_stmt_execute($consultat);
+    mysqli_stmt_close($consulta);
 
     return true;
 }
@@ -139,6 +138,28 @@ function listarUsuariosPorRol($rol) {
         mysqli_stmt_close($consulta);
         return $usuarios;        
     }
+}
+
+function verificarUsuarioExistente($cedula, $correo) {
+    $conexion = conexionBD();
+
+    $sql = "SELECT COUNT(*) AS encontrado 
+            FROM usuarios 
+            WHERE cedula = ? OR correo = ?";
+    
+    $consulta = mysqli_prepare($conexion, $sql);
+
+    mysqli_stmt_bind_param($consulta, "ss", $cedula, $correo);
+
+    mysqli_stmt_execute($consulta);
+
+    $resultado = mysqli_stmt_get_result($consulta);
+    $fila = mysqli_fetch_assoc($resultado);
+
+    mysqli_stmt_close($consulta);
+    mysqli_close($conexion);
+
+    return $fila['encontrado'] > 0;
 }
 
 function obtenerUsuarioPorCedula($cedula) {

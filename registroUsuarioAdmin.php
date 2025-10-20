@@ -6,7 +6,7 @@
 </head>
 <body>
     <h2>Crear Usuario Administrador</h2>
-    <form action="procesarRegistroAdmin.php" method="POST" enctype="multipart/form-data">
+    <form action="procesarRegistro.php" method="POST" enctype="multipart/form-data">
         <label>Nombre:</label><br>
         <input type="text" name="nombre" required><br>
 

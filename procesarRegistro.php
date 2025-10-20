@@ -52,7 +52,7 @@ function mostrarResultado($resultado) {
     if ($resultado['success']) {
         echo "<script>
                 alert('✅ Usuario registrado con éxito!'); 
-                window.location.href = 'login.php';
+             
               </script>";
     } else {
         $error = addslashes($resultado['error']); 

@@ -33,7 +33,7 @@ function enviarCorreoActivacion($correo, $nombre, $token) {
         $mail->Host = 'smtp.gmail.com';   
         $mail->SMTPAuth = true;
         $mail->Username = 'seidyalanis@gmail.com';
-        $mail->Password = 'zeznhrrhtzhxltbq';
+        $mail->Password = 'qvaa tmxk roeh mcoe';
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 

@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } 
 
-$rolFiltrado = $rolFiltrado ?? 'Administrador';
+$rolFiltrado = $rolFiltrado;
 $usuarios = listarUsuariosPorRol($rolFiltrado);
 
 ?>

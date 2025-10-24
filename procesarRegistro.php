@@ -48,11 +48,22 @@ function procesarFotografia() {
     return null;
 }
 
+function validarUsuarioExistente($cedula, $correo) {
+    if (verificarUsuarioExistente($cedula, $correo)) {
+        echo "<script>
+                alert('Ya existe un usuario registrado con esa cédula o correo.');
+                history.back();
+              </script>";
+        return false;
+    }
+    return true;
+}
+
 function mostrarResultado($resultado) {
     if ($resultado['success']) {
         echo "<script>
                 alert('✅ Usuario registrado con éxito!'); 
-             
+                window.location.href = 'login.php';
               </script>";
     } else {
         $error = addslashes($resultado['error']); 
@@ -65,8 +76,17 @@ function mostrarResultado($resultado) {
 function procesarRegistro() {
     $datos = obtenerDatosFormulario();
 
-    if (!validarContrasenas($datos['contrasena'], $datos['contrasena2'])) {
-        die("Las contraseñas no coinciden.");
+    if (!validarUsuarioExistente($datos['cedula'], $datos['correo'])) {
+        return;
+    }
+
+    $validacion = validarContrasenas($datos['contrasena'], $datos['contrasena2']);
+    if ($validacion !== true) {
+        echo "<script>
+                alert('❌ {$validacion}');
+                history.back();
+              </script>";
+        return;
     }
 
     $fotografia = procesarFotografia();

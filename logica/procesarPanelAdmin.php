@@ -21,5 +21,22 @@ function procesarAccion() {
         exit;
     }
 }
+/**
+ * Función para obtener el rol filtrado y la lista de usuarios
+ */
+function obtenerUsuariosFiltrados() {
+    $rolesValidos = ['Administrador', 'Chofer', 'Pasajero'];
+    $rolFiltrado = null; // por defecto no hay selección
+    $usuarios = [];
 
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['filtro_rol'])) {
+        $seleccion = $_POST['filtro_rol'];
 
+        if (in_array($seleccion, $rolesValidos)) {
+            $rolFiltrado = $seleccion;
+            $usuarios = listarUsuariosPorRol($rolFiltrado);
+        }
+    }
+
+    return [$rolFiltrado, $usuarios];
+}

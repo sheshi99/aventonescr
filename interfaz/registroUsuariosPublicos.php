@@ -3,44 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <title>Registro de Usuario</title>
+    <link rel="stylesheet" href="../Estilos/estilosRegistroUsuario.css">
 </head>
 <body>
-    <h2>Registro de Usuario</h2>
-    <form action="../logica/procesarRegistro.php" method="POST" enctype="multipart/form-data">
-        <label>Nombre:</label><br>
-        <input type="text" name="nombre" required><br>
+    <div class="registro-container">
+        <div class="form-card">
+            <h2>Registro de Usuario</h2>
+            <form action="../logica/procesarRegistro.php" method="POST" enctype="multipart/form-data">
+                <div class="input-group">
+                    <label>Nombre</label>
+                    <input type="text" name="nombre" required>
+                </div>
 
-        <label>Apellido:</label><br>
-        <input type="text" name="apellido" required><br>
+                <div class="input-group">
+                    <label>Apellido</label>
+                    <input type="text" name="apellido" required>
+                </div>
 
-        <label>Cédula:</label><br>
-        <input type="text" name="cedula" required><br>
+                <div class="input-group">
+                    <label>Cédula</label>
+                    <input type="text" name="cedula" required>
+                </div>
 
-        <label>Fecha de Nacimiento:</label><br>
-        <input type="date" name="fecha_nacimiento" required><br>
+                <div class="input-group">
+                    <label>Fecha de Nacimiento</label>
+                    <input type="date" name="fecha_nacimiento" required>
+                </div>
 
-        <label>Correo:</label><br>
-        <input type="email" name="correo" required><br>
+                <div class="input-group">
+                    <label>Correo</label>
+                    <input type="email" name="correo" required>
+                </div>
 
-        <label>Teléfono:</label><br>
-        <input type="text" name="telefono" required><br>
+                <div class="input-group">
+                    <label>Teléfono</label>
+                    <input type="text" name="telefono" required>
+                </div>
 
-        <label>Fotografía:</label><br>
-        <input type="file" name="fotografia" accept="image/*"><br>
+                <div class="input-group">
+                    <label>Fotografía</label>
+                    <input type="file" name="fotografia" accept="image/*">
+                </div>
 
-        <label>Contraseña:</label><br>
-        <input type="password" name="contrasena" required><br>
+                <div class="input-group">
+                    <label>Contraseña</label>
+                    <input type="password" name="contrasena" required>
+                </div>
 
-        <label>Confirmar Contraseña:</label><br>
-        <input type="password" name="contrasena2" required><br>
+                <div class="input-group">
+                    <label>Confirmar Contraseña</label>
+                    <input type="password" name="contrasena2" required>
+                </div>
 
-        <label>Rol:</label><br>
-        <select name="rol" required>
-            <option value="Pasajero">Pasajero</option>
-            <option value="Chofer">Chofer</option>
-        </select><br><br>
+                <div class="input-group">
+                    <label>Rol</label>
+                    <select name="rol" required>
+                        <option value="Pasajero">Pasajero</option>
+                        <option value="Chofer">Chofer</option>
+                    </select>
+                </div>
 
-        <input type="submit" value="Registrar">
-    </form>
+                <button type="submit" class="btn-registrar">Registrar</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

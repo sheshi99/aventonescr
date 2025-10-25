@@ -20,6 +20,9 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
         <h1>Panel de Administración</h1>
         <div class="admin-user">
             👤 <?php echo $_SESSION['usuario']['nombre']; ?> (Administrador)
+             <a href="../logica/cerrarSesion.php" class="btn-cerrar" style="margin-left: 15px; color: white; text-decoration: none;">
+            🔒 Cerrar Sesión
+            </a>
         </div>
     </header>
 

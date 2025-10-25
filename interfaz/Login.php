@@ -25,7 +25,7 @@
 
             <p class="registro-texto">
                 ¿No tienes cuenta?
-                <a href="../interfaz/registroUsuariosPublicos.php">Regístrate aquí</a>
+                <a href="../interfaz/registroUsuario.php">Regístrate aquí</a>
             </p>
         </div>
     </div>

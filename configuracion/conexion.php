@@ -1,4 +1,5 @@
 <?php
+
 function conexionBD() {
     $host = "localhost";
     $usuario = "admin";

@@ -2,6 +2,7 @@
 include_once ("../configuracion/conexion.php");
 include_once ("../configuracion/correo.php");
 
+
 function inicializacionDatosUsuario($rol, $contrasena) {
     if ($rol === 'Administrador') {
         $estado = 'Activo';
@@ -163,7 +164,5 @@ function cambiarEstadoUsuario($id, $estado) {
         return ["success" => false, "error" => $error];
     }
 }
-
-
 
 ?>

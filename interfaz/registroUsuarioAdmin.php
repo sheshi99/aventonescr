@@ -9,6 +9,7 @@
     <div class="registro-container">
         <div class="form-card">
             <h2>Registro de Usuario Administrador</h2>
+
             <form action="../logica/procesarRegistro.php" method="POST" enctype="multipart/form-data">
                 <div class="input-group">
                     <label>Nombre</label>
@@ -61,6 +62,26 @@
                         <option value="Administrador">Administrador</option>
                     </select>
                 </div>
+
+                <?php
+                session_start();
+                if (!empty($_SESSION['mensaje'])) {
+                    $mensaje = $_SESSION['mensaje']['texto'];
+                    $tipo = $_SESSION['mensaje']['tipo']; // success, error, info
+
+                    // Mapear el tipo a clase CSS
+                    $clase = match($tipo) {
+                        'success' => 'alert-success',
+                        'error'   => 'alert-error',
+                        default   => 'alert-info',
+                    };
+
+                    echo "<div class='alert {$clase}'>{$mensaje}</div>";
+
+                    // Limpiar la sesión para que no se repita
+                    unset($_SESSION['mensaje']);
+                }
+                ?>
 
                 <button type="submit" class="btn-registrar">Registrar</button>
             </form>

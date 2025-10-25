@@ -7,6 +7,25 @@ if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'Administrad
     die("Acceso no permitido.");
 }
 
+function obtenerUsuariosFiltrados() {
+    $rolesValidos = ['Administrador', 'Chofer', 'Pasajero'];
+    $rolFiltrado = null;
+    $usuarios = [];
+    $sinRolSeleccionado = true;
+
+    // Buscar el rol desde POST o GET
+    $seleccion = $_POST['filtro_rol'] ?? $_GET['filtro_rol'] ?? null;
+
+    if ($seleccion && in_array($seleccion, $rolesValidos)) {
+        $rolFiltrado = $seleccion;
+        $usuarios = listarUsuariosPorRol($rolFiltrado);
+        $sinRolSeleccionado = false;
+    }
+
+    return [$rolFiltrado, $usuarios, $sinRolSeleccionado];
+}
+
+
 function procesarAccion() {
     if (isset($_POST['accion'], $_POST['id_usuario'])) {
         $id = $_POST['id_usuario'];
@@ -14,29 +33,21 @@ function procesarAccion() {
 
         if (!in_array($accion, ['activar', 'desactivar'])) return;
 
-        $estado = $accion === 'activar' ? 'Activo' : 'Inactivo';
+        $estado = ($accion === 'activar') ? 'Activo' : 'Inactivo';
         cambiarEstadoUsuario($id, $estado);
 
-        echo "<script>alert('Estado modificado correctamente'); window.location.href='adminPanel.php';</script>";
+        // Recupera el rol actual desde POST o GET
+        $rolActual = isset($_POST['filtro_rol']) ? urlencode($_POST['filtro_rol']) 
+                    : (isset($_GET['filtro_rol']) ? urlencode($_GET['filtro_rol']) : '');
+
+        // Redirige conservando el rol seleccionado
+        echo "<script>
+                alert('✅ Estado modificado correctamente');
+                window.location.href = '../interfaz/adminPanel.php" . ($rolActual ? "?filtro_rol={$rolActual}" : "") . "';
+              </script>";
         exit;
     }
 }
-/**
- * Función para obtener el rol filtrado y la lista de usuarios
- */
-function obtenerUsuariosFiltrados() {
-    $rolesValidos = ['Administrador', 'Chofer', 'Pasajero'];
-    $rolFiltrado = null; // por defecto no hay selección
-    $usuarios = [];
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['filtro_rol'])) {
-        $seleccion = $_POST['filtro_rol'];
 
-        if (in_array($seleccion, $rolesValidos)) {
-            $rolFiltrado = $seleccion;
-            $usuarios = listarUsuariosPorRol($rolFiltrado);
-        }
-    }
 
-    return [$rolFiltrado, $usuarios];
-}

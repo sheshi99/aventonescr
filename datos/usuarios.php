@@ -147,6 +147,20 @@ function obtenerUsuarioPorCedula($cedula) {
     return $usuario;
 }
 
+function obtenerUsuarioPorId($id_usuario) {
+    $conexion = conexionBD();
+    $sql = "SELECT * FROM usuarios WHERE id_usuario = ?";
+    $consulta = mysqli_prepare($conexion, $sql);
+    mysqli_stmt_bind_param($consulta, "i", $id_usuario);
+    mysqli_stmt_execute($consulta);
+    $resultado = mysqli_stmt_get_result($consulta);
+    $usuario = mysqli_fetch_assoc($resultado);
+    mysqli_stmt_close($consulta);
+    mysqli_close($conexion);
+    return $usuario;
+}
+
+
 
 function cambiarEstadoUsuario($id, $estado) {
     $conexion = conexionBD();

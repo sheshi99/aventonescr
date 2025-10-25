@@ -40,8 +40,8 @@ function iniciarSesion($usuario) {
             header("Location: ../interfaz/adminPanel.php");
             exit;
         case 'Chofer':
-            echo "Bienvenido Chofer: " . $usuario['nombre'];
-            break;
+            header("Location: ../interfaz/choferPanel.php");
+            exit;
         case 'Pasajero':
             echo "Bienvenido Pasajero: " . $usuario['nombre'];
             break;

@@ -3,9 +3,8 @@ session_start();
 include_once ("../logica/procesarPanelAdmin.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'], $_POST['id_usuario'])) {
-    procesarAccion(); // Activar o desactivar
+    procesarAccion(); // Activar o desactivar usuario
 }
-
 
 list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
 ?>
@@ -36,12 +35,13 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
                 </select>
             </form>
 
-            <form action="registroUsuarioAdmin.php" method="get">
+            <form action="registroUsuario.php" method="get">
+                <input type="hidden" name="admin" value="1">
                 <button type="submit" class="btn-nuevo">➕ Crear Usuario Administrador</button>
             </form>
         </section>
 
-         <section class="tabla-usuarios">
+        <section class="tabla-usuarios">
             <?php if (!$sinRolSeleccionado): ?>
                 <h2>Usuarios <?php echo htmlspecialchars($rolFiltrado); ?></h2>
                 <table>

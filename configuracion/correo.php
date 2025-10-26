@@ -1,6 +1,5 @@
 <?php
 
-
 include_once 'config.php'; 
 
 require 'PHPMailer/src/PHPMailer.php';
@@ -15,28 +14,47 @@ function enviarCorreoActivacion($correo, $nombre, $token) {
     try {
         // Configuración SMTP usando CONSTANTES
         $mail->isSMTP();
-        $mail->Host = SMTP_HOST; // Usando la constante
+        $mail->Host = SMTP_HOST; 
         $mail->SMTPAuth = true;
-        $mail->Username = SMTP_USERNAME; // Usando la constante
-        $mail->Password = SMTP_PASSWORD; // Usando la constante
+        $mail->Username = SMTP_USERNAME; 
+        $mail->Password = SMTP_PASSWORD; 
         $mail->SMTPSecure = SMTP_SECURE;
         $mail->Port = SMTP_PORT;
 
-        // ... resto de la configuración ...
-        $mail->setFrom(SMTP_USERNAME, 'AventonesCR'); // Usando la constante
+        // Remitente y destinatario
+        $mail->setFrom(SMTP_USERNAME, 'AventonesCR');
         $mail->addAddress($correo, $nombre);
 
         // Contenido del correo
         $mail->isHTML(true);
-        $mail->Subject = 'Activación de cuenta';
-        
-        // Usando la constante BASE_URL
-        $url = BASE_URL . "/activarCuenta.php?token=$token"; 
-        
-        $mail->Body = "Hola $nombre,<br><br>
-                       Para activar tu cuenta haz clic en el siguiente enlace:<br>
-                       <a href='$url'>$url</a><br><br>Gracias.";
+        $mail->Subject = 'Activacion de cuenta';
 
+        // URL de activación
+        $url = BASE_URL . "/activarCuenta.php?token=" . urlencode($token);
+
+        // Cuerpo HTML con botón
+        $mail->Body = "
+        <html>
+        <body>
+            <p>Hola $nombre,</p>
+            <p>Para activar tu cuenta haz clic en el siguiente boton:</p>
+            <p>
+                <a href='$url' style='
+                    display: inline-block;
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    color: #fff;
+                    background-color: #2196F3;
+                    text-decoration: none;
+                    border-radius: 5px;
+                '>Activar Cuenta</a>
+            </p>
+            <p>Gracias.</p>
+        </body>
+        </html>
+        ";
+
+        // Enviar correo
         $mail->send();
         return true;
 
@@ -45,3 +63,4 @@ function enviarCorreoActivacion($correo, $nombre, $token) {
         return false;
     }
 }
+?>

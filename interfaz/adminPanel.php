@@ -23,6 +23,7 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
              <a href="../logica/cerrarSesion.php" class="btn-cerrar" style="margin-left: 15px; color: white; text-decoration: none;">
             🔒 Cerrar Sesión
             </a>
+
         </div>
     </header>
 
@@ -38,7 +39,7 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
                 </select>
             </form>
 
-            <form action="registroUsuario.php" method="get">
+            <form action="registroAdmin.php" method="get">
                 <input type="hidden" name="admin" value="1">
                 <button type="submit" class="btn-nuevo">➕ Crear Usuario Administrador</button>
             </form>
@@ -81,6 +82,7 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
                                             <?php echo $usuario['estado']==='Activo' ? 'Desactivar' : 'Activar'; ?>
                                         </button>
                                     </form>
+                                    
                                 </td>
                             </tr>
                         <?php endforeach; ?>

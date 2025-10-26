@@ -1,19 +1,26 @@
 <?php
 session_start();
+
+
+if (!isset($_SESSION['usuario']['rol']) || $_SESSION['usuario']['rol'] !== 'Administrador') {
+    header("Location: login.php");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registro de Usuario</title>
+    <title>Registrar Administrador</title>
     <link rel="stylesheet" href="../Estilos/estilosRegistroUsuario.css">
 </head>
 <body>
 <div class="registro-container">
     <div class="form-card">
-        <h2>Registro de Usuario</h2>
+        <h2>Registrar Administrador</h2>
 
-            <?php
+
+                 <?php
             if (!empty($_SESSION['mensaje'])) {
                 $mensaje = $_SESSION['mensaje']['texto'];
                 $tipo = $_SESSION['mensaje']['tipo'];
@@ -23,11 +30,14 @@ session_start();
                     default   => 'alert-info',
                 };
                 echo "<div class='alert {$clase}'>{$mensaje}</div>. <br>";
+               
                 unset($_SESSION['mensaje']);
             }
             ?>
 
         <form action="../logica/procesarRegistro.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="rol" value="Administrador">
+
             <div class="input-group">
                 <label>Nombre</label>
                 <input type="text" name="nombre" value="<?= htmlspecialchars($_SESSION['form_data']['nombre'] ?? '') ?>" required>
@@ -73,31 +83,8 @@ session_start();
                 <input type="password" name="contrasena2" required>
             </div>
 
-            <div class="input-group">
-                <label>Rol</label>
-                <select name="rol" required>
-                    <option value="">Seleccione un rol</option>
-                    <option value="Chofer" <?= (($_SESSION['form_data']['rol'] ?? '') === 'Chofer') ? 'selected' : '' ?>>Chofer</option>
-                    <option value="Pasajero" <?= (($_SESSION['form_data']['rol'] ?? '') === 'Pasajero') ? 'selected' : '' ?>>Pasajero</option>
-                </select>
-            </div>
-
-            <?php
-            if (!empty($_SESSION['mensaje'])) {
-                $mensaje = $_SESSION['mensaje']['texto'];
-                $tipo = $_SESSION['mensaje']['tipo'];
-                $clase = match($tipo) {
-                    'success' => 'alert-success',
-                    'error'   => 'alert-error',
-                    default   => 'alert-info',
-                };
-                echo "<div class='alert {$clase}'>{$mensaje}</div>";
-                unset($_SESSION['mensaje']);
-            }
-            ?>
-
             <button type="submit" class="btn-registrar">Registrar</button>
-            <a href="login.php" class="btn-volver">⬅ Volver al Login</a>
+            <a href="adminPanel.php" class="btn-volver">⬅ Regresar al Panel</a>
         </form>
     </div>
 </div>

@@ -17,7 +17,6 @@ function inicializacionDatosUsuario($rol, $contrasena) {
 }
 
 
-
 function insertarUsuario($nombre, $apellido, $cedula, $fecha_nacimiento, $correo, $telefono, 
                          $fotografia, $contrasena, $rol) {
     $conexion = conexionBD();
@@ -178,5 +177,42 @@ function cambiarEstadoUsuario($id, $estado) {
         return ["success" => false, "error" => $error];
     }
 }
+
+function editarUsuario($id_usuario, $nombre, $apellido, $cedula, $fecha_nacimiento, $correo, $telefono, $rol, $fotografia = null) {
+    $conexion = conexionBD();
+
+    // Si se envió una nueva fotografía, actualiza todo (incluida la foto)
+    if ($fotografia) {
+        $sql = "UPDATE usuarios 
+                SET nombre = ?, apellido = ?, cedula = ?, fecha_nacimiento = ?, correo = ?, telefono = ?, rol = ?, fotografia = ?
+                WHERE id_usuario = ?";
+        $consulta = mysqli_prepare($conexion, $sql);
+        mysqli_stmt_bind_param($consulta, "ssssssssi", 
+            $nombre, $apellido, $cedula, $fecha_nacimiento, $correo, $telefono, $rol, $fotografia, $id_usuario
+        );
+    } 
+    // Si no se cambió la foto, no se actualiza ese campo
+    else {
+        $sql = "UPDATE usuarios 
+                SET nombre = ?, apellido = ?, cedula = ?, fecha_nacimiento = ?, correo = ?, telefono = ?, rol = ?
+                WHERE id_usuario = ?";
+        $consulta = mysqli_prepare($conexion, $sql);
+        mysqli_stmt_bind_param($consulta, "sssssssi", 
+            $nombre, $apellido, $cedula, $fecha_nacimiento, $correo, $telefono, $rol, $id_usuario
+        );
+    }
+
+    if (mysqli_stmt_execute($consulta)) {
+        mysqli_stmt_close($consulta);
+        mysqli_close($conexion);
+        return ["success" => true];
+    } else {
+        $error = mysqli_error($conexion);
+        mysqli_stmt_close($consulta);
+        mysqli_close($conexion);
+        return ["success" => false, "error" => $error];
+    }
+}
+
 
 ?>

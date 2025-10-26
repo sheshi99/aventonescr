@@ -38,4 +38,21 @@ if (!empty($_POST['id_vehiculo'])) {
         $accion = 'actualizar';
     }
 }
-?>
+
+// Capturar valores previos en caso de error
+$valores = $_SESSION['datos_formulario'] ?? [];
+$campoError = $_SESSION['mensaje']['campo_error'] ?? null;
+
+// Guardar mensaje y tipo
+$mensajeTexto = $_SESSION['mensaje']['texto'] ?? '';
+$mensajeTipo = $_SESSION['mensaje']['tipo'] ?? 'info';
+
+// Limpiar la sesión para que no se repita el mensaje
+unset($_SESSION['mensaje'], $_SESSION['datos_formulario']);
+
+// Función para obtener el valor correcto de cada campo
+function valorCampo($campo, $vehiculo, $valores, $campoError) {
+    if ($campoError === $campo) return ''; // Vacío si es el campo con error
+    if (isset($valores[$campo])) return htmlspecialchars($valores[$campo]); // Valor ingresado por usuario
+    return htmlspecialchars($vehiculo[$campo] ?? ''); // Valor original del vehículo
+}

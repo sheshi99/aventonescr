@@ -9,9 +9,13 @@ if (!isset($_SESSION['usuario']['id_usuario'])) {
 
 $id_chofer = $_SESSION['usuario']['id_usuario'];
 
-// Mostrar mensaje y redirigir, pasando los datos del formulario
+// Mostrar mensaje y redirigir
 function mostrarMensajeYRedirigir($mensaje, $destino, $tipo = 'info', $datosFormulario = [], $campoError = null) {
-    $_SESSION['mensaje'] = ['texto' => $mensaje, 'tipo' => $tipo, 'campo_error' => $campoError];
+    $_SESSION['mensaje'] = [
+        'texto' => $mensaje,
+        'tipo' => $tipo,
+        'campo_error' => $campoError
+    ];
     $_SESSION['datos_formulario'] = $datosFormulario;
     header("Location: $destino");
     exit;
@@ -20,12 +24,12 @@ function mostrarMensajeYRedirigir($mensaje, $destino, $tipo = 'info', $datosForm
 // Obtener datos del formulario
 function obtenerDatosFormulario() {
     return [
-        'placa'   => trim($_POST['placa'] ?? ''),
-        'color'   => trim($_POST['color'] ?? ''),
-        'marca'   => trim($_POST['marca'] ?? ''),
-        'modelo'  => trim($_POST['modelo'] ?? ''),
-        'anno'    => trim($_POST['anno'] ?? ''),
-        'asientos'=> trim($_POST['asientos'] ?? '')
+        'placa'    => trim($_POST['placa'] ?? ''),
+        'color'    => trim($_POST['color'] ?? ''),
+        'marca'    => trim($_POST['marca'] ?? ''),
+        'modelo'   => trim($_POST['modelo'] ?? ''),
+        'anno'     => trim($_POST['anno'] ?? ''),
+        'asientos' => trim($_POST['asientos'] ?? '')
     ];
 }
 
@@ -42,12 +46,15 @@ function validarDatos($datos) {
             );
         }
     }
+
     if (!preg_match('/^[A-Z0-9\-]{1,20}$/i', $datos['placa'])) {
         mostrarMensajeYRedirigir("❌ La placa no es válida", "../interfaz/registroVehiculo.php", "error", $datos, 'placa');
     }
+
     if (!is_numeric($datos['anno']) || $datos['anno'] < 1900 || $datos['anno'] > date('Y')) {
         mostrarMensajeYRedirigir("❌ Año no válido", "../interfaz/registroVehiculo.php", "error", $datos, 'anno');
     }
+
     if (!is_numeric($datos['asientos']) || $datos['asientos'] < 1) {
         mostrarMensajeYRedirigir("❌ Cantidad de asientos no válida", "../interfaz/registroVehiculo.php", "error", $datos, 'asientos');
     }
@@ -77,13 +84,17 @@ function guardarVehiculo($id_chofer) {
         $resultado = actualizarVehiculo($id_vehiculo, $datos['placa'], $datos['color'],$datos['marca'], 
                                         $datos['modelo'], $datos['anno'], $datos['asientos'], $foto);
 
-        if ($resultado) mostrarMensajeYRedirigir("✅ Vehículo actualizado", "../interfaz/gestionVehiculos.php", "success");
-        else mostrarMensajeYRedirigir("❌ Error al actualizar", "../interfaz/registroVehiculo.php", "error", $datos);
+        if ($resultado)
+            mostrarMensajeYRedirigir("✅ Vehículo actualizado", "../interfaz/gestionVehiculos.php", "success");
+        else
+            mostrarMensajeYRedirigir("❌ Error al actualizar", "../interfaz/registroVehiculo.php", "error", $datos);
     } else {
         $resultado = insertarVehiculo($id_chofer, $datos['placa'], $datos['color'], $datos['marca'], 
                                       $datos['modelo'], $datos['anno'], $datos['asientos'], $foto);
-        if ($resultado) mostrarMensajeYRedirigir("✅ Vehículo registrado", "../interfaz/gestionVehiculos.php", "success");
-        else mostrarMensajeYRedirigir("❌ Error al registrar", "../interfaz/registroVehiculo.php", "error", $datos);
+        if ($resultado)
+            mostrarMensajeYRedirigir("✅ Vehículo registrado", "../interfaz/gestionVehiculos.php", "success");
+        else
+            mostrarMensajeYRedirigir("❌ Error al registrar", "../interfaz/registroVehiculo.php", "error", $datos);
     }
 }
 

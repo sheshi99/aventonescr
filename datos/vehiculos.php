@@ -9,7 +9,7 @@ function insertarVehiculo($id_chofer, $placa, $color, $marca, $modelo, $anno, $a
         $sql = "INSERT INTO vehiculos (id_chofer, numero_placa, color, marca, modelo, anno, capacidad_asientos, fotografia)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $consulta = mysqli_prepare($conexion, $sql);
-        mysqli_stmt_bind_param($consulta, "isssssis",
+        mysqli_stmt_bind_param($consulta, "issssiis",
             $id_chofer, $placa, $color, $marca, $modelo, $anno, $asientos, $foto
         );
 
@@ -69,7 +69,7 @@ function actualizarVehiculo($id_vehiculo, $placa, $color, $marca, $modelo, $anno
                 SET numero_placa = ?, color = ?, marca = ?, modelo = ?, anno = ?, capacidad_asientos = ?, fotografia = ?
                 WHERE id_vehiculo = ?";
         $consulta = mysqli_prepare($conexion, $sql);
-        mysqli_stmt_bind_param($consulta, "sssssisi", 
+        mysqli_stmt_bind_param($consulta, "ssssiisi", 
             $placa, $color, $marca, $modelo, $anno, $asientos, $foto, $id_vehiculo
         );
 
@@ -84,6 +84,28 @@ function actualizarVehiculo($id_vehiculo, $placa, $color, $marca, $modelo, $anno
         return false;
     }
 }
+
+function obtenerVehiculoPorId($id_vehiculo) {
+    $conexion = conexionBD();
+    try {
+        $sql = "SELECT * FROM vehiculos WHERE id_vehiculo = ?";
+        $consulta = mysqli_prepare($conexion, $sql);
+        mysqli_stmt_bind_param($consulta, "i", $id_vehiculo);
+        mysqli_stmt_execute($consulta);
+
+        $resultado = mysqli_stmt_get_result($consulta);
+        $vehiculo = mysqli_fetch_assoc($resultado); // Devuelve un solo registro o null
+
+        mysqli_stmt_close($consulta);
+        mysqli_close($conexion);
+
+        return $vehiculo; // Array asociativo o null si no existe
+    } catch (Exception $e) {
+        error_log("Error en obtenerVehiculoPorId: " . $e->getMessage());
+        return null;
+    }
+}
+
 
 
 

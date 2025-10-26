@@ -42,7 +42,8 @@ function validarContrasena($contrasena, $contrasena2, $datos) {
 
     if (!preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_]).{8,}$/', $contrasena)) {
         mostrarMensajeYRedirigir(
-            "❌ La contraseña debe tener al menos 8 caracteres, una letra, un número y un carácter especial", 
+            "❌ La contraseña debe tener al menos 8 caracteres, una letra,
+             un número y un carácter especial", 
             "error", $datos
         );
     }

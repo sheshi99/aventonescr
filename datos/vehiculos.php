@@ -9,7 +9,7 @@ function insertarVehiculo($id_chofer, $placa, $color, $marca, $modelo, $anno, $a
         $sql = "INSERT INTO vehiculos (id_chofer, numero_placa, color, marca, modelo, anno, capacidad_asientos, fotografia)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $consulta = mysqli_prepare($conexion, $sql);
-        mysqli_stmt_bind_param($consulta, "isssiiis",
+        mysqli_stmt_bind_param($consulta, "issssiis",
             $id_chofer, $placa, $color, $marca, $modelo, $anno, $asientos, $foto
         );
 

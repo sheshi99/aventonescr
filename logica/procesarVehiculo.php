@@ -11,11 +11,7 @@ $id_chofer = $_SESSION['usuario']['id_usuario'];
 
 // Mostrar mensaje y redirigir
 function mostrarMensajeYRedirigir($mensaje, $destino, $tipo = 'info', $datosFormulario = [], $campoError = null) {
-    $_SESSION['mensaje'] = [
-        'texto' => $mensaje,
-        'tipo' => $tipo,
-        'campo_error' => $campoError
-    ];
+    $_SESSION['mensaje'] = ['texto' => $mensaje, 'tipo' => $tipo, 'campo_error' => $campoError];
     $_SESSION['datos_formulario'] = $datosFormulario;
     header("Location: $destino");
     exit;
@@ -76,12 +72,24 @@ function procesarFoto() {
 function guardarVehiculo($id_chofer) {
     $datos = obtenerDatosFormulario();
     validarDatos($datos);
-    $foto = procesarFoto();
+
+    // Forzar enteros
+    $datos['anno'] = (int)$datos['anno'];
+    $datos['asientos'] = (int)$datos['asientos'];
 
     $accion = $_POST['accion'] ?? 'guardar';
+    $foto = procesarFoto();
+
     if ($accion === 'actualizar' && !empty($_POST['id_vehiculo'])) {
         $id_vehiculo = $_POST['id_vehiculo'];
-        $resultado = actualizarVehiculo($id_vehiculo, $datos['placa'], $datos['color'],$datos['marca'], 
+
+        // Mantener la foto actual si no se subió nueva
+        if (empty($foto)) {
+            $vehiculoDB = obtenerVehiculoPorId($id_vehiculo);
+            $foto = $vehiculoDB['fotografia'] ?? null;
+        }
+
+        $resultado = actualizarVehiculo($id_vehiculo, $datos['placa'], $datos['color'], $datos['marca'],
                                         $datos['modelo'], $datos['anno'], $datos['asientos'], $foto);
 
         if ($resultado)
@@ -89,7 +97,7 @@ function guardarVehiculo($id_chofer) {
         else
             mostrarMensajeYRedirigir("❌ Error al actualizar", "../interfaz/registroVehiculo.php", "error", $datos);
     } else {
-        $resultado = insertarVehiculo($id_chofer, $datos['placa'], $datos['color'], $datos['marca'], 
+        $resultado = insertarVehiculo($id_chofer, $datos['placa'], $datos['color'], $datos['marca'],
                                       $datos['modelo'], $datos['anno'], $datos['asientos'], $foto);
         if ($resultado)
             mostrarMensajeYRedirigir("✅ Vehículo registrado", "../interfaz/gestionVehiculos.php", "success");

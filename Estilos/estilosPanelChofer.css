@@ -1,0 +1,75 @@
+/* ===== Fondo general ===== */
+body {
+    font-family: "Poppins", Arial, sans-serif;
+    background: linear-gradient(135deg, #d3e4fa, #5bb4f0);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    color: #2c3e50;
+}
+
+/* ===== Header con bienvenida ===== */
+.chofer-header {
+    width: 100%;
+    max-width: 2000px;
+    background-color: #00609f;
+    padding: 20px 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.1);
+    text-align: center;
+    margin-bottom: 40px;
+    color: #ffffff; /* texto blanco */
+}
+
+.chofer-header h2 {
+    color: #ffffff; /* asegurar que el h2 también sea blanco */
+    font-size: 26px;
+    margin: 0;
+}
+
+/* ===== Tarjeta principal (botones) ===== */
+.chofer-card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 120px 100px;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.chofer-card:hover {
+    transform: translateY(-3px);
+}
+
+/* ===== Menú de botones (alineados horizontalmente) ===== */
+.menu-chofer {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* ===== Botones más grandes ===== */
+.menu-chofer button {
+    background-color: #00609f;
+    color: #fff;
+    border: none;
+    padding: 60px 40px; /* alto y ancho del botón */
+    border-radius: 10px;
+    font-size: 24px; /* letra más grande */
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+    min-width: 180px;
+}
+
+
+.menu-chofer button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}

@@ -2,6 +2,7 @@
 session_start();
 include_once("../datos/vehiculos.php");
 
+// Verifica sesión
 if (!isset($_SESSION['usuario']['id_usuario'])) {
     header("Location: login.php");
     exit;
@@ -9,8 +10,12 @@ if (!isset($_SESSION['usuario']['id_usuario'])) {
 
 $id_chofer = $_SESSION['usuario']['id_usuario'];
 $vehiculos = obtenerVehiculosPorChofer($id_chofer);
-?>
 
+// Datos del usuario para encabezado
+$usuario = $_SESSION['usuario'];
+$nombre = htmlspecialchars($usuario['nombre']);
+$rol = htmlspecialchars($usuario['rol']);
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -19,6 +24,24 @@ $vehiculos = obtenerVehiculosPorChofer($id_chofer);
     <link rel="stylesheet" href="../estilos/estilosPanelAdmin.css">
 </head>
 <body>
+
+<div class="admin-header">
+    <div class="admin-header-left">
+
+         <form action="registroUsuario.php" method="get" style="display:inline;">
+                <input type="hidden" name="editar" value="1">
+                <button type="submit" class="btn-editar"> ✏️ </button>
+        </form>
+        <h1>Bienvenido <?= $nombre ?> (<?= $rol ?>)</h1>
+    </div>
+    <div class="admin-header-right">
+
+        <form action="../logica/cerrarSesion.php" method="post" style="display:inline;">
+            <button type="submit" class="btn-cerrar">Cerrar</button>
+        </form>
+    </div>
+</div>
+
 
 <div class="admin-main">
     <div class="tabla-usuarios">

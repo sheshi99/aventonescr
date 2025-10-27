@@ -52,11 +52,9 @@ unset($_SESSION['mensaje'], $_SESSION['datos_formulario']);
            value="<?= htmlspecialchars($datosFormulario['asientos'] ?? $vehiculo['asientos']) ?>" required><br><br>
 
     <label for="foto">Foto:</label>
-    
-    <input type="file" name="foto" id="foto" accept="image/*" required><br><br>
+    <input type="file" name="fotografia" id="foto" accept="image/*" <?= $accion === 'actualizar' ? '' : 'required' ?>><br><br>
 
     <button type="submit"><?= $accion === 'actualizar' ? "Actualizar Vehículo" : "Registrar Vehículo" ?></button>
 </form>
 </body>
 </html>
-

@@ -17,13 +17,22 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
 </head>
 <body>
     <header class="admin-header">
-        <h1>Panel de Administración</h1>
-        <div class="admin-user">
-            👤 <?php echo $_SESSION['usuario']['nombre']; ?> (Administrador)
-             <a href="../logica/cerrarSesion.php" class="btn-cerrar" style="margin-left: 15px; color: white; text-decoration: none;">
-            🔒 Cerrar Sesión
-            </a>
+        <div class="admin-header-left">
+            <!-- Botón Editar Perfil a la izquierda -->
+            <form action="registroAdmin.php" method="get" style="display:inline;">
+                <input type="hidden" name="editar" value="1">
+                <button type="submit" class="btn-editar"> ✏️ </button>
+            </form>
 
+            <h1>Panel de Administración</h1>
+        </div>
+
+        <div class="admin-user">
+            👤 <?= $_SESSION['usuario']['nombre']; ?> (Administrador)
+
+            <form action="../logica/cerrarSesion.php" method="post" style="display:inline;">
+                <button type="submit" class="btn-cerrar">Cerrar</button>
+            </form>
         </div>
     </header>
 
@@ -48,6 +57,14 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
         <section class="tabla-usuarios">
             <?php if (!$sinRolSeleccionado): ?>
                 <h2>Usuarios <?php echo htmlspecialchars($rolFiltrado); ?></h2>
+
+                 <?php if(!empty($_SESSION['mensaje'])): ?>
+                    <p style="color: <?= $_SESSION['mensaje']['tipo'] === 'error' ? 'red' : 'green' ?>;">
+                        <?= $_SESSION['mensaje']['texto'] ?>
+                    </p>
+                    <?php unset($_SESSION['mensaje']); ?>
+                <?php endif; ?>
+
                 <table>
                     <thead>
                         <tr>
@@ -82,7 +99,6 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
                                             <?php echo $usuario['estado']==='Activo' ? 'Desactivar' : 'Activar'; ?>
                                         </button>
                                     </form>
-                                    
                                 </td>
                             </tr>
                         <?php endforeach; ?>

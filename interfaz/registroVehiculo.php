@@ -6,6 +6,8 @@ $datosFormulario = $_SESSION['datos_formulario'] ?? [];
 $mensaje = $_SESSION['mensaje'] ?? null;
 unset($_SESSION['mensaje'], $_SESSION['datos_formulario']);
 ?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>

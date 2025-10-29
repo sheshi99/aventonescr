@@ -21,6 +21,7 @@ $tipo = $_SESSION['mensaje']['tipo'] ?? 'info';
 // Limpiar sesión para evitar mostrar mensajes repetidos
 unset($_SESSION['form_data'], $_SESSION['mensaje']);
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>

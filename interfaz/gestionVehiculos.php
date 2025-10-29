@@ -48,8 +48,8 @@ $rol = htmlspecialchars($usuario['rol']);
         <h2>Mis Vehículos</h2>
 
         <?php if(!empty($_SESSION['mensaje'])): ?>
-            <p style="color: <?= $_SESSION['mensaje']['tipo'] === 'error' ? 'red' : 'green' ?>;">
-                <?= $_SESSION['mensaje']['texto'] ?>
+            <p style="color: <?= $_SESSION['mensaje']['tipo'] === 'error' ? 'red' : 'green' ?>; font-weight: bold;">
+                <?= htmlspecialchars($_SESSION['mensaje']['texto']) ?>
             </p>
             <?php unset($_SESSION['mensaje']); ?>
         <?php endif; ?>

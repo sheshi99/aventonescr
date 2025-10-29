@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,6 +13,12 @@
         <div class="login-card">
             <h1>Iniciar Sesión</h1>
             <form action="../logica/procesarLogin.php" method="POST">
+                <?php if(!empty($_SESSION['mensaje'])): ?>
+                    <p style="color: <?= $_SESSION['mensaje']['tipo'] === 'error' ? 'red' : 'green' ?>; font-weight: bold;">
+                        <?= htmlspecialchars($_SESSION['mensaje']['texto']) ?>
+                    </p>
+                    <?php unset($_SESSION['mensaje']); ?>
+                <?php endif; ?>
                 <div class="input-group">
                     <label>Usuario</label>
                     <input type="text" name="cedula" placeholder="Ingrese su cédula" required>

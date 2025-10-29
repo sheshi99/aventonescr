@@ -28,7 +28,7 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
         </div>
 
         <div class="admin-user">
-            👤 <?= $_SESSION['usuario']['nombre']; ?> (Administrador)
+            👤 <?= htmlspecialchars($_SESSION['usuario']['nombre']); ?> (Administrador)
 
             <form action="../logica/cerrarSesion.php" method="post" style="display:inline;">
                 <button type="submit" class="btn-cerrar">Cerrar</button>
@@ -37,6 +37,15 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
     </header>
 
     <main class="admin-main">
+
+        <!-- MENSAJE GLOBAL -->
+        <?php if(!empty($_SESSION['mensaje'])): ?>
+            <p style="color: <?= $_SESSION['mensaje']['tipo'] === 'error' ? 'red' : 'green' ?>; font-weight: bold;">
+                <?= htmlspecialchars($_SESSION['mensaje']['texto']) ?>
+            </p>
+            <?php unset($_SESSION['mensaje']); ?>
+        <?php endif; ?>
+
         <section class="filtros">
             <form method="POST" class="form-filtro">
                 <label for="filtro_rol">Filtrar por rol:</label>
@@ -58,13 +67,6 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
             <?php if (!$sinRolSeleccionado): ?>
                 <h2>Usuarios <?php echo htmlspecialchars($rolFiltrado); ?></h2>
 
-                 <?php if(!empty($_SESSION['mensaje'])): ?>
-                    <p style="color: <?= $_SESSION['mensaje']['tipo'] === 'error' ? 'red' : 'green' ?>;">
-                        <?= $_SESSION['mensaje']['texto'] ?>
-                    </p>
-                    <?php unset($_SESSION['mensaje']); ?>
-                <?php endif; ?>
-
                 <table>
                     <thead>
                         <tr>
@@ -81,10 +83,10 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
                         <?php foreach ($usuarios as $usuario): ?>
                             <tr>
                                 <td><?php echo $usuario['id_usuario']; ?></td>
-                                <td><?php echo $usuario['nombre'].' '.$usuario['apellido']; ?></td>
-                                <td><?php echo $usuario['cedula']; ?></td>
-                                <td><?php echo $usuario['correo']; ?></td>
-                                <td><?php echo $usuario['telefono']; ?></td>
+                                <td><?php echo htmlspecialchars($usuario['nombre'].' '.$usuario['apellido']); ?></td>
+                                <td><?php echo htmlspecialchars($usuario['cedula']); ?></td>
+                                <td><?php echo htmlspecialchars($usuario['correo']); ?></td>
+                                <td><?php echo htmlspecialchars($usuario['telefono']); ?></td>
                                 <td>
                                     <span class="estado <?php echo strtolower($usuario['estado']); ?>">
                                         <?php echo $usuario['estado']; ?>

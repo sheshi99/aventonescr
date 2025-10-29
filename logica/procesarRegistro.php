@@ -201,7 +201,13 @@ function actualizarUsuario($datos, $fotografia) {
         }
 
         $_SESSION['mensaje'] = ['texto' => '✅ Usuario actualizado con éxito', 'tipo' => 'success'];
-        header("Location: ../interfaz/gestionVehiculos.php");
+        
+        $rolReal = $datos['rol']; // ya se definió arriba con obtenerUsuarioPorId si estaba vacío
+        if (strtolower($rolReal) === 'administrador') {
+            header("Location: ../interfaz/adminPanel.php");
+        } else {
+            header("Location: ../interfaz/gestionVehiculos.php");
+        }
         exit;
     } else {
         mostrarMensajeYRedirigir("❌ Error al actualizar usuario", "error", $datos);
@@ -219,17 +225,18 @@ function registrarUsuario($datos, $fotografia) {
         $fotografia, $datos['contrasena'], $datos['rol']
     );
 
-    if ($resultado['success']) {
+   if ($resultado['success']) {
         if (strtolower($datos['rol']) === 'administrador') {
-            mostrarMensajeYRedirigir("✅ Usuario registrado con éxito", "success", $datos);
+            $_SESSION['mensaje'] = ['texto'=>'✅ Usuario registrado con éxito','tipo'=>'success'];
+            header("Location: ../interfaz/adminPanel.php");
+            exit;
         } else {
             $_SESSION['mensaje'] = ['texto'=>'✅ Usuario registrado con éxito','tipo'=>'success'];
             header("Location: ../interfaz/login.php");
             exit;
         }
-    } else {
-        mostrarMensajeYRedirigir("❌ Error al registrar usuario", "error", $datos);
     }
+
 }
 
 // ----------------------------

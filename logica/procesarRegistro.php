@@ -181,7 +181,7 @@ function procesarFotografia($cedula, $nombre, $apellido, $rol, $datos) {
 function actualizarUsuario($datos, $fotografia) {
     if (empty($datos['rol'])) {
         $usuarioExistente = obtenerUsuarioPorId($datos['id_usuario']);
-        $datos['rol'] = $usuarioExistente['rol'] ?? 'Pasajero';
+        $datos['rol'] = $usuarioExistente['rol'] ?? '';
     }
 
     $resultado = editarUsuario(
@@ -201,8 +201,14 @@ function actualizarUsuario($datos, $fotografia) {
         }
 
         $_SESSION['mensaje'] = ['texto' => '✅ Usuario actualizado con éxito', 'tipo' => 'success'];
-        header("Location: ../interfaz/gestionVehiculos.php");
+
+        if (strtolower($datos['rol']) === 'administrador') {
+            header("Location: ../interfaz/adminPanel.php");
+        } else {
+            header("Location: ../interfaz/gestionVehiculos.php");
+        }
         exit;
+
     } else {
         mostrarMensajeYRedirigir("❌ Error al actualizar usuario", "error", $datos);
     }

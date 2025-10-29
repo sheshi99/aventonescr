@@ -98,16 +98,20 @@ function procesarFotografiaVehiculo($datos) {
     return $destino;
 }
 
+// --- FUNCIONES PARA INSERTAR Y ACTUALIZAR VEHÍCULO ---
+
 function actualizarVehiculoDB($id_vehiculo, $datos, $foto) {
     if (empty($foto)) {
         $vehiculoDB = obtenerVehiculoPorId($id_vehiculo);
         $foto = $vehiculoDB['fotografia'] ?? null;
     }
 
+    // --- CORRECCIÓN IMPORTANTE ---
     $resultado = actualizarVehiculo(
         $id_vehiculo, $datos['placa'], $datos['color'], $datos['marca'],
         $datos['modelo'], $datos['anno'], $datos['asientos'], $foto
     );
+    // --- FIN DE LA CORRECCIÓN ---
 
     if ($resultado) {
         mostrarMensajeYRedirigir("✅ Vehículo actualizado", "../interfaz/gestionVehiculos.php", "success");
@@ -129,6 +133,7 @@ function registrarVehiculo($id_chofer, $datos, $foto) {
     }
 }
 
+// --- GESTIONAR VEHÍCULO ---
 function gestionarVehiculo($id_chofer) {
     $datos = obtenerDatosFormulario();
     validarDatos($datos);
@@ -138,16 +143,21 @@ function gestionarVehiculo($id_chofer) {
 
     $accion = $_POST['accion'] ?? 'guardar';
 
+    // --- CORRECCIÓN IMPORTANTE ---
     if ($accion === 'actualizar' && !empty($_POST['id_vehiculo'])) {
-        actualizarVehiculo($_POST['id_vehiculo'], $datos, $foto);
+        // Antes: actualizarVehiculo($_POST['id_vehiculo'], $datos, $foto);
+        actualizarVehiculoDB($_POST['id_vehiculo'], $datos, $foto); // ✅ CORRECTO
     } else {
         registrarVehiculo($id_chofer, $datos, $foto);
     }
+    // --- FIN DE LA CORRECCIÓN ---
 }
 
+// --- EJECUCIÓN DEL POST ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_chofer = $_SESSION['usuario']['id_usuario'] ?? null;
     gestionarVehiculo($id_chofer);
-}else {
-    die ('Acceso no permitido');
+} else {
+    die('Acceso no permitido');
 }
+?>

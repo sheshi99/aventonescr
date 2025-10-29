@@ -111,7 +111,7 @@ unset($_SESSION['form_data'], $_SESSION['mensaje']);
             <?php endif; ?>
 
             <button type="submit" class="btn-registrar"><?= $editar ? "Actualizar" : "Registrar" ?></button>
-            <a href="<?= $editar ? 'gestionVehiculos.php' : 'Login.php' ?>" class="btn-volver">
+            <a href="<?= $editar ? 'adminPanel.php' : 'Login.php' ?>" class="btn-volver">
                 ⬅ <?= $editar ? "Volver" : "Volver" ?>
             </a>
         </form>

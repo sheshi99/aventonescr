@@ -6,55 +6,81 @@ $datosFormulario = $_SESSION['datos_formulario'] ?? [];
 $mensaje = $_SESSION['mensaje'] ?? null;
 unset($_SESSION['mensaje'], $_SESSION['datos_formulario']);
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title><?= $accion === 'actualizar' ? "Editar Vehículo" : "Registrar Vehículo" ?></title>
+    <!-- Enlace a tu hoja de estilos -->
+    <link rel="stylesheet" href="../Estilos/estilosRegistroUsuario.css">
 </head>
 <body>
-<h2><?= $accion === 'actualizar' ? "Editar Vehículo" : "Registrar Vehículo" ?></h2>
 
-<?php if ($mensaje): ?>
-    <p style="color: <?= $mensaje['tipo'] === 'error' ? 'red' : 'green' ?>">
-        <?= htmlspecialchars($mensaje['texto']) ?>
-    </p>
-<?php endif; ?>
+<div class="registro-container">
+    <div class="form-card">
+        <h2><?= $accion === 'actualizar' ? "Editar Vehículo" : "Registrar Vehículo" ?></h2>
 
-<form action="../logica/procesarVehiculo.php" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="accion" value="<?= $accion ?>">
-    <?php if($accion === 'actualizar'): ?>
-        <input type="hidden" name="id_vehiculo" value="<?= $id_vehiculo ?>">
-    <?php endif; ?>
+        <?php if ($mensaje): ?>
+            <p class="mensaje <?= $mensaje['tipo'] === 'error' ? 'error' : 'exito' ?>">
+                <?= htmlspecialchars($mensaje['texto']) ?>
+            </p>
+        <?php endif; ?>
 
-    <label for="placa">Placa:</label>
-    <input type="text" name="placa" id="placa" 
-           value="<?= htmlspecialchars($datosFormulario['placa'] ?? $vehiculo['placa']) ?>" required><br><br>
+        <form action="../logica/procesarVehiculo.php" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="accion" value="<?= $accion ?>">
+            <?php if ($accion === 'actualizar'): ?>
+                <input type="hidden" name="id_vehiculo" value="<?= $id_vehiculo ?>">
+            <?php endif; ?>
 
-    <label for="color">Color:</label>
-    <input type="text" name="color" id="color" 
-           value="<?= htmlspecialchars($datosFormulario['color'] ?? $vehiculo['color']) ?>" required><br><br>
+            <div class="input-group">
+                <label for="placa">Placa:</label>
+                <input type="text" name="placa" id="placa"
+                       value="<?= htmlspecialchars($datosFormulario['placa'] ?? $vehiculo['placa']) ?>" required>
+            </div>
 
-    <label for="marca">Marca:</label>
-    <input type="text" name="marca" id="marca" 
-           value="<?= htmlspecialchars($datosFormulario['marca'] ?? $vehiculo['marca']) ?>" required><br><br>
+            <div class="input-group">
+                <label for="color">Color:</label>
+                <input type="text" name="color" id="color"
+                       value="<?= htmlspecialchars($datosFormulario['color'] ?? $vehiculo['color']) ?>" required>
+            </div>
 
-    <label for="modelo">Modelo:</label>
-    <input type="text" name="modelo" id="modelo" 
-           value="<?= htmlspecialchars($datosFormulario['modelo'] ?? $vehiculo['modelo']) ?>" required><br><br>
+            <div class="input-group">
+                <label for="marca">Marca:</label>
+                <input type="text" name="marca" id="marca"
+                       value="<?= htmlspecialchars($datosFormulario['marca'] ?? $vehiculo['marca']) ?>" required>
+            </div>
 
-    <label for="anno">Año:</label>
-    <input type="number" name="anno" id="anno" min="1900" max="<?= date('Y') ?>" 
-           value="<?= htmlspecialchars($datosFormulario['anno'] ?? $vehiculo['anno']) ?>" required><br><br>
+            <div class="input-group">
+                <label for="modelo">Modelo:</label>
+                <input type="text" name="modelo" id="modelo"
+                       value="<?= htmlspecialchars($datosFormulario['modelo'] ?? $vehiculo['modelo']) ?>" required>
+            </div>
 
-    <label for="asientos">Asientos:</label>
-    <input type="number" name="asientos" id="asientos" min="1" 
-           value="<?= htmlspecialchars($datosFormulario['asientos'] ?? $vehiculo['asientos']) ?>" required><br><br>
+            <div class="input-group">
+              <label for="anno">Año:</label>
+              <input type="number" name="anno" id="anno" min="1900" max="<?= date('Y') ?>"
+                     value="<?= htmlspecialchars($datosFormulario['anno'] ?? $vehiculo['anno']) ?>" required>
+            </div>
 
-    <label for="foto">Foto:</label>
-    <input type="file" name="fotografia" id="foto" accept="image/*" <?= $accion === 'actualizar' ? '' : 'required' ?>><br><br>
+            <div class="input-group">
+              <label for="asientos">Asientos:</label>
+              <input type="number" name="asientos" id="asientos" min="1"
+                     value="<?= htmlspecialchars($datosFormulario['asientos'] ?? $vehiculo['asientos']) ?>" required>
+            </div>
 
-    <button type="submit"><?= $accion === 'actualizar' ? "Actualizar Vehículo" : "Registrar Vehículo" ?></button>
-</form>
+
+            <div class="input-group">
+                <label for="foto">Foto:</label>
+                <input type="file" name="fotografia" id="foto" accept="image/*" <?= $accion === 'actualizar' ? '' : 'required' ?>>
+            </div>
+
+            <button type="submit" class="btn-registrar">
+                <?= $accion === 'actualizar' ? "Actualizar Vehículo" : "Registrar Vehículo" ?>
+            </button>
+        </form>
+    </div>
+</div>
+
 </body>
 </html>

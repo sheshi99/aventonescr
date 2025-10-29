@@ -21,7 +21,7 @@ $vehiculo = [
 $accion = 'guardar';
 $id_vehiculo = null;
 
-// Modo edición usando POST (no GET)
+
 if (!empty($_POST['id_vehiculo'])) {
     $id_vehiculo = $_POST['id_vehiculo'];
     $vehiculoDB = obtenerVehiculoPorId($id_vehiculo);

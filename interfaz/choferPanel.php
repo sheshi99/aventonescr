@@ -23,6 +23,9 @@ $nombre_chofer = isset($_SESSION['usuario']['nombre']) ? $_SESSION['usuario']['n
     <!-- Header con bienvenida -->
     <header class="chofer-header">
         <h2>Bienvenido, <?= htmlspecialchars($nombre_chofer) ?></h2>
+        <a href="../logica/cerrarSesion.php" class="btn-cerrar" style="margin-left: 15px; color: white; text-decoration: none;">
+            🔒 Cerrar Sesión
+        </a>
     </header>
 
     <!-- Tarjeta principal con botones -->

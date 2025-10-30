@@ -1,16 +1,21 @@
-
 <?php
 include_once("../configuracion/conexion.php");
 
+/**
+ * Inserta un nuevo ride.
+ */
 function insertarRide($id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios) {
     $conexion = conexionBD();
     try {
         $sql = "INSERT INTO rides (id_chofer, id_vehiculo, nombre, salida, llegada, dia, hora, costo, espacios)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $consulta = mysqli_prepare($conexion, $sql);
+
+        // i = entero, s = string, d = decimal
         mysqli_stmt_bind_param($consulta, "iisssssdi",
             $id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios
         );
+
         mysqli_stmt_execute($consulta);
         mysqli_stmt_close($consulta);
         mysqli_close($conexion);
@@ -21,35 +26,9 @@ function insertarRide($id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia
     }
 }
 
-function obtenerRidesPorChofer($id_chofer) {
-    $conexion = conexionBD();
-    try {
-        // Seleccionamos todos los campos de rides y el número de placa del vehículo
-        $sql = "SELECT r.*, v.numero_placa AS placa_vehiculo
-                FROM rides r
-                INNER JOIN vehiculos v ON r.id_vehiculo = v.id_vehiculo
-                WHERE r.id_chofer = ?";
-        $consulta = mysqli_prepare($conexion, $sql);
-        mysqli_stmt_bind_param($consulta, "i", $id_chofer);
-        mysqli_stmt_execute($consulta);
-        $resultado = mysqli_stmt_get_result($consulta);
-        
-        $rides = [];
-        while ($fila = mysqli_fetch_assoc($resultado)) {
-            $rides[] = $fila;
-        }
-        
-        mysqli_stmt_close($consulta);
-        mysqli_close($conexion);
-        
-        return $rides;
-    } catch (Exception $e) {
-        error_log("Error al obtenerRidesPorChofer: " . $e->getMessage());
-        return [];
-    }
-}
-
-
+/**
+ * Obtiene un ride por su ID.
+ */
 function obtenerRidePorId($id_ride) {
     $conexion = conexionBD();
     try {
@@ -62,7 +41,6 @@ function obtenerRidePorId($id_ride) {
 
         mysqli_stmt_close($consulta);
         mysqli_close($conexion);
-
         return $ride;
     } catch (Exception $e) {
         error_log("Error en obtenerRidePorId: " . $e->getMessage());
@@ -70,6 +48,9 @@ function obtenerRidePorId($id_ride) {
     }
 }
 
+/**
+ * Actualiza un ride existente.
+ */
 function actualizarRide($id_ride, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios) {
     $conexion = conexionBD();
     try {
@@ -78,23 +59,13 @@ function actualizarRide($id_ride, $id_vehiculo, $nombre, $salida, $llegada, $dia
                 WHERE id_ride=?";
         $consulta = mysqli_prepare($conexion, $sql);
 
-        // Tipos correctos: i=entero, s=string, d=decimal
         mysqli_stmt_bind_param($consulta, "isssssdii",
-            $id_vehiculo, // i
-            $nombre,      // s
-            $salida,      // s
-            $llegada,     // s
-            $dia,         // s
-            $hora,        // s
-            $costo,       // d
-            $espacios,    // i
-            $id_ride      // i
+            $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios, $id_ride
         );
 
         mysqli_stmt_execute($consulta);
         mysqli_stmt_close($consulta);
         mysqli_close($conexion);
-
         return true;
     } catch (Exception $e) {
         error_log("Error en actualizarRide: " . $e->getMessage());
@@ -102,8 +73,9 @@ function actualizarRide($id_ride, $id_vehiculo, $nombre, $salida, $llegada, $dia
     }
 }
 
-
-
+/**
+ * Elimina un ride.
+ */
 function eliminarRide($id_ride) {
     $conexion = conexionBD();
     try {
@@ -120,9 +92,66 @@ function eliminarRide($id_ride) {
     }
 }
 
+/**
+ * Obtiene rides de un vehículo.
+ */
+function obtenerRidesPorVehiculo($id_vehiculo) {
+    $conexion = conexionBD();
+    try {
+        $sql = "SELECT * FROM rides WHERE id_vehiculo = ?";
+        $consulta = mysqli_prepare($conexion, $sql);
+        mysqli_stmt_bind_param($consulta, "i", $id_vehiculo);
+        mysqli_stmt_execute($consulta);
+        $resultado = mysqli_stmt_get_result($consulta);
+        
+        $rides = [];
+        while ($fila = mysqli_fetch_assoc($resultado)) {
+            $rides[] = $fila;
+        }
+        
+        mysqli_stmt_close($consulta);
+        mysqli_close($conexion);
+        return $rides;
+    } catch (Exception $e) {
+        error_log("Error en obtenerRidesPorVehiculo: " . $e->getMessage());
+        return [];
+    }
+}
 
+/**
+ * Obtiene rides de un chofer (con número de placa del vehículo).
+ */
+function obtenerRidesPorChofer($id_chofer) {
+    $conexion = conexionBD();
+    try {
+        $sql = "SELECT r.*, v.numero_placa AS placa_vehiculo
+                FROM rides r
+                INNER JOIN vehiculos v ON r.id_vehiculo = v.id_vehiculo
+                WHERE r.id_chofer = ?";
+        $consulta = mysqli_prepare($conexion, $sql);
+        mysqli_stmt_bind_param($consulta, "i", $id_chofer);
+        mysqli_stmt_execute($consulta);
+        $resultado = mysqli_stmt_get_result($consulta);
+        
+        $rides = [];
+        while ($fila = mysqli_fetch_assoc($resultado)) {
+            $rides[] = $fila;
+        }
+        
+        mysqli_stmt_close($consulta);
+        mysqli_close($conexion);
+        return $rides;
+    } catch (Exception $e) {
+        error_log("Error al obtenerRidesPorChofer: " . $e->getMessage());
+        return [];
+    }
+}
+
+/**
+ * Busca rides disponibles por salida y llegada.
+ */
 function buscarRides($salida = '', $llegada = '') {
-    $conexion = conexionBD(); // Debe devolver un mysqli
+    $conexion = conexionBD();
 
     $sql = "SELECT r.id_ride, r.nombre, r.salida, r.llegada, r.dia, r.hora,
                    r.costo, r.espacios, v.marca, v.modelo, v.anno
@@ -130,31 +159,32 @@ function buscarRides($salida = '', $llegada = '') {
             JOIN vehiculos v ON r.id_vehiculo = v.id_vehiculo
             WHERE r.espacios > 0";
 
-    // Filtros dinámicos
+    // Aplicar filtros dinámicos
+    $parametros = [];
+    $tipos = '';
+
     if ($salida !== '') {
         $sql .= " AND r.salida LIKE ?";
-        $salida = "%$salida%";
+        $parametros[] = "%$salida%";
+        $tipos .= 's';
     }
 
     if ($llegada !== '') {
         $sql .= " AND r.llegada LIKE ?";
-        $llegada = "%$llegada%";
+        $parametros[] = "%$llegada%";
+        $tipos .= 's';
     }
 
     $sql .= " ORDER BY r.dia, r.hora ASC";
 
     $stmt = mysqli_prepare($conexion, $sql);
     if (!$stmt) {
-        die("Error preparando la consulta: " . mysqli_error($conexion));
+        error_log("Error preparando la consulta: " . mysqli_error($conexion));
+        return [];
     }
 
-    // Bind según filtros
-    if ($salida !== '' && $llegada !== '') {
-        mysqli_stmt_bind_param($stmt, "ss", $salida, $llegada);
-    } elseif ($salida !== '') {
-        mysqli_stmt_bind_param($stmt, "s", $salida);
-    } elseif ($llegada !== '') {
-        mysqli_stmt_bind_param($stmt, "s", $llegada);
+    if (!empty($parametros)) {
+        mysqli_stmt_bind_param($stmt, $tipos, ...$parametros);
     }
 
     mysqli_stmt_execute($stmt);
@@ -169,5 +199,4 @@ function buscarRides($salida = '', $llegada = '') {
     mysqli_close($conexion);
     return $rides;
 }
-
 ?>

@@ -19,7 +19,9 @@ $rides = obtenerRidesPorChofer($id_chofer); // Debes tener esta función en dato
     <link rel="stylesheet" href="../estilos/estilosPanelAdmin.css">
 </head>
 <body>
-
+    <form action="../logica/cerrarSesion.php" method="post" style="display:inline;">
+           <button type="submit" class="btn-cerrar">Cerrar</button>
+    </form>
 <div class="admin-main">
     <div class="tabla-usuarios">
         <h2>Mis Rides</h2>

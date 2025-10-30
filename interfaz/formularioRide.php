@@ -2,7 +2,7 @@
 session_start();
 include_once("../datos/vehiculos.php");  
 include_once("../datos/rides.php"); 
-include_once("../logica/rideHelper.php");    
+include_once("../utilidades/formulariosUtilidades.php");    
 
 // --- Verificar sesión ---
 $id_chofer = $_SESSION['usuario']['id_usuario'] ?? null;
@@ -11,18 +11,15 @@ if (!$id_chofer) {
     exit;
 }
 
-// --- Mensajes y datos previos ---
-$datosFormulario = $_SESSION['datos_formulario'] ?? [];
-$mensaje = $_SESSION['mensaje'] ?? null;
-unset($_SESSION['mensaje'], $_SESSION['datos_formulario']);
-
-
-$preparacion = prepararRidePorDefecto($_POST['id_ride'] ?? null);
+// --- Preparar datos del formulario usando la utilidad ---
+$preparacion = prepararFormularioRide();
 $ride = $preparacion['ride'];
 $accion = $preparacion['accion'];
+$datosFormulario = $preparacion['datosFormulario'];
+$mensaje = $preparacion['mensaje'];
 
+// --- Vehículos del chofer ---
 $vehiculos = obtenerVehiculosPorChofer($id_chofer);
-
 ?>
 
 <!DOCTYPE html>

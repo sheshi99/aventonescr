@@ -122,33 +122,39 @@ function eliminarRide($id_ride) {
 
 
 function buscarRides($salida = '', $llegada = '') {
-    $conexion = conexionBD();
+    $conexion = conexionBD(); // Debe devolver un mysqli
+
     $sql = "SELECT r.id_ride, r.nombre, r.salida, r.llegada, r.dia, r.hora,
                    r.costo, r.espacios, v.marca, v.modelo, v.anno
             FROM rides r
             JOIN vehiculos v ON r.id_vehiculo = v.id_vehiculo
             WHERE r.espacios > 0";
 
-    $params = [];
-    $tipos = '';
-
+    // Filtros dinámicos
     if ($salida !== '') {
-        $sql .= " AND LOWER(r.salida) LIKE LOWER(?)";
-        $params[] = "%$salida%";
-        $tipos .= 's';
+        $sql .= " AND r.salida LIKE ?";
+        $salida = "%$salida%";
     }
 
     if ($llegada !== '') {
-        $sql .= " AND LOWER(r.llegada) LIKE LOWER(?)";
-        $params[] = "%$llegada%";
-        $tipos .= 's';
+        $sql .= " AND r.llegada LIKE ?";
+        $llegada = "%$llegada%";
     }
 
     $sql .= " ORDER BY r.dia, r.hora ASC";
 
     $stmt = mysqli_prepare($conexion, $sql);
-    if (!empty($params)) {
-        mysqli_stmt_bind_param($stmt, $tipos, ...$params);
+    if (!$stmt) {
+        die("Error preparando la consulta: " . mysqli_error($conexion));
+    }
+
+    // Bind según filtros
+    if ($salida !== '' && $llegada !== '') {
+        mysqli_stmt_bind_param($stmt, "ss", $salida, $llegada);
+    } elseif ($salida !== '') {
+        mysqli_stmt_bind_param($stmt, "s", $salida);
+    } elseif ($llegada !== '') {
+        mysqli_stmt_bind_param($stmt, "s", $llegada);
     }
 
     mysqli_stmt_execute($stmt);
@@ -164,4 +170,4 @@ function buscarRides($salida = '', $llegada = '') {
     return $rides;
 }
 
-
+?>

@@ -1,60 +1,51 @@
 <?php
 session_start();
-include_once("../datos/reservas.php");
+include_once("../datos/reservas.php"); // Debe existir la función insertarReserva($idRide, $idPasajero)
 
 /**
- * Muestra un mensaje en la sesión y redirige a otra página
+ * Redirige a la página de búsqueda con un mensaje en sesión.
  */
-function mostrarMensajeYRedirigir($mensaje, $tipo = 'info', $destino = '../interfaz/buscarRides.php') {
-    $_SESSION['mensaje'] = ['texto' => $mensaje, 'tipo' => $tipo];
+function redirigirConMensaje($mensaje, $tipo = 'info', $destino = '../interfaz/buscarRide.php') {
+    $_SESSION['mensaje_reserva'] = ['texto' => $mensaje, 'tipo' => $tipo];
     header("Location: $destino");
     exit;
 }
 
 /**
- * Valida que el usuario esté logueado y que sea pasajero.
- * Si no cumple, redirige con un mensaje de error.
+ * Valida que la petición sea POST y que se reciba un id_ride.
  */
-function validarUsuarioPasajero() {
-    if (!isset($_SESSION['usuario'])) {
-        mostrarMensajeYRedirigir("⚠️ Debe iniciar sesión como pasajero para reservar.", "error");
+function validarPeticion() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['id_ride'])) {
+        redirigirConMensaje('Solicitud inválida.', 'error');
     }
-
-    if ($_SESSION['usuario']['rol'] !== 'Pasajero') {
-        mostrarMensajeYRedirigir("⚠️ Solo los usuarios pasajeros pueden realizar reservas.", "error");
-    }
-
-    return $_SESSION['usuario']['id_usuario'];
 }
 
-/**
- * Ejecuta la acción de reserva
- */
-function procesarReserva() {
-    $accion = $_POST['accion'] ?? '';
-    $id_ride = $_POST['id_ride'] ?? null;
 
-    if ($accion !== 'reservar' || !$id_ride) {
-        mostrarMensajeYRedirigir("Acción no válida.", "error");
+function validarUsuario() {
+    $usuario = $_SESSION['usuario'] ?? null;
+    if (!$usuario || $usuario['rol'] !== 'Pasajero') {
+        redirigirConMensaje('⚠️ Debes iniciar sesión como pasajero para reservar.', 'error');
+    }
+    return $usuario;
+}
+
+function crearReserva($idRide, $idPasajero) {
+    if (!$idPasajero) {
+        redirigirConMensaje('Usuario inválido.', 'error');
     }
 
-    // Validar usuario y obtener su ID
-    $id_pasajero = validarUsuarioPasajero();
+    $exito = insertarReserva($idRide, $idPasajero);
 
-    // Insertar la reserva
-    $ok = insertarReserva($id_ride, $id_pasajero);
-
-    if ($ok) {
-        mostrarMensajeYRedirigir("✅ Reserva creada correctamente.", "success");
+    if ($exito) {
+        redirigirConMensaje('✅ Reserva registrada.', 'success');
     } else {
-        mostrarMensajeYRedirigir("❌ Error al crear la reserva.", "error");
+        redirigirConMensaje('Error al registrar la reserva. Intente de nuevo.', 'error');
     }
 }
 
-// --- Punto de entrada principal ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    procesarReserva();
-} else {
-    mostrarMensajeYRedirigir("Acceso no permitido.", "error");
-}
-?>
+// --- Lógica principal ---
+validarPeticion();
+$usuario = validarUsuario();
+$idRide = $_POST['id_ride'];
+$idPasajero = $usuario['id_usuario'] ?? null;
+crearReserva($idRide, $idPasajero);

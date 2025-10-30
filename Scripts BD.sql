@@ -17,3 +17,13 @@ CREATE TABLE rides (
     FOREIGN KEY (id_chofer) REFERENCES usuarios(id_usuario),
     FOREIGN KEY (id_vehiculo) REFERENCES vehiculos(id_vehiculo)
 );
+
+CREATE TABLE reservas (
+    id_reserva SERIAL PRIMARY KEY,
+    id_ride INT NOT NULL,
+    id_pasajero INT NOT NULL,
+    fecha_reserva TIMESTAMP DEFAULT NOW(),
+    estado VARCHAR(20) NOT NULL DEFAULT 'Pendiente', -- Pendiente, Aceptada, Rechazada, Cancelada
+    FOREIGN KEY (id_ride) REFERENCES rides(id_ride),
+    FOREIGN KEY (id_pasajero) REFERENCES usuarios(id_usuario)
+);

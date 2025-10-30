@@ -201,7 +201,6 @@ function actualizarUsuario($datos, $fotografia) {
         }
 
         $_SESSION['mensaje'] = ['texto' => '✅ Usuario actualizado con éxito', 'tipo' => 'success'];
-        
         $rolReal = $datos['rol']; // ya se definió arriba con obtenerUsuarioPorId si estaba vacío
         if (strtolower($rolReal) === 'administrador') {
             header("Location: ../interfaz/adminPanel.php");

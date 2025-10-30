@@ -1,13 +1,21 @@
 <?php
 session_start();
+include_once("../datos/rides.php");
 
+// Recuperar mensajes y filtros
 $mensaje = $_SESSION['mensaje']['texto'] ?? '';
 $tipo = $_SESSION['mensaje']['tipo'] ?? '';
 $rides = $_SESSION['rides'] ?? [];
 $salida = $_SESSION['filtros']['salida'] ?? '';
 $llegada = $_SESSION['filtros']['llegada'] ?? '';
-
 unset($_SESSION['mensaje'], $_SESSION['rides'], $_SESSION['filtros']);
+
+// Obtener usuario logueado (puede ser null)
+$usuario = $_SESSION['usuario'] ?? null;
+
+// Mensaje de reserva
+$mensajeReserva = $_SESSION['mensaje_reserva'] ?? '';
+unset($_SESSION['mensaje_reserva']);
 ?>
 
 <!DOCTYPE html>
@@ -18,10 +26,34 @@ unset($_SESSION['mensaje'], $_SESSION['rides'], $_SESSION['filtros']);
 </head>
 <body>
 
+<header>
+    <?php if (!$usuario): ?>
+        <!-- Página pública: mostrar botones -->
+        <a href="login.php"><button>Iniciar sesión</button></a>
+        <a href="registro.php"><button>Registrarse</button></a>
+    <?php else: ?>
+        <p>Hola, <?= htmlspecialchars($usuario['nombre'] ?? $usuario['rol']) ?></p>
+        <?php if ($usuario['rol'] === 'Pasajero'): ?>
+            <a href="pasajeroPanel.php"><button>Ir al panel</button></a>
+            <form action="../logica/cerrarSesion.php" method="post" style="display:inline;">
+                <button type="submit" class="btn-cerrar">Cerrar</button>
+            </form>
+        <?php endif; ?>
+    <?php endif; ?>
+</header>
+
 <h2>Buscar Rides</h2>
 
 <?php if ($mensaje): ?>
-<p><?= htmlspecialchars($mensaje) ?></p>
+    <p style="color: <?= $tipo === 'success' ? 'green' : ($tipo === 'error' ? 'red' : 'blue') ?>;">
+        <?= htmlspecialchars($mensaje) ?>
+    </p>
+<?php endif; ?>
+
+<?php if ($mensajeReserva): ?>
+    <p style="color: <?= $mensajeReserva['tipo'] === 'success' ? 'green' : 'red' ?>;">
+        <?= htmlspecialchars($mensajeReserva['texto']) ?>
+    </p>
 <?php endif; ?>
 
 <form method="post" action="../logica/procesarBusquedaRide.php">
@@ -59,8 +91,8 @@ unset($_SESSION['mensaje'], $_SESSION['rides'], $_SESSION['filtros']);
                 <td><?= htmlspecialchars($r['costo']) ?></td>
                 <td><?= htmlspecialchars($r['espacios']) ?></td>
                 <td>
+                    <!-- Siempre enviar el formulario -->
                     <form method="post" action="../logica/procesarReserva.php">
-                        <input type="hidden" name="accion" value="reservar">
                         <input type="hidden" name="id_ride" value="<?= $r['id_ride'] ?>">
                         <button type="submit">Reservar</button>
                     </form>
@@ -68,9 +100,8 @@ unset($_SESSION['mensaje'], $_SESSION['rides'], $_SESSION['filtros']);
             </tr>
         <?php endforeach; ?>
     </table>
-<?php elseif ($salida !== '' || $llegada !== ''): ?>
-    <p>No se encontraron rides.</p>
 <?php endif; ?>
 
 </body>
 </html>
+

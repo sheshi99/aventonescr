@@ -43,7 +43,7 @@ function iniciarSesion($usuario) {
             header("Location: ../interfaz/choferPanel.php");
             exit;
         case 'Pasajero':
-            echo "Bienvenido Pasajero: " . $usuario['nombre'];
+            header("Location: ../interfaz/pasajeroPanel.php");
             break;
         default:
             echo "Rol no reconocido.";

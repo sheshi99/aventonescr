@@ -5,7 +5,7 @@ include_once("../datos/rides.php");
 /**
  * Guarda un mensaje en sesión y redirige.
  */
-function mostrarMensajeYRedirigir($mensaje, $tipo = 'info', $destino = '../interfaz/buscarRides.php') {
+function mostrarMensajeYRedirigir($mensaje, $tipo = 'info', $destino = '../interfaz/buscarRide.php') {
     $_SESSION['mensaje'] = ['texto' => $mensaje, 'tipo' => $tipo];
     header("Location: $destino");
     exit;
@@ -31,22 +31,7 @@ function obtenerFiltros() {
 }
 
 /**
- * Valida que haya un usuario logueado y que sea pasajero.
- */
-function validarUsuarioPasajero() {
-    if (!isset($_SESSION['usuario'])) {
-        mostrarMensajeYRedirigir("⚠️ Debe iniciar sesión como pasajero para reservar.", "error");
-    }
-
-    if ($_SESSION['usuario']['rol'] !== 'Pasajero') {
-        mostrarMensajeYRedirigir("⚠️ Solo los usuarios pasajeros pueden realizar reservas.", "error");
-    }
-
-    return $_SESSION['usuario']['id_usuario'];
-}
-
-/**
- * Ejecuta la búsqueda y guarda resultados en sesión.
+ * Ejecuta la búsqueda de rides y guarda resultados en sesión.
  */
 function ejecutarBusqueda($salida, $llegada) {
     if ($salida === '' && $llegada === '') {
@@ -58,7 +43,7 @@ function ejecutarBusqueda($salida, $llegada) {
     if (empty($rides)) {
         $_SESSION['mensaje'] = ['texto' => 'No se encontraron rides.', 'tipo' => 'info'];
     } else {
-        $_SESSION['mensaje'] = ['texto' => 'Búsqueda realizada correctamente.', 'tipo' => 'success'];
+        $_SESSION['mensaje'] = ['texto' => 'Rides disponibles.', 'tipo' => 'success'];
     }
 
     $_SESSION['rides'] = $rides;
@@ -69,5 +54,5 @@ function ejecutarBusqueda($salida, $llegada) {
 // --- Punto de entrada principal ---
 validarMetodoPOST();
 list($salida, $llegada) = obtenerFiltros();
-validarUsuarioPasajero();
 ejecutarBusqueda($salida, $llegada);
+?>

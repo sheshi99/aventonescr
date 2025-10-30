@@ -121,3 +121,47 @@ function eliminarRide($id_ride) {
 }
 
 
+function buscarRides($salida = '', $llegada = '') {
+    $conexion = conexionBD();
+    $sql = "SELECT r.id_ride, r.nombre, r.salida, r.llegada, r.dia, r.hora,
+                   r.costo, r.espacios, v.marca, v.modelo, v.anno
+            FROM rides r
+            JOIN vehiculos v ON r.id_vehiculo = v.id_vehiculo
+            WHERE r.espacios > 0";
+
+    $params = [];
+    $tipos = '';
+
+    if ($salida !== '') {
+        $sql .= " AND LOWER(r.salida) LIKE LOWER(?)";
+        $params[] = "%$salida%";
+        $tipos .= 's';
+    }
+
+    if ($llegada !== '') {
+        $sql .= " AND LOWER(r.llegada) LIKE LOWER(?)";
+        $params[] = "%$llegada%";
+        $tipos .= 's';
+    }
+
+    $sql .= " ORDER BY r.dia, r.hora ASC";
+
+    $stmt = mysqli_prepare($conexion, $sql);
+    if (!empty($params)) {
+        mysqli_stmt_bind_param($stmt, $tipos, ...$params);
+    }
+
+    mysqli_stmt_execute($stmt);
+    $resultado = mysqli_stmt_get_result($stmt);
+
+    $rides = [];
+    while ($fila = mysqli_fetch_assoc($resultado)) {
+        $rides[] = $fila;
+    }
+
+    mysqli_stmt_close($stmt);
+    mysqli_close($conexion);
+    return $rides;
+}
+
+

@@ -11,9 +11,9 @@ function insertarRide($id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $consulta = mysqli_prepare($conexion, $sql);
 
-        // i = entero, s = string, d = decimal
-        mysqli_stmt_bind_param($consulta, "iisssssdi",
-            $id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios
+      
+        mysqli_stmt_bind_param($consulta, "iissssddi",
+        $id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios
         );
 
         mysqli_stmt_execute($consulta);
@@ -60,7 +60,7 @@ function actualizarRide($id_ride, $id_vehiculo, $nombre, $salida, $llegada, $dia
         $consulta = mysqli_prepare($conexion, $sql);
 
         mysqli_stmt_bind_param($consulta, "isssssdii",
-            $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios, $id_ride
+        $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios, $id_ride
         );
 
         mysqli_stmt_execute($consulta);

@@ -19,12 +19,28 @@ $rides = obtenerRidesPorChofer($id_chofer); // Debes tener esta función en dato
     <link rel="stylesheet" href="../estilos/estilosPanelAdmin.css">
 </head>
 <body>
-    <form action="../logica/cerrarSesion.php" method="post" style="display:inline;">
-           <button type="submit" class="btn-cerrar">Cerrar</button>
-    </form>
+   
+
+<div class="admin-header">
+    <div class="admin-header-left">
+
+    <h1>Mis Rides</h1>
+    </div>
+    <div class="admin-header-right">
+        <form action="../logica/cerrarSesion.php" method="post" style="display:inline;">
+            <button type="submit" class="btn-cerrar">Cerrar</button>
+        </form>
+
+        <form action="choferPanel.php" method="get" style="margin-bottom: 20px;">
+        <button type="submit" class="btn-nuevo">Panel Principal</button>
+        </form>
+        
+    </div>
+</div>
+
+
 <div class="admin-main">
     <div class="tabla-usuarios">
-        <h2>Mis Rides</h2>
 
         <?php if(!empty($_SESSION['mensaje'])): ?>
             <p style="color: <?= $_SESSION['mensaje']['tipo'] === 'error' ? 'red' : 'green' ?>;">
@@ -32,6 +48,7 @@ $rides = obtenerRidesPorChofer($id_chofer); // Debes tener esta función en dato
             </p>
             <?php unset($_SESSION['mensaje']); ?>
         <?php endif; ?>
+        
 
         <table>
             <thead>
@@ -54,8 +71,9 @@ $rides = obtenerRidesPorChofer($id_chofer); // Debes tener esta función en dato
                     <td><?= htmlspecialchars($ride['placa_vehiculo'] ?? 'N/A') ?></td>
                     <td><?= htmlspecialchars($ride['salida']) ?></td>
                     <td><?= htmlspecialchars($ride['llegada']) ?></td>
-                    <td><?= htmlspecialchars($ride['dia']) ?></td>
-                    <td><?= htmlspecialchars($ride['hora']) ?></td>
+                    <td><?= !empty($ride['dia']) ? date('d/m/Y', strtotime($ride['dia'])) : '' ?></td>
+                    <td><?= !empty($ride['hora']) ? date('H:i', strtotime($ride['hora'])) : '' ?></td>
+
                     <td><?= htmlspecialchars($ride['costo']) ?></td>
                     <td><?= htmlspecialchars($ride['espacios']) ?></td>
                     <td>

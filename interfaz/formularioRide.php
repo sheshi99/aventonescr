@@ -65,14 +65,10 @@ $vehiculos = obtenerVehiculosPorChofer($id_chofer);
     <input type="text" name="llegada" required value="<?= valor('llegada',$datosFormulario,$ride) ?>"><br><br>
 
     <label>Día:</label>
-    <select name="dia" required>
-        <?php foreach(obtenerDias() as $d): ?>
-            <option value="<?= $d ?>" <?= valor('dia',$datosFormulario,$ride) == $d ? 'selected' : '' ?>><?= $d ?></option>
-        <?php endforeach; ?>
-    </select><br><br>
+    <input type="date" name="dia" value="<?= valor('dia', $datosFormulario, $ride) ?>"><br><br>
 
     <label>Hora:</label>
-    <input type="time" name="hora" required value="<?= valor('hora',$datosFormulario,$ride) ?>"><br><br>
+    <input type="time" name="hora" value="<?= valor('hora', $datosFormulario, $ride) ?>"><br><br>
 
     <label>Costo:</label>
     <input type="number" name="costo" step="0.01" required value="<?= valor('costo',$datosFormulario,$ride) ?>"><br><br>

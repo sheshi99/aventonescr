@@ -1,7 +1,7 @@
 
 <?php
 
-function mostrarMensajeYRedirigir($mensaje, $destino, $tipo = 'info', $datosFormulario = [], 
+function redirigirMsjRide($mensaje, $destino, $tipo = 'info', $datosFormulario = [], 
                                  $campoError = null, $idRide = null, $accion = null) {
     $_SESSION['mensaje'] = ['texto' => $mensaje, 'tipo' => $tipo];
 
@@ -22,4 +22,20 @@ function mostrarMensajeYRedirigir($mensaje, $destino, $tipo = 'info', $datosForm
     header("Location: $destino");
     exit;
 }
+
+
+
+function redirigirMsjVehiculo($mensaje, $destino, $tipo = 'info', $datosFormulario = [], 
+                              $campoError = null) {
+    $_SESSION['mensaje'] = ['texto' => $mensaje, 'tipo' => $tipo, 'campo_error' => $campoError];
+
+    if ($campoError && isset($datosFormulario[$campoError])) {
+        $datosFormulario[$campoError] = '';
+    }
+
+    $_SESSION['datos_formulario'] = $datosFormulario;
+    header("Location: $destino");
+    exit;
+}
+
 ?>

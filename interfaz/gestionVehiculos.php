@@ -76,12 +76,12 @@ $rol = htmlspecialchars($usuario['rol']);
                     <td><?= htmlspecialchars($vehiculo['anno']) ?></td>
                     <td><?= htmlspecialchars($vehiculo['capacidad_asientos']) ?></td>
                     <td>
-                        <form action="../interfaz/registroVehiculo.php" method="post" class="form-accion">
+                        <form action="../interfaz/formularioVehiculo.php" method="post" class="form-accion">
                             <input type="hidden" name="id_vehiculo" value="<?= $vehiculo['id_vehiculo'] ?>">
                             <button type="submit" class="btn-activar">Editar</button>
                         </form>
 
-                        <form action="../logica/procesarGestionVehiculo.php" method="post" class="form-accion">
+                        <form action="../logica/procesarVehiculo.php" method="post" class="form-accion">
                             <input type="hidden" name="accion" value="eliminar">
                             <input type="hidden" name="id_vehiculo" value="<?= $vehiculo['id_vehiculo'] ?>">
                             <button type="submit" class="btn-desactivar" onclick="return confirm('¿Seguro que desea eliminar?')">Eliminar</button>
@@ -93,7 +93,7 @@ $rol = htmlspecialchars($usuario['rol']);
         </table>
 
         <br>
-        <form action="../interfaz/registroVehiculo.php" method="post">
+        <form action="../interfaz/formularioVehiculo.php" method="post">
             <button type="submit" class="btn-nuevo">Agregar Vehículo</button>
         </form>
     </div>

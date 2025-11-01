@@ -1,6 +1,7 @@
 <?php
 session_start();
 include_once("../datos/vehiculos.php");
+include_once("../utilidades/mensajes.php");
 
 if (!isset($_SESSION['usuario']['id_usuario'])) {
     header("Location: ../interfaz/login.php");
@@ -9,20 +10,7 @@ if (!isset($_SESSION['usuario']['id_usuario'])) {
 
 $id_chofer = $_SESSION['usuario']['id_usuario'];
 
-// Mostrar mensaje y redirigir
-function mostrarMensajeYRedirigir($mensaje, $destino, $tipo = 'info', $datosFormulario = [], $campoError = null) {
-    $_SESSION['mensaje'] = ['texto' => $mensaje, 'tipo' => $tipo, 'campo_error' => $campoError];
 
-    if ($campoError && isset($datosFormulario[$campoError])) {
-        $datosFormulario[$campoError] = '';
-    }
-
-    $_SESSION['datos_formulario'] = $datosFormulario;
-    header("Location: $destino");
-    exit;
-}
-
-// Obtener datos del formulario
 function obtenerDatosFormulario() {
     return [
         'placa'   => trim($_POST['placa'] ?? ''),
@@ -35,38 +23,41 @@ function obtenerDatosFormulario() {
     ];
 }
 
-// Validar datos
+// ==================== VALIDACIONES ====================
+
 function validarDatos($datos) {
     foreach ($datos as $campo => $valor) {
         if ($campo !== 'fotografia_existente' && empty($valor)) {
-            mostrarMensajeYRedirigir(
+            redirigirMsjVehiculo(
                 "❌ El campo $campo es obligatorio",
                 "../interfaz/registroVehiculo.php",
-                "error",
-                $datos,
-                $campo
+                "error", $datos, $campo
             );
         }
     }
     $id_vehiculo = $_POST['id_vehiculo'] ?? null; // Para actualizar
     if (placaExiste($datos['placa'], $id_vehiculo)) {
-        mostrarMensajeYRedirigir("❌ La placa ya está registrada", "../interfaz/registroVehiculo.php", "error", $datos, 'placa');
+        redirigirMsjVehiculo("❌ La placa ya está registrada", "../interfaz/registroVehiculo.php",
+         "error", $datos, 'placa');
     }
 
     if (!preg_match('/^[A-Z0-9\-]{1,20}$/i', $datos['placa'])) {
-        mostrarMensajeYRedirigir("❌ La placa no es válida", "../interfaz/registroVehiculo.php", "error", $datos, 'placa');
+        redirigirMsjVehiculo("❌ La placa no es válida", "../interfaz/registroVehiculo.php", 
+        "error", $datos, 'placa');
     }
 
     if (!is_numeric($datos['anno']) || $datos['anno'] < 1900 || $datos['anno'] > date('Y')) {
-        mostrarMensajeYRedirigir("❌ Año no válido", "../interfaz/registroVehiculo.php", "error", $datos, 'anno');
+        redirigirMsjVehiculo("❌ Año no válido", "../interfaz/registroVehiculo.php", 
+        "error", $datos, 'anno');
     }
 
     if (!is_numeric($datos['asientos']) || $datos['asientos'] < 1) {
-        mostrarMensajeYRedirigir("❌ Cantidad de asientos no válida", "../interfaz/registroVehiculo.php", "error", $datos, 'asientos');
+        redirigirMsjVehiculo("❌ Cantidad de asientos no válida", 
+                            "../interfaz/registroVehiculo.php", "error", $datos, 'asientos');
     }
 }
 
-// Procesar foto del vehículo
+
 function procesarFotografiaVehiculo($datos) {
     if (!isset($_FILES['fotografia']) || $_FILES['fotografia']['error'] !== UPLOAD_ERR_OK) {
         return $datos['fotografia_existente'] ?? null;
@@ -79,11 +70,11 @@ function procesarFotografiaVehiculo($datos) {
 
     $ext = strtolower(pathinfo($archivo['name'], PATHINFO_EXTENSION));
     if (!in_array($ext, ['jpg','jpeg','png','gif'])) {
-        mostrarMensajeYRedirigir("❌ Formato no permitido. Solo JPG, PNG o GIF", "../interfaz/registroVehiculo.php", "error", $datos, 'fotografia_existente');
+        redirigirMsjVehiculo("❌ Formato no permitido. Solo JPG, PNG o GIF", "../interfaz/registroVehiculo.php", "error", $datos, 'fotografia_existente');
     }
 
     if ($archivo['size'] > 2*1024*1024) {
-        mostrarMensajeYRedirigir("❌ La fotografía supera los 2MB", "../interfaz/registroVehiculo.php", "error", $datos, 'fotografia_existente');
+        redirigirMsjVehiculo("❌ La fotografía supera los 2MB", "../interfaz/registroVehiculo.php", "error", $datos, 'fotografia_existente');
     }
 
     $nombreArchivo = preg_replace('/[^A-Za-z0-9]/', '', $datos['placa']) . '.' . $ext;
@@ -92,68 +83,102 @@ function procesarFotografiaVehiculo($datos) {
     if (file_exists($destino)) unlink($destino);
 
     if (!move_uploaded_file($archivo['tmp_name'], $destino)) {
-        mostrarMensajeYRedirigir("❌ Error al guardar la fotografía", "../interfaz/registroVehiculo.php", "error", $datos, 'fotografia_existente');
+        redirigirMsjVehiculo("❌ Error al guardar la fotografía", "../interfaz/registroVehiculo.php", "error", $datos, 'fotografia_existente');
     }
 
     return $destino;
 }
 
-// --- FUNCIONES PARA INSERTAR Y ACTUALIZAR VEHÍCULO ---
+// ==================== ACCIONES ====================
 
-function actualizarVehiculoDB($id_vehiculo, $datos, $foto) {
+function actualizarVehiculoAction($id_vehiculo, $datos, $foto) {
     if (empty($foto)) {
         $vehiculoDB = obtenerVehiculoPorId($id_vehiculo);
         $foto = $vehiculoDB['fotografia'] ?? null;
     }
 
-    // --- CORRECCIÓN IMPORTANTE ---
+  
     $resultado = actualizarVehiculo(
         $id_vehiculo, $datos['placa'], $datos['color'], $datos['marca'],
         $datos['modelo'], $datos['anno'], $datos['asientos'], $foto
     );
-    // --- FIN DE LA CORRECCIÓN ---
+    
 
     if ($resultado) {
-        mostrarMensajeYRedirigir("✅ Vehículo actualizado", "../interfaz/gestionVehiculos.php", "success");
+        redirigirMsjVehiculo("✅ Vehículo actualizado", "../interfaz/gestionVehiculos.php", 
+                            "success");
     } else {
-        mostrarMensajeYRedirigir("❌ Error al actualizar", "../interfaz/registroVehiculo.php", "error", $datos);
+        redirigirMsjVehiculo("❌ Error al actualizar", "../interfaz/registroVehiculo.php", 
+                            "error", $datos);
     }
 }
 
-function registrarVehiculo($id_chofer, $datos, $foto) {
+function registrarVehiculoAction($id_chofer, $datos, $foto) {
     $resultado = insertarVehiculo(
         $id_chofer, $datos['placa'], $datos['color'], $datos['marca'],
         $datos['modelo'], $datos['anno'], $datos['asientos'], $foto
     );
 
     if ($resultado) {
-        mostrarMensajeYRedirigir("✅ Vehículo registrado", "../interfaz/gestionVehiculos.php", "success");
+        redirigirMsjVehiculo("✅ Vehículo registrado", "../interfaz/gestionVehiculos.php", 
+                            "success");
     } else {
-        mostrarMensajeYRedirigir("❌ Error al registrar", "../interfaz/registroVehiculo.php", "error", $datos);
+        redirigirMsjVehiculo("❌ Error al registrar", "../interfaz/registroVehiculo.php", 
+                            "error", $datos);
     }
 }
 
-// --- GESTIONAR VEHÍCULO ---
+function eliminarVehiculoAction($id_vehiculo) {
+    try {
+        if (eliminarVehiculo($id_vehiculo)) {
+            redirigirMsjVehiculo("✅ Vehículo eliminado", "../interfaz/gestionVehiculos.php", 
+                                "success");
+        }
+    } catch (Exception $e) {
+        redirigirMsjVehiculo("❌ No se pudo eliminar: " . $e->getMessage(), 
+                            "../interfaz/gestionVehiculos.php", "error");
+    }
+}
+
+
 function gestionarVehiculo($id_chofer) {
-    $datos = obtenerDatosFormulario();
-    validarDatos($datos);
-    $datos['anno'] = (int)$datos['anno'];
-    $datos['asientos'] = (int)$datos['asientos'];
-    $foto = procesarFotografiaVehiculo($datos);
+$accion = $_POST['accion'] ?? 'guardar';
+$id_vehiculo = $_POST['id_vehiculo'] ?? null;
 
-    $accion = $_POST['accion'] ?? 'guardar';
-
-    // --- CORRECCIÓN IMPORTANTE ---
-    if ($accion === 'actualizar' && !empty($_POST['id_vehiculo'])) {
-        // Antes: actualizarVehiculo($_POST['id_vehiculo'], $datos, $foto);
-        actualizarVehiculoDB($_POST['id_vehiculo'], $datos, $foto); // ✅ CORRECTO
+switch($accion) {
+    case 'eliminar':
+    if ($id_vehiculo !== null && $id_vehiculo !== '') {
+        eliminarVehiculoAction($id_vehiculo);
     } else {
-        registrarVehiculo($id_chofer, $datos, $foto);
+        redirigirMsjVehiculo("❌ ID de vehículo inválido", "../interfaz/gestionVehiculos.php", 
+        "error");
     }
-    // --- FIN DE LA CORRECCIÓN ---
+    break;
+
+
+    case 'actualizar':
+        $datos = obtenerDatosFormulario();
+        validarDatos($datos);
+        $datos['anno'] = (int)$datos['anno'];
+        $datos['asientos'] = (int)$datos['asientos'];
+        $foto = procesarFotografiaVehiculo($datos);
+        actualizarVehiculoAction($id_vehiculo, $datos, $foto);
+        break;
+
+    case 'guardar':
+    default:
+        $datos = obtenerDatosFormulario();
+        validarDatos($datos);
+        $datos['anno'] = (int)$datos['anno'];
+        $datos['asientos'] = (int)$datos['asientos'];
+        $foto = procesarFotografiaVehiculo($datos);
+        registrarVehiculoAction($id_chofer, $datos, $foto);
+        break;
+    }
 }
 
-// --- EJECUCIÓN DEL POST ---
+// ==================== EJECUTAR ACCIÓN SEGÚN POST ====================
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_chofer = $_SESSION['usuario']['id_usuario'] ?? null;
     gestionarVehiculo($id_chofer);

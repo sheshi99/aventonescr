@@ -1,3 +1,17 @@
+
+/**
+ * --------------------------------------------------------------
+ * Archivo: procesarRide.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Fecha: 31/10/2025
+ * Descripción:
+ * Maneja la lógica para registrar, editar y eliminar rides (viajes),
+ * creados por los choferes. Incluye validaciones de vehículo, lugares,
+ * día, hora, costo y espacios, mostrando mensajes según el resultado.
+ * --------------------------------------------------------------
+ */
+
+
 <?php
 session_start();
 include_once("../datos/rides.php");
@@ -29,7 +43,7 @@ function obtenerDatosRide() {
 function validarCamposObligatorios($datos, $id_ride = null) {
     foreach ($datos as $campo => $valor) {
         if (empty($valor)) {
-            mostrarMensajeYRedirigir(
+            redirigirMsjRide(
                 "El campo $campo es obligatorio", "../interfaz/formularioRide.php",
                 "error", $datos, $campo, $id_ride, $id_ride ? 'actualizar' : 'insertar'
             );
@@ -39,13 +53,13 @@ function validarCamposObligatorios($datos, $id_ride = null) {
 
 function validarCostoEspacios($datos, $id_ride = null) {
     if (!is_numeric($datos['costo']) || $datos['costo'] <= 0) {
-        mostrarMensajeYRedirigir(
+        redirigirMsjRide(
             "❌ Costo inválido", "../interfaz/formularioRide.php",
             "error", $datos, 'costo', $id_ride, $id_ride ? 'actualizar' : 'insertar'
         );
     }
     if (!is_numeric($datos['espacios']) || $datos['espacios'] < 1) {
-        mostrarMensajeYRedirigir(
+        redirigirMsjRide(
             "❌ Espacios inválidos", "../interfaz/formularioRide.php",
             "error", $datos, 'espacios', $id_ride, $id_ride ? 'actualizar' : 'insertar'
         );
@@ -55,13 +69,13 @@ function validarCostoEspacios($datos, $id_ride = null) {
 function validarCapacidadesVehiculo($datos, $id_ride = null) {
     $vehiculo = obtenerVehiculoPorId($datos['id_vehiculo']);
     if (!$vehiculo) {
-        mostrarMensajeYRedirigir(
+        redirigirMsjRide(
             "❌ Vehículo no encontrado", "../interfaz/formularioRide.php",
             "error", $datos,'id_vehiculo', $id_ride, $id_ride ? 'actualizar' : 'insertar'
         );
     }
     if ($datos['espacios'] > $vehiculo['capacidad_asientos']) {
-        mostrarMensajeYRedirigir(
+        redirigirMsjRide(
             "⚠️ El vehículo solo tiene {$vehiculo['capacidad_asientos']} asientos disponibles.",
             "../interfaz/formularioRide.php","error", $datos,'espacios',
             $id_ride, $id_ride ? 'actualizar' : 'insertar'
@@ -96,7 +110,7 @@ function validarVehiculoDisponible($datos, $id_ride_actual = null) {
     if (!$id_vehiculo) return;
 
     if (vehiculoOcupado($id_vehiculo, $dia, $hora, $id_ride_actual)) {
-        mostrarMensajeYRedirigir(
+        redirigirMsjRide(
             "❌ El vehículo ya tiene un ride programado en esa fecha y hora",
             "../interfaz/formularioRide.php", "error", $datos,'hora', $id_ride_actual,
             $id_ride_actual ? 'actualizar' : 'insertar'
@@ -106,7 +120,7 @@ function validarVehiculoDisponible($datos, $id_ride_actual = null) {
 
 function validarSalidaLlegada($datos, $id_ride = null) {
     if ($datos['salida'] === $datos['llegada']) {
-        mostrarMensajeYRedirigir(
+        redirigirMsjRide(
             "❌ El lugar de salida no puede ser igual al lugar de llegada",
             "../interfaz/formularioRide.php", "error", $datos,'llegada',
             $id_ride, $id_ride ? 'actualizar' : 'insertar'
@@ -126,7 +140,7 @@ function validarDiaHora($datos, $id_ride = null) {
     $horaActual  = date('H:i');
 
     if ($dia < $fechaActual) {
-        mostrarMensajeYRedirigir(
+        redirigirMsjRide(
             "❌ El día del ride no puede ser anterior al día de hoy",
             "../interfaz/formularioRide.php",
             "error",
@@ -138,7 +152,7 @@ function validarDiaHora($datos, $id_ride = null) {
     }
 
     if ($dia === $fechaActual && $hora < $horaActual) {
-        mostrarMensajeYRedirigir(
+        redirigirMsjRide(
             "❌ La hora del ride no puede ser anterior a la hora actual",
             "../interfaz/formularioRide.php",
             "error",
@@ -164,9 +178,11 @@ function validarRide($datos, $id_ride_actual = null) {
 
 function eliminarRideAction($id_ride) {
     if (eliminarRide($id_ride)) {
-        mostrarMensajeYRedirigir("✅ Ride eliminado", "../interfaz/gestionRides.php", "success");
+        redirigirMsjRide("✅ Ride eliminado", "../interfaz/gestionRides.php", 
+                                "success");
     } else {
-        mostrarMensajeYRedirigir("❌ Error al eliminar", "../interfaz/gestionRides.php", "error");
+        redirigirMsjRide("❌ Error al eliminar", "../interfaz/gestionRides.php", 
+                                "error");
     }
 }
 
@@ -175,28 +191,17 @@ function actualizarRideAction($id_ride) {
     validarRide($datos, $id_ride);
 
     $ok = actualizarRide(
-        $id_ride,
-        $datos['id_vehiculo'],
-        $datos['nombre'],
-        $datos['salida'],
-        $datos['llegada'],
-        $datos['dia'], 
-        $datos['hora'],
-        $datos['costo'],
-        $datos['espacios']
+        $id_ride, $datos['id_vehiculo'], $datos['nombre'], $datos['salida'], $datos['llegada'],
+        $datos['dia'], $datos['hora'], $datos['costo'], $datos['espacios']
     );
 
     if ($ok) {
-        mostrarMensajeYRedirigir("✅ Ride actualizado", "../interfaz/gestionRides.php", "success");
+        redirigirMsjRide("✅ Ride actualizado", "../interfaz/gestionRides.php", "success");
     } else {
-        mostrarMensajeYRedirigir(
+        redirigirMsjRide(
             "❌ Error al actualizar",
-            "../interfaz/formularioRide.php",
-            "error",
-            $datos,
-            null,
-            $id_ride,
-            'actualizar'
+            "../interfaz/formularioRide.php","error", $datos,
+            null, $id_ride, 'actualizar'
         );
     }
 }
@@ -218,9 +223,9 @@ function insertarRideAction($id_chofer) {
     );
 
     if ($ok) {
-        mostrarMensajeYRedirigir("✅ Ride registrado", "../interfaz/gestionRides.php", "success");
+        redirigirMsjRide("✅ Ride registrado", "../interfaz/gestionRides.php", "success");
     } else {
-        mostrarMensajeYRedirigir(
+        redirigirMsjRide(
             "❌ Error al registrar",
             "../interfaz/formularioRide.php",
             "error",

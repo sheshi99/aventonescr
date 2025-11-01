@@ -82,7 +82,7 @@ $rides = obtenerRidesPorChofer($id_chofer); // Debes tener esta función en dato
                             <button type="submit" class="btn-activar">Editar</button>
                         </form>
 
-                        <form action="../logica/procesarGestionRide.php" method="post" class="form-accion">
+                        <form action="../logica/procesarRide.php" method="post" class="form-accion">
                             <input type="hidden" name="accion" value="eliminar">
                             <input type="hidden" name="id_ride" value="<?= $ride['id_ride'] ?>">
                             <button type="submit" class="btn-desactivar" onclick="return confirm('¿Seguro que desea eliminar este ride?')">Eliminar</button>

@@ -1,24 +1,24 @@
+
 <?php
 session_start();
 include_once("../datos/vehiculos.php");  
 include_once("../datos/rides.php"); 
 include_once("../utilidades/formulariosUtilidades.php");    
 
-// --- Verificar sesión ---
+
 $id_chofer = $_SESSION['usuario']['id_usuario'] ?? null;
 if (!$id_chofer) {
     header("Location: ../interfaz/login.php");
     exit;
 }
 
-// --- Preparar datos del formulario usando la utilidad ---
+
 $preparacion = prepararFormularioRide();
 $ride = $preparacion['ride'];
 $accion = $preparacion['accion'];
 $datosFormulario = $preparacion['datosFormulario'];
 $mensaje = $preparacion['mensaje'];
 
-// --- Vehículos del chofer ---
 $vehiculos = obtenerVehiculosPorChofer($id_chofer);
 ?>
 

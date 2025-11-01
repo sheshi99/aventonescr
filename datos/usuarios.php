@@ -35,7 +35,7 @@ function insertarUsuario($nombre, $apellido, $cedula, $fecha_nacimiento, $correo
         mysqli_stmt_close($consulta);
 
         if ($inicializacion['token']) {
-            enviarCorreoActivacion($correo, $nombre, $inicializacion['token']);
+            enviarCorreoActivacion($correo, $nombre, $inicializacion['token'],$rol);
         }
 
         mysqli_close($conexion);

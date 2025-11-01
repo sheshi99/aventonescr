@@ -1,21 +1,16 @@
 <?php
 include_once("../configuracion/conexion.php");
 
-/**
- * Inserta un nuevo ride.
- */
+
 function insertarRide($id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios) {
     $conexion = conexionBD();
     try {
         $sql = "INSERT INTO rides (id_chofer, id_vehiculo, nombre, salida, llegada, dia, hora, costo, espacios)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $consulta = mysqli_prepare($conexion, $sql);
-
-      
-        mysqli_stmt_bind_param($consulta, "iissssddi",
-        $id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios
+        mysqli_stmt_bind_param($consulta, "iisssssdi",
+            $id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios
         );
-
         mysqli_stmt_execute($consulta);
         mysqli_stmt_close($consulta);
         mysqli_close($conexion);
@@ -26,31 +21,7 @@ function insertarRide($id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia
     }
 }
 
-/**
- * Obtiene un ride por su ID.
- */
-function obtenerRidePorId($id_ride) {
-    $conexion = conexionBD();
-    try {
-        $sql = "SELECT * FROM rides WHERE id_ride = ?";
-        $consulta = mysqli_prepare($conexion, $sql);
-        mysqli_stmt_bind_param($consulta, "i", $id_ride);
-        mysqli_stmt_execute($consulta);
-        $resultado = mysqli_stmt_get_result($consulta);
-        $ride = mysqli_fetch_assoc($resultado);
 
-        mysqli_stmt_close($consulta);
-        mysqli_close($conexion);
-        return $ride;
-    } catch (Exception $e) {
-        error_log("Error en obtenerRidePorId: " . $e->getMessage());
-        return null;
-    }
-}
-
-/**
- * Actualiza un ride existente.
- */
 function actualizarRide($id_ride, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios) {
     $conexion = conexionBD();
     try {
@@ -73,9 +44,8 @@ function actualizarRide($id_ride, $id_vehiculo, $nombre, $salida, $llegada, $dia
     }
 }
 
-/**
- * Elimina un ride.
- */
+
+
 function eliminarRide($id_ride) {
     $conexion = conexionBD();
     try {
@@ -92,9 +62,27 @@ function eliminarRide($id_ride) {
     }
 }
 
-/**
- * Obtiene rides de un vehículo.
- */
+
+function obtenerRidePorId($id_ride) {
+    $conexion = conexionBD();
+    try {
+        $sql = "SELECT * FROM rides WHERE id_ride = ?";
+        $consulta = mysqli_prepare($conexion, $sql);
+        mysqli_stmt_bind_param($consulta, "i", $id_ride);
+        mysqli_stmt_execute($consulta);
+        $resultado = mysqli_stmt_get_result($consulta);
+        $ride = mysqli_fetch_assoc($resultado);
+
+        mysqli_stmt_close($consulta);
+        mysqli_close($conexion);
+        return $ride;
+    } catch (Exception $e) {
+        error_log("Error en obtenerRidePorId: " . $e->getMessage());
+        return null;
+    }
+}
+
+
 function obtenerRidesPorVehiculo($id_vehiculo) {
     $conexion = conexionBD();
     try {
@@ -118,9 +106,6 @@ function obtenerRidesPorVehiculo($id_vehiculo) {
     }
 }
 
-/**
- * Obtiene rides de un chofer (con número de placa del vehículo).
- */
 function obtenerRidesPorChofer($id_chofer) {
     $conexion = conexionBD();
     try {
@@ -147,9 +132,7 @@ function obtenerRidesPorChofer($id_chofer) {
     }
 }
 
-/**
- * Busca rides disponibles por salida y llegada.
- */
+
 function buscarRides($salida = '', $llegada = '') {
     $conexion = conexionBD();
 

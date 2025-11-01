@@ -204,8 +204,10 @@ function actualizarUsuario($datos, $fotografia) {
         $rolReal = $datos['rol']; // ya se definió arriba con obtenerUsuarioPorId si estaba vacío
         if (strtolower($rolReal) === 'administrador') {
             header("Location: ../interfaz/adminPanel.php");
-        } else {
-            header("Location: ../interfaz/gestionVehiculos.php");
+        } else if (strtolower($rolReal) === 'chofer') {
+            header("Location: ../interfaz/choferPanel.php");
+        }else {
+            header("Location: ../interfaz/pasajeroPanel.php");
         }
         exit;
 

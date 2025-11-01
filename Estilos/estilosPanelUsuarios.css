@@ -12,6 +12,7 @@ body {
 }
 
 /* ===== Header con bienvenida ===== */
+.pasajero-header,
 .chofer-header {
     width: 100%;
     max-width: 2000px;
@@ -26,7 +27,7 @@ body {
     justify-content: space-between;
     align-items: center;
 }
-
+.pasajero-header h2,
 .chofer-header h2 {
     color: #ffffff;
     font-size: 26px;
@@ -59,6 +60,7 @@ body {
 }
 
 /* ===== Tarjeta principal (botones) ===== */
+.pasajero-card,
 .chofer-card {
     background: #ffffff;
     border-radius: 15px;
@@ -69,12 +71,13 @@ body {
     text-align: center;
     transition: transform 0.2s ease;
 }
-
+.pasajero-card:hover,
 .chofer-card:hover {
     transform: translateY(-3px);
 }
 
 /* ===== Menú de botones ===== */
+.menu-pasajero,
 .menu-chofer {
     display: flex;
     justify-content: center;
@@ -83,6 +86,7 @@ body {
 }
 
 /* ===== Botones del menú ===== */
+.menu-pasajero button,
 .menu-chofer button {
     background-color: #00609f;
     color: #fff;
@@ -95,10 +99,25 @@ body {
     transition: 0.3s ease;
     min-width: 180px;
 }
-
+.menu-pasajero button:hover,
 .menu-chofer button:hover {
     background-color: #2980b9;
     transform: translateY(-2px);
 }
+.btn-editarPasajero,
+.btn-editarChofer {
+    background-color: #d4e7f4; /* un tono más oscuro al pasar el mouse */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
 
+.btn-editarPasajero:hover,
+.btn-editarChofer:hover {
+    background-color: #75bceb;
+}
 

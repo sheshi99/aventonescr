@@ -2,11 +2,25 @@
 session_start();
 include_once("../datos/usuarios.php");
 
-// Determinar si estamos editando o registrando
+// ----------------------------
+// DETECTAR ROL DEL USUARIO PARA EL BOTÓN VOLVER
+// ----------------------------
+$rolUsuario = $_SESSION['usuario']['rol'] ?? null;
+
+if ($rolUsuario === 'Chofer') {
+    $urlVolver = 'choferPanel.php';
+} elseif ($rolUsuario === 'Pasajero') {
+    $urlVolver = 'pasajeroPanel.php';
+} else {
+    $urlVolver = 'Login.php'; // fallback por si no hay sesión
+}
+
+// ----------------------------
+// OBTENER DATOS DEL USUARIO
+// ----------------------------
 $editar = $_GET['editar'] ?? 0;
 $datosUsuario = [];
 
-// Si estamos editando y hay usuario logueado
 if ($editar == 1 && isset($_SESSION['usuario'])) {
     $datosUsuario = obtenerUsuarioPorId($_SESSION['usuario']['id_usuario']);
 }
@@ -27,7 +41,7 @@ unset($_SESSION['form_data'], $_SESSION['mensaje']);
 <head>
     <meta charset="UTF-8">
     <title><?= $editar ? "Editar Usuario" : "Registrar Usuario" ?></title>
-    <link rel="stylesheet" href="../Estilos/estilosRegistroUsuario.css">
+    <link rel="stylesheet" href="../Estilos/estilosRegistro.css">
 </head>
 <body>
 <div class="registro-container">
@@ -112,12 +126,9 @@ unset($_SESSION['form_data'], $_SESSION['mensaje']);
             <?php endif; ?>
 
             <button type="submit" class="btn-registrar"><?= $editar ? "Actualizar" : "Registrar" ?></button>
-            <a href="<?= $editar ? 'adminPanel.php' : 'Login.php' ?>" class="btn-volver">
-                ⬅ <?= $editar ? "Volver" : "Volver" ?>
-            </a>
+            <a href="<?= $urlVolver ?>" class="btn-volver">⬅ Volver</a>
         </form>
     </div>
 </div>
 </body>
 </html>
-

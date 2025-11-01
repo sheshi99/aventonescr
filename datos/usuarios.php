@@ -35,7 +35,7 @@ function insertarUsuario($nombre, $apellido, $cedula, $fecha_nacimiento, $correo
         mysqli_stmt_close($consulta);
 
         if ($inicializacion['token']) {
-            enviarCorreoActivacion($correo, $nombre, $inicializacion['token']);
+            enviarCorreoActivacion($correo, $nombre, $inicializacion['token'],$rol);
         }
 
         mysqli_close($conexion);
@@ -209,36 +209,4 @@ function editarUsuario($id_usuario, $nombre, $apellido, $cedula, $fecha_nacimien
         return ["success" => false, "error" => $e->getMessage()];
     }
 }
-
-function placaExiste($placa, $id_vehiculo = null) {
-    try {
-        $conexion = conexionBD();
-
-        if ($id_vehiculo) {
-            // Al actualizar: excluye el vehículo actual
-            $sql = "SELECT COUNT(*) AS existe FROM vehiculos WHERE numero_placa = ? AND id_vehiculo != ?";
-            $consulta = mysqli_prepare($conexion, $sql);
-            mysqli_stmt_bind_param($consulta, "si", $placa, $id_vehiculo);
-        } else {
-            // Al registrar: verifica toda la tabla
-            $sql = "SELECT COUNT(*) AS existe FROM vehiculos WHERE numero_placa = ?";
-            $consulta = mysqli_prepare($conexion, $sql);
-            mysqli_stmt_bind_param($consulta, "s", $placa);
-        }
-
-        mysqli_stmt_execute($consulta);
-        $resultado = mysqli_stmt_get_result($consulta);
-        $fila = mysqli_fetch_assoc($resultado);
-        mysqli_stmt_close($consulta);
-        mysqli_close($conexion);
-
-        return $fila['existe'] > 0;
-    } catch (Exception $e) {
-        error_log("Error en placaExiste: " . $e->getMessage());
-        return false; // o true, según prefieras manejar el error
-    }
-}
-
-
-
 ?>

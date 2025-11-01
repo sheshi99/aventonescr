@@ -137,27 +137,39 @@ function obtenerVehiculoPorId($id_vehiculo) {
 }
 
 
-
-
 function eliminarVehiculo($id_vehiculo) {
-
     $conexion = conexionBD();
     try {
-
         $sql = "DELETE FROM vehiculos WHERE id_vehiculo = ?";
         $consulta = mysqli_prepare($conexion, $sql);
         mysqli_stmt_bind_param($consulta, "i", $id_vehiculo);
 
-        mysqli_stmt_execute($consulta);
+        if (!mysqli_stmt_execute($consulta)) {
+            $errno = mysqli_errno($conexion);
+            $error = mysqli_error($conexion);
+
+            mysqli_stmt_close($consulta);
+            mysqli_close($conexion);
+
+            // Error por restricción de clave foránea
+            if ($errno == 1451) { // Código MySQL: Cannot delete or update a parent row
+                throw new Exception("El vehículo está asociado a un ride y no se puede eliminar.");
+            } else {
+                throw new Exception($error);
+            }
+        }
 
         mysqli_stmt_close($consulta);
         mysqli_close($conexion);
 
         return true;
+
     } catch (Exception $e) {
         error_log("Error en eliminarVehiculo: " . $e->getMessage());
-        return false;
+        // Re-lanzamos la excepción para PHP mostrar mensaje adecuado
+        throw $e;
     }
 }
+
 
 ?>

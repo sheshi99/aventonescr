@@ -7,6 +7,8 @@ body {
 }
 
 /* ===== Encabezado ===== */
+.reserva-header,
+.gestion-header,
 .admin-header {
     background-color: #00609f;
     color: #fff;
@@ -18,12 +20,16 @@ body {
     flex-wrap: wrap; /* para que en pantallas pequeñas no se rompa */
 }
 
+.reserva-header-left,
+.gestion-header-left,
 .admin-header-left {
     display: flex;
     align-items: center;
     gap: 10px; /* espacio entre botón y título */
 }
 
+.reserva-header-right,
+.gestion-header-right,
 .admin-header-right {
     display: flex;          /* pone los elementos en fila */
     gap: 10px;              /* espacio entre botones */
@@ -31,19 +37,23 @@ body {
     flex-wrap: wrap;        /* opcional: que no se rompa en pantallas muy pequeñas */
 }
 
+.reserva-header-right form,
+.gestion-header-right form,
 .admin-header-right form {
     display: inline-block;  /* evita que los formularios sean bloques completos */
     margin: 0;
 }
 
-
-
+.reserva-header h1,
+.gestion-header h1,
 .admin-header h1 {
     margin: 0;
     font-size: 22px;
     letter-spacing: 1px;
 }
 
+.reserva-user,
+.gestion-user,
 .admin-user {
     font-weight: 500;
     font-size: 15px;
@@ -51,6 +61,8 @@ body {
 
 
 /* ===== Contenido principal ===== */
+.reserva-main,
+.gestion-main,
 .admin-main {
     max-width: 1100px;
     margin: 30px auto;
@@ -96,6 +108,8 @@ select {
 }
 
 /* ===== Tabla de usuarios ===== */
+.tabla-reserva h2,
+.tabla-gestion h2,
 .tabla-usuarios h2 {
     color: #005ab5;
     margin-bottom: 15px;
@@ -144,6 +158,8 @@ tbody tr:hover {
     display: inline;
 }
 
+.btn-editar, .btn-eliminar,
+.btn-aceptar, .btn-cancelar, .btn-rechazar,
 .btn-activar, .btn-desactivar {
     border: none;
     padding: 8px 12px;
@@ -154,18 +170,28 @@ tbody tr:hover {
     transition: 0.3s ease;
 }
 
+.btn-editar,
+.btn-aceptar,
 .btn-activar {
     background-color: #27ae60;
 }
 
+.btn-eliminar,
+.btn-rechazar,
+.btn-cancelar,
 .btn-desactivar {
     background-color: #e74c3c;
 }
 
+.btn-ediar:hover,
+.btn-aceptar:hover,
 .btn-activar:hover {
     background-color: #1e8449;
 }
 
+.btn-eliminar:hover,
+.btn-rechazar:hover,
+.btn-cancelar:hover,
 .btn-desactivar:hover {
     background-color: #c0392b;
 }
@@ -188,7 +214,7 @@ tbody tr:hover {
 }
 
 /* ===== Botón Editar Perfil (misma forma que btn-nuevo) ===== */
-.btn-editar {
+.btn-editarAdmin {
     background-color: #d4e7f4; /* un tono más oscuro al pasar el mouse */
     color: white;
     border: none;
@@ -199,7 +225,7 @@ tbody tr:hover {
     transition: 0.3s;
 }
 
-.btn-editar:hover {
+.btn-editarAdmin:hover {
     background-color: #75bceb;
 }
 
@@ -220,4 +246,10 @@ tbody tr:hover {
 .btn-panel:hover {
     background-color: #d0e9ff;
 }
-
+.foto-vehiculo,
+.foto-usuario {
+    width: 60px;    /* ancho fijo */
+    height: 60px;   /* alto fijo */
+    object-fit: cover; /* recorta para que se vea bien */
+    border-radius: 50%; /* opcional, redondear */
+}

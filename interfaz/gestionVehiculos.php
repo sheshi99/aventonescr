@@ -21,18 +21,14 @@ $rol = htmlspecialchars($usuario['rol']);
 <head>
     <meta charset="UTF-8">
     <title>Gestión de Vehículos</title>
-    <link rel="stylesheet" href="../estilos/estilosPanelAdmin.css?v=2">
+    <link rel="stylesheet" href="../estilos/estilosTablas.css?v=2">
 </head>
 <body>
-    <div class="admin-header">
-        <div class="admin-header-left">
-            <form action="registroUsuario.php" method="get" style="display:inline;">
-                <input type="hidden" name="editar" value="1">
-                <button type="submit" class="btn-editar"> ✏️ </button>
-            </form>
-            <h1>Bienvenido <?= $nombre ?> (<?= $rol ?>)</h1>
+    <div class="gestion-header">
+        <div class="gestion-header-left">
+            <h1>Gestión de Vehiculos</h1>
         </div>
-        <div class="admin-header-right">
+        <div class="gestion-header-right">
             <form action="choferPanel.php" method="get">
                 <button type="submit" class="btn-panel">Ir al Panel</button>
             </form>
@@ -40,8 +36,8 @@ $rol = htmlspecialchars($usuario['rol']);
     </div>
 
 
-<div class="admin-main">
-    <div class="tabla-usuarios">
+<div class="gestion-main">
+    <div class="tabla-gestion">
         <h2>Mis Vehículos</h2>
 
         <?php if(!empty($_SESSION['mensaje'])): ?>
@@ -60,6 +56,7 @@ $rol = htmlspecialchars($usuario['rol']);
                     <th>Modelo</th>
                     <th>Año</th>
                     <th>Asientos</th>
+                    <th>Fotografía</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -73,15 +70,25 @@ $rol = htmlspecialchars($usuario['rol']);
                     <td><?= htmlspecialchars($vehiculo['anno']) ?></td>
                     <td><?= htmlspecialchars($vehiculo['capacidad_asientos']) ?></td>
                     <td>
-                        <form action="../interfaz/registroVehiculo.php" method="post" class="form-accion">
+                        <?php if (!empty($vehiculo['fotografia'])): ?>
+                            <img src="../logica/<?= htmlspecialchars($vehiculo['fotografia']); ?>"
+                                alt="<?= htmlspecialchars($vehiculo['marca'] . ' ' . $vehiculo['modelo']); ?>"
+                                class="foto-vehiculo">
+                        <?php else: ?>
+                            <span>No hay foto</span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <form action="../interfaz/formularioVehiculo.php" method="post" class="form-accion">
                             <input type="hidden" name="id_vehiculo" value="<?= $vehiculo['id_vehiculo'] ?>">
-                            <button type="submit" class="btn-activar">Editar</button>
+                            <button type="submit" class="btn-editar">Editar</button>
                         </form>
 
-                        <form action="../logica/procesarGestionVehiculo.php" method="post" class="form-accion">
+                        <form action="../logica/procesarVehiculo.php" method="post" class="form-accion">
                             <input type="hidden" name="accion" value="eliminar">
                             <input type="hidden" name="id_vehiculo" value="<?= $vehiculo['id_vehiculo'] ?>">
-                            <button type="submit" class="btn-desactivar" onclick="return confirm('¿Seguro que desea eliminar?')">Eliminar</button>
+                            <button type="submit" class="btn-eliminar" 
+                            onclick="return confirm('¿Seguro que desea eliminar?')">Eliminar</button>
                         </form>
                     </td>
                 </tr>
@@ -90,7 +97,7 @@ $rol = htmlspecialchars($usuario['rol']);
         </table>
 
         <br>
-        <form action="../interfaz/registroVehiculo.php" method="post">
+        <form action="../interfaz/formularioVehiculo.php" method="post">
             <button type="submit" class="btn-nuevo">Agregar Vehículo</button>
         </form>
     </div>

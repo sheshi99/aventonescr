@@ -16,17 +16,17 @@ $reservas = obtenerReservasPorUsuario($usuario['id_usuario'], $usuario['rol']);
 <head>
     <meta charset="UTF-8">
     <title>Mis Reservas</title>
-    <link rel="stylesheet" href="../Estilos/estilosPanelAdmin.css?v=2">
+    <link rel="stylesheet" href="../Estilos/estilosTablas.css?v=2">
 </head>
 <body>
 
     <!-- ===== ENCABEZADO ===== -->
-    <header class="admin-header">
-        <div class="admin-header-left">
+    <header class="reserva-header">
+        <div class="reserva-header-left">
             <h1>Mis Reservas</h1>
         </div>
 
-        <div class="admin-user">
+        <div class="reserva-user">
             <?php
             $destinoPanel = ($usuario['rol'] === 'Chofer')
                 ? '../interfaz/choferPanel.php'
@@ -39,8 +39,8 @@ $reservas = obtenerReservasPorUsuario($usuario['id_usuario'], $usuario['rol']);
     </header>
 
     <!-- ===== CONTENIDO PRINCIPAL ===== -->
-    <main class="admin-main">
-        <section class="tabla-usuarios">
+    <main class="reserva-main">
+        <section class="tabla-reserva">
 
             <!-- ===== RESERVAS ACTIVAS ===== -->
             <h2>Reservas Activas</h2>
@@ -67,13 +67,13 @@ $reservas = obtenerReservasPorUsuario($usuario['id_usuario'], $usuario['rol']);
                             <?php if ($usuario['rol'] === 'Chofer' && $r['estado'] === 'Pendiente'): ?>
                                 <form action="../logica/procesarAccionReserva.php" method="post">
                                     <input type="hidden" name="id_reserva" value="<?= $r['id_reserva'] ?>">
-                                    <button type="submit" name="accion" value="aceptar" class="btn-activar">Aceptar</button>
-                                    <button type="submit" name="accion" value="rechazar" class="btn-desactivar">Rechazar</button>
+                                    <button type="submit" name="accion" value="aceptar" class="btn-acepatar">Aceptar</button>
+                                    <button type="submit" name="accion" value="rechazar" class="btn-rechazar">Rechazar</button>
                                 </form>
                             <?php elseif ($usuario['rol'] === 'Pasajero' && in_array($r['estado'], ['Pendiente','Aceptada'])): ?>
                                 <form action="../logica/procesarAccionReserva.php" method="post">
                                     <input type="hidden" name="id_reserva" value="<?= $r['id_reserva'] ?>">
-                                    <button type="submit" name="accion" value="cancelar" class="btn-desactivar">Cancelar</button>
+                                    <button type="submit" name="accion" value="cancelar" class="btn-cancelar">Cancelar</button>
                                 </form>
                             <?php else: ?>
                                 —

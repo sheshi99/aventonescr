@@ -1,10 +1,15 @@
 <?php
-include_once("../logica/prepararVehiculoEdicion.php");
+session_start();
+include_once("../utilidades/formulariosUtilidades.php"); 
 
-// Obtener mensaje y datos del formulario si existe
-$datosFormulario = $_SESSION['datos_formulario'] ?? [];
-$mensaje = $_SESSION['mensaje'] ?? null;
-unset($_SESSION['mensaje'], $_SESSION['datos_formulario']);
+// Preparar datos del formulario y mensaje
+$formulario = prepararFormularioVehiculo();
+$vehiculo = $formulario['vehiculo'];
+$accion = $formulario['accion'];
+$datosFormulario = $formulario['datosFormulario'];
+$mensaje = $formulario['mensaje'];
+$id_vehiculo = $_POST['id_vehiculo'] ?? $vehiculo['id_vehiculo'] ?? null;
+
 ?>
 
 <!DOCTYPE html>
@@ -12,8 +17,7 @@ unset($_SESSION['mensaje'], $_SESSION['datos_formulario']);
 <head>
     <meta charset="UTF-8">
     <title><?= $accion === 'actualizar' ? "Editar Vehículo" : "Registrar Vehículo" ?></title>
-    <!-- Enlace a tu hoja de estilos -->
-    <link rel="stylesheet" href="../Estilos/estilosRegistroUsuario.css">
+    <link rel="stylesheet" href="../Estilos/estilosRegistro.css?v=2">
 </head>
 <body>
 
@@ -36,40 +40,39 @@ unset($_SESSION['mensaje'], $_SESSION['datos_formulario']);
             <div class="input-group">
                 <label for="placa">Placa:</label>
                 <input type="text" name="placa" id="placa"
-                       value="<?= htmlspecialchars($datosFormulario['placa'] ?? $vehiculo['placa']) ?>" required>
+                       value="<?= valorVehiculo('placa', $datosFormulario, $vehiculo) ?>" required>
             </div>
 
             <div class="input-group">
                 <label for="color">Color:</label>
                 <input type="text" name="color" id="color"
-                       value="<?= htmlspecialchars($datosFormulario['color'] ?? $vehiculo['color']) ?>" required>
+                       value="<?= valorVehiculo('color', $datosFormulario, $vehiculo) ?>" required>
             </div>
 
             <div class="input-group">
                 <label for="marca">Marca:</label>
                 <input type="text" name="marca" id="marca"
-                       value="<?= htmlspecialchars($datosFormulario['marca'] ?? $vehiculo['marca']) ?>" required>
+                       value="<?= valorVehiculo('marca', $datosFormulario, $vehiculo) ?>" required>
             </div>
 
             <div class="input-group">
                 <label for="modelo">Modelo:</label>
                 <input type="text" name="modelo" id="modelo"
-                       value="<?= htmlspecialchars($datosFormulario['modelo'] ?? $vehiculo['modelo']) ?>" required>
+                       value="<?= valorVehiculo('modelo', $datosFormulario, $vehiculo) ?>" required>
             </div>
 
             <div class="input-group">
-              <label for="anno">Año:</label>
-              <input type="number" name="anno" id="anno" min="1900" max="<?= date('Y') ?>"
-                     value="<?= htmlspecialchars($datosFormulario['anno'] ?? $vehiculo['anno']) ?>" required>
+                <label for="anno">Año:</label>
+                <input type="number" name="anno" id="anno" min="1900" max="<?= date('Y') ?>"
+                       value="<?= valorVehiculo('anno', $datosFormulario, $vehiculo) ?>" required>
             </div>
 
             <div class="input-group">
-              <label for="asientos">Asientos:</label>
-              <input type="number" name="asientos" id="asientos" min="1"
-                     value="<?= htmlspecialchars($datosFormulario['asientos'] ?? $vehiculo['asientos']) ?>" required>
+                <label for="asientos">Asientos:</label>
+                <input type="number" name="asientos" id="asientos" min="1"
+                       value="<?= valorVehiculo('asientos', $datosFormulario, $vehiculo) ?>" required>
             </div>
-
-
+     
             <div class="input-group">
                 <label for="foto">Foto:</label>
                 <input type="file" name="fotografia" id="foto" accept="image/*" <?= $accion === 'actualizar' ? '' : 'required' ?>>
@@ -78,7 +81,14 @@ unset($_SESSION['mensaje'], $_SESSION['datos_formulario']);
             <button type="submit" class="btn-registrar">
                 <?= $accion === 'actualizar' ? "Actualizar Vehículo" : "Registrar Vehículo" ?>
             </button>
+
+
         </form>
+
+        
+            <form action="choferPanel.php" method="get" style="display:inline;">
+                <button type="submit" class="btn-salir">Salir</button>
+            </form>
     </div>
 </div>
 

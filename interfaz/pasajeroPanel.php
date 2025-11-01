@@ -16,12 +16,20 @@ $usuario = $_SESSION['usuario'];
 <head>
     <meta charset="UTF-8">
     <title>Panel de Pasajero</title>
-    <link rel="stylesheet" href="../Estilos/estilosPanelChofer.css?v=2">
+    <link rel="stylesheet" href="../Estilos/estilosPanelUsuarios.css?v=2">
 </head>
 <body>
     <!-- Header -->
-    <header class="chofer-header">
-        <h2>Bienvenido al Panel de Pasajeros, <?= htmlspecialchars($usuario['nombre']) ?> <?= htmlspecialchars($usuario['apellido']) ?></h2>
+    <header class="pasajero-header">
+
+        <form action="registroUsuario.php" method="get">
+            <input type="hidden" name="editar" value="1">
+            <button type="submit" class="btn-editarChofer"> ✏️ </button>
+        </form>
+
+        <h2>Bienvenido al Panel de Pasajeros, <?= htmlspecialchars($usuario['nombre']) ?> 
+        <?= htmlspecialchars($usuario['apellido']) ?></h2>
+
         <form action="../logica/cerrarSesion.php" method="post">
             <button type="submit" class="btn-cerrar">Cerrar</button>
         </form>
@@ -41,8 +49,8 @@ $usuario = $_SESSION['usuario'];
     <?php endif; ?>
 
     <!-- Tarjeta principal -->
-    <div class="chofer-card">
-        <div class="menu-chofer">
+    <div class="pasajero-card">
+        <div class="menu-pasajero">
             <!-- Botón Mis Reservas -->
             <form action="misReservas.php" method="post">
                 <input type="hidden" name="desde_panel" value="1">

@@ -26,7 +26,7 @@ unset($_SESSION['form_data'], $_SESSION['mensaje']);
 <head>
     <meta charset="UTF-8">
     <title><?= $editar ? "Editar Perfil" : "Registrar Administrador" ?></title>
-    <link rel="stylesheet" href="../Estilos/estilosRegistroUsuario.css">
+    <link rel="stylesheet" href="../Estilos/estilosRegistro.css">
 </head>
 <body>
 <div class="registro-container">

@@ -21,13 +21,41 @@ body {
     box-shadow: 0 4px 25px rgba(0,0,0,0.1);
     text-align: center;
     margin-bottom: 40px;
-    color: #ffffff; /* texto blanco */
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .chofer-header h2 {
-    color: #ffffff; /* asegurar que el h2 también sea blanco */
+    color: #ffffff;
     font-size: 26px;
     margin: 0;
+}
+
+/* ===== Botón de cerrar sesión ===== */
+.btn-cerrar {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cerrar:hover {
+    background-color: #c9302c;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.btn-cerrar:active {
+    background-color: #a94442;
+    transform: scale(0.97);
 }
 
 /* ===== Tarjeta principal (botones) ===== */
@@ -46,7 +74,7 @@ body {
     transform: translateY(-3px);
 }
 
-/* ===== Menú de botones (alineados horizontalmente) ===== */
+/* ===== Menú de botones ===== */
 .menu-chofer {
     display: flex;
     justify-content: center;
@@ -54,22 +82,23 @@ body {
     flex-wrap: wrap;
 }
 
-/* ===== Botones más grandes ===== */
+/* ===== Botones del menú ===== */
 .menu-chofer button {
     background-color: #00609f;
     color: #fff;
     border: none;
-    padding: 60px 40px; /* alto y ancho del botón */
+    padding: 60px 40px;
     border-radius: 10px;
-    font-size: 24px; /* letra más grande */
+    font-size: 24px;
     font-weight: 600;
     cursor: pointer;
     transition: 0.3s ease;
     min-width: 180px;
 }
 
-
 .menu-chofer button:hover {
     background-color: #2980b9;
     transform: translateY(-2px);
 }
+
+

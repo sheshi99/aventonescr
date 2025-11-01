@@ -1,6 +1,7 @@
 <?php
 session_start();
-include_once("../datos/reservas.php"); // Debe existir la función insertarReserva($idRide, $idPasajero)
+include_once("../datos/reservas.php"); // insertarReserva()
+include_once("../datos/rides.php");    // obtenerEspaciosDisponibles()
 
 /**
  * Redirige a la página de búsqueda con un mensaje en sesión.
@@ -20,7 +21,9 @@ function validarPeticion() {
     }
 }
 
-
+/**
+ * Valida que el usuario esté logueado y sea pasajero.
+ */
 function validarUsuario() {
     $usuario = $_SESSION['usuario'] ?? null;
     if (!$usuario || $usuario['rol'] !== 'Pasajero') {
@@ -29,10 +32,26 @@ function validarUsuario() {
     return $usuario;
 }
 
+/**
+ * Verifica si hay espacios disponibles para el ride.
+ */
+function validarEspaciosDisponibles($idRide) {
+    $espacios = obtenerEspaciosDisponibles($idRide);
+    if ($espacios < 1) {
+        redirigirConMensaje('No hay espacios disponibles para este ride.', 'error');
+    }
+}
+
+/**
+ * Crea la reserva si todo está correcto.
+ */
 function crearReserva($idRide, $idPasajero) {
     if (!$idPasajero) {
         redirigirConMensaje('Usuario inválido.', 'error');
     }
+
+    // Validar espacios antes de insertar
+    validarEspaciosDisponibles($idRide);
 
     $exito = insertarReserva($idRide, $idPasajero);
 

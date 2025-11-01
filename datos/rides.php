@@ -1,7 +1,6 @@
 <?php
 include_once("../configuracion/conexion.php");
 
-
 function insertarRide($id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios) {
     $conexion = conexionBD();
     try {
@@ -21,7 +20,6 @@ function insertarRide($id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia
     }
 }
 
-
 function actualizarRide($id_ride, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios) {
     $conexion = conexionBD();
     try {
@@ -29,11 +27,9 @@ function actualizarRide($id_ride, $id_vehiculo, $nombre, $salida, $llegada, $dia
                 SET id_vehiculo=?, nombre=?, salida=?, llegada=?, dia=?, hora=?, costo=?, espacios=? 
                 WHERE id_ride=?";
         $consulta = mysqli_prepare($conexion, $sql);
-
         mysqli_stmt_bind_param($consulta, "isssssdii",
         $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios, $id_ride
         );
-
         mysqli_stmt_execute($consulta);
         mysqli_stmt_close($consulta);
         mysqli_close($conexion);
@@ -43,8 +39,6 @@ function actualizarRide($id_ride, $id_vehiculo, $nombre, $salida, $llegada, $dia
         return false;
     }
 }
-
-
 
 function eliminarRide($id_ride) {
     $conexion = conexionBD();
@@ -62,7 +56,6 @@ function eliminarRide($id_ride) {
     }
 }
 
-
 function obtenerRidePorId($id_ride) {
     $conexion = conexionBD();
     try {
@@ -72,7 +65,6 @@ function obtenerRidePorId($id_ride) {
         mysqli_stmt_execute($consulta);
         $resultado = mysqli_stmt_get_result($consulta);
         $ride = mysqli_fetch_assoc($resultado);
-
         mysqli_stmt_close($consulta);
         mysqli_close($conexion);
         return $ride;
@@ -81,7 +73,6 @@ function obtenerRidePorId($id_ride) {
         return null;
     }
 }
-
 
 function obtenerRidesPorVehiculo($id_vehiculo) {
     $conexion = conexionBD();
@@ -132,42 +123,36 @@ function obtenerRidesPorChofer($id_chofer) {
     }
 }
 
-
-function buscarRides($salida = '', $llegada = '') {
+/**
+ * Consulta rides desde la base de datos según filtros de salida y llegada.
+ */
+function consultarRides($salida = '', $llegada = '') {
     $conexion = conexionBD();
 
     $sql = "SELECT r.id_ride, r.nombre, r.salida, r.llegada, r.dia, r.hora,
-                   r.costo, r.espacios, v.marca, v.modelo, v.anno
+                   r.costo, v.marca, v.modelo, v.anno
             FROM rides r
             JOIN vehiculos v ON r.id_vehiculo = v.id_vehiculo
-            WHERE r.espacios > 0";
+            WHERE 1=1";
 
-    // Aplicar filtros dinámicos
-    $parametros = [];
+    $params = [];
     $tipos = '';
 
     if ($salida !== '') {
         $sql .= " AND r.salida LIKE ?";
-        $parametros[] = "%$salida%";
+        $params[] = "%$salida%";
         $tipos .= 's';
     }
 
     if ($llegada !== '') {
         $sql .= " AND r.llegada LIKE ?";
-        $parametros[] = "%$llegada%";
+        $params[] = "%$llegada%";
         $tipos .= 's';
     }
 
-    $sql .= " ORDER BY r.dia, r.hora ASC";
-
     $stmt = mysqli_prepare($conexion, $sql);
-    if (!$stmt) {
-        error_log("Error preparando la consulta: " . mysqli_error($conexion));
-        return [];
-    }
-
-    if (!empty($parametros)) {
-        mysqli_stmt_bind_param($stmt, $tipos, ...$parametros);
+    if ($params) {
+        mysqli_stmt_bind_param($stmt, $tipos, ...$params);
     }
 
     mysqli_stmt_execute($stmt);
@@ -180,6 +165,87 @@ function buscarRides($salida = '', $llegada = '') {
 
     mysqli_stmt_close($stmt);
     mysqli_close($conexion);
+
     return $rides;
+}
+
+/**
+ * Filtra solo los rides que tienen espacios disponibles.
+ */
+function filtrarEspaciosDisponibles($rides) {
+    $resultado = [];
+    foreach ($rides as $fila) {
+        $disponibles = obtenerEspaciosDisponibles($fila['id_ride']);
+        if ($disponibles > 0) {
+            $fila['espacios'] = $disponibles;
+            $resultado[] = $fila;
+        }
+    }
+    return $resultado;
+}
+
+/**
+ * Ordena los rides según columna y dirección.
+ * Columnas válidas: 'dia', 'salida', 'llegada'
+ * Direcciones válidas: 'ASC', 'DESC'
+ */
+function ordenamientoRides($rides, $columna = 'dia', $direccion = 'ASC') {
+    $columnas_validas = ['dia', 'salida', 'llegada'];
+    $direccion_validas = ['ASC', 'DESC'];
+
+    if (!in_array($columna, $columnas_validas)) $columna = 'dia';
+    if (!in_array($direccion, $direccion_validas)) $direccion = 'ASC';
+
+    usort($rides, function($a, $b) use ($columna, $direccion) {
+        // Primero comparo por la columna elegida
+        $cmp = strcmp($a[$columna], $b[$columna]);
+        if ($cmp === 0) {
+            // Si es la misma fecha/lugar, comparo por hora
+            $cmp = strtotime($a['hora']) <=> strtotime($b['hora']);
+        }
+        return ($direccion === 'ASC') ? $cmp : -$cmp;
+    });
+
+    return $rides;
+}
+
+/**
+ * Función principal para buscar rides filtrados y ordenados
+ */
+function buscarRides($salida = '', $llegada = '', $columna = 'dia', $direccion = 'ASC') {
+    $rides = consultarRides($salida, $llegada);
+    $rides = filtrarEspaciosDisponibles($rides);
+    $rides = ordenamientoRides($rides, $columna, $direccion);
+    return $rides;
+}
+
+
+/**
+ * Obtiene la cantidad de espacios disponibles para un ride
+ */
+function obtenerEspaciosDisponibles($idRide) {
+    $conexion = conexionBD();
+
+    // Pasajeros con reserva aceptada
+    $sql = "SELECT COUNT(*) AS ocupados FROM reservas 
+            WHERE id_ride = ? AND estado = 'Aceptada'";
+    $stmt = mysqli_prepare($conexion, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $idRide);
+    mysqli_stmt_execute($stmt);
+    $resultado = mysqli_stmt_get_result($stmt);
+    $ocupados = mysqli_fetch_assoc($resultado)['ocupados'] ?? 0;
+    mysqli_stmt_close($stmt);
+
+    // Capacidad total del ride
+    $sql2 = "SELECT espacios FROM rides WHERE id_ride = ?";
+    $stmt2 = mysqli_prepare($conexion, $sql2);
+    mysqli_stmt_bind_param($stmt2, "i", $idRide);
+    mysqli_stmt_execute($stmt2);
+    $resultado2 = mysqli_stmt_get_result($stmt2);
+    $total = mysqli_fetch_assoc($resultado2)['espacios'] ?? 0;
+    mysqli_stmt_close($stmt2);
+
+    mysqli_close($conexion);
+    return $total - $ocupados;
 }
 ?>

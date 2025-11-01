@@ -21,26 +21,23 @@ $rol = htmlspecialchars($usuario['rol']);
 <head>
     <meta charset="UTF-8">
     <title>Gestión de Vehículos</title>
-    <link rel="stylesheet" href="../estilos/estilosPanelAdmin.css">
+    <link rel="stylesheet" href="../estilos/estilosPanelAdmin.css?v=2">
 </head>
 <body>
-
-<div class="admin-header">
-    <div class="admin-header-left">
-
-         <form action="registroUsuario.php" method="get" style="display:inline;">
+    <div class="admin-header">
+        <div class="admin-header-left">
+            <form action="registroUsuario.php" method="get" style="display:inline;">
                 <input type="hidden" name="editar" value="1">
                 <button type="submit" class="btn-editar"> ✏️ </button>
-        </form>
-        <h1>Bienvenido <?= $nombre ?> (<?= $rol ?>)</h1>
+            </form>
+            <h1>Bienvenido <?= $nombre ?> (<?= $rol ?>)</h1>
+        </div>
+        <div class="admin-header-right">
+            <form action="choferPanel.php" method="get">
+                <button type="submit" class="btn-panel">Ir al Panel</button>
+            </form>
+        </div>
     </div>
-    <div class="admin-header-right">
-
-        <form action="../logica/cerrarSesion.php" method="post" style="display:inline;">
-            <button type="submit" class="btn-cerrar">Cerrar</button>
-        </form>
-    </div>
-</div>
 
 
 <div class="admin-main">

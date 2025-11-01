@@ -17,15 +17,19 @@ $nombre_chofer = isset($_SESSION['usuario']['nombre']) ? $_SESSION['usuario']['n
 <head>
     <meta charset="UTF-8">
     <title>Panel del Chofer</title>
-    <link rel="stylesheet" href="../estilos/estilosPanelChofer.css">
+    <link rel="stylesheet" href="../Estilos/estilosPanelChofer.css?v=2">
 </head>
 <body>
     <!-- Header con bienvenida -->
     <header class="chofer-header">
-        <h2>Bienvenido, <?= htmlspecialchars($nombre_chofer) ?></h2>
-        <a href="../logica/cerrarSesion.php" class="btn-cerrar" style="margin-left: 15px; color: white; text-decoration: none;">
-            🔒 Cerrar Sesión
-        </a>
+        <form action="registroUsuario.php" method="get" style="display:inline;">
+            <input type="hidden" name="editar" value="1">
+            <button type="submit" class="btn-editar"> ✏️ </button>
+        </form>
+        <h2>Bienvenido al Panel de Chofer, <?= htmlspecialchars($nombre_chofer) ?></h2>
+        <form action="../logica/cerrarSesion.php" method="post">
+            <button type="submit" class="btn-cerrar">Cerrar</button>
+        </form>
     </header>
 
     <!-- Tarjeta principal con botones -->
@@ -33,6 +37,7 @@ $nombre_chofer = isset($_SESSION['usuario']['nombre']) ? $_SESSION['usuario']['n
         <div class="menu-chofer">
             <button onclick="location.href='gestionVehiculos.php'">Gestión de Vehículos</button>
             <button onclick="location.href='gestionRides.php'">Gestión de Rides</button>
+            <button onclick="location.href='misReservas.php'">Mis Reservas</button>
         </div>
     </div>
 </body>

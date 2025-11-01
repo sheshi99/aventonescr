@@ -24,6 +24,19 @@ body {
     gap: 10px; /* espacio entre botón y título */
 }
 
+.admin-header-right {
+    display: flex;          /* pone los elementos en fila */
+    gap: 10px;              /* espacio entre botones */
+    align-items: center;    /* centra verticalmente */
+    flex-wrap: wrap;        /* opcional: que no se rompa en pantallas muy pequeñas */
+}
+
+.admin-header-right form {
+    display: inline-block;  /* evita que los formularios sean bloques completos */
+    margin: 0;
+}
+
+
 
 .admin-header h1 {
     margin: 0;
@@ -190,6 +203,21 @@ tbody tr:hover {
     background-color: #75bceb;
 }
 
+.btn-login,
+.btn-panel {
+    background-color: #ffffff;
+    color: #00609f;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+    text-decoration: none;
+}
 
-
+.btn-login:hover,
+.btn-panel:hover {
+    background-color: #d0e9ff;
+}
 

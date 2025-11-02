@@ -40,7 +40,7 @@ CREATE TABLE rides (
     salida VARCHAR(100) NOT NULL,
     llegada VARCHAR(100) NOT NULL,
     dia DATE NOT NULL,         -- campo tipo DATE
-    hora TIME NOT NULL
+    hora TIME NOT NULL,
     costo NUMERIC(10,2) NOT NULL,
     espacios INT NOT NULL,
     CONSTRAINT fk_chofer_rides FOREIGN KEY (id_chofer) REFERENCES usuarios(id_usuario),

@@ -7,7 +7,7 @@ include_once("../datos/rides.php");    // obtenerEspaciosDisponibles()
  * Redirige a la página de búsqueda con un mensaje en sesión.
  */
 function redirigirConMensaje($mensaje, $tipo = 'info', $destino = '../interfaz/buscarRide.php') {
-    $_SESSION['mensaje_reserva'] = ['texto' => $mensaje, 'tipo' => $tipo];
+    $_SESSION['mensaje_esperado'] = ['texto' => $mensaje, 'tipo' => $tipo];
     header("Location: $destino");
     exit;
 }

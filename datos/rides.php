@@ -1,6 +1,9 @@
 <?php
 include_once("../configuracion/conexion.php");
 
+/**
+ * Inserta un nuevo ride
+ */
 function insertarRide($id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios) {
     $conexion = conexionBD();
     try {
@@ -20,6 +23,9 @@ function insertarRide($id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia
     }
 }
 
+/**
+ * Actualiza un ride existente
+ */
 function actualizarRide($id_ride, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios) {
     $conexion = conexionBD();
     try {
@@ -40,6 +46,9 @@ function actualizarRide($id_ride, $id_vehiculo, $nombre, $salida, $llegada, $dia
     }
 }
 
+/**
+ * Elimina un ride
+ */
 function eliminarRide($id_ride) {
     $conexion = conexionBD();
     try {
@@ -56,6 +65,9 @@ function eliminarRide($id_ride) {
     }
 }
 
+/**
+ * Obtiene un ride por su ID
+ */
 function obtenerRidePorId($id_ride) {
     $conexion = conexionBD();
     try {
@@ -73,7 +85,6 @@ function obtenerRidePorId($id_ride) {
         return null;
     }
 }
-
 function obtenerRidesPorVehiculo($id_vehiculo) {
     $conexion = conexionBD();
     try {
@@ -123,14 +134,15 @@ function obtenerRidesPorChofer($id_chofer) {
     }
 }
 
+
 /**
- * Consulta rides desde la base de datos según filtros de salida y llegada.
+ * Consulta rides según filtros de fecha, salida y llegada
  */
-function consultarRides($salida = '', $llegada = '') {
+function consultarRides($fecha = '', $salida = '', $llegada = '') {
     $conexion = conexionBD();
 
     $sql = "SELECT r.id_ride, r.nombre, r.salida, r.llegada, r.dia, r.hora,
-                   r.costo, v.marca, v.modelo, v.anno
+                   r.costo, r.espacios, v.marca, v.modelo, v.anno
             FROM rides r
             JOIN vehiculos v ON r.id_vehiculo = v.id_vehiculo
             WHERE 1=1";
@@ -138,19 +150,28 @@ function consultarRides($salida = '', $llegada = '') {
     $params = [];
     $tipos = '';
 
+    // Filtro por fecha exacta
+    if ($fecha !== '') {
+        $sql .= " AND r.dia = ?";
+        $params[] = $fecha;
+        $tipos .= 's';
+    }
+
+    // Filtro por salida
     if ($salida !== '') {
         $sql .= " AND r.salida LIKE ?";
         $params[] = "%$salida%";
         $tipos .= 's';
     }
 
+    // Filtro por llegada
     if ($llegada !== '') {
         $sql .= " AND r.llegada LIKE ?";
         $params[] = "%$llegada%";
         $tipos .= 's';
     }
 
-    // ===== Agregar condición para rides que no han ocurrido aún =====
+    // Solo rides futuros
     $sql .= " AND STR_TO_DATE(CONCAT(r.dia,' ',r.hora), '%Y-%m-%d %H:%i:%s') > NOW()";
 
     $stmt = mysqli_prepare($conexion, $sql);
@@ -172,26 +193,18 @@ function consultarRides($salida = '', $llegada = '') {
     return $rides;
 }
 
-
 /**
- * Filtra solo los rides que tienen espacios disponibles.
+ * Calcula espacios disponibles para cada ride
  */
 function filtrarEspaciosDisponibles($rides) {
-    $resultado = [];
-    foreach ($rides as $fila) {
-        $disponibles = obtenerEspaciosDisponibles($fila['id_ride']);
-        if ($disponibles > 0) {
-            $fila['espacios'] = $disponibles;
-            $resultado[] = $fila;
-        }
+    foreach ($rides as &$fila) {
+        $fila['espacios_disponibles'] = obtenerEspaciosDisponibles($fila['id_ride']);
     }
-    return $resultado;
+    return $rides;
 }
 
 /**
- * Ordena los rides según columna y dirección.
- * Columnas válidas: 'dia', 'salida', 'llegada'
- * Direcciones válidas: 'ASC', 'DESC'
+ * Ordena rides por columna y dirección
  */
 function ordenamientoRides($rides, $columna = 'dia', $direccion = 'ASC') {
     $columnas_validas = ['dia', 'salida', 'llegada'];
@@ -201,10 +214,8 @@ function ordenamientoRides($rides, $columna = 'dia', $direccion = 'ASC') {
     if (!in_array($direccion, $direccion_validas)) $direccion = 'ASC';
 
     usort($rides, function($a, $b) use ($columna, $direccion) {
-        // Primero comparo por la columna elegida
         $cmp = strcmp($a[$columna], $b[$columna]);
         if ($cmp === 0) {
-            // Si es la misma fecha/lugar, comparo por hora
             $cmp = strtotime($a['hora']) <=> strtotime($b['hora']);
         }
         return ($direccion === 'ASC') ? $cmp : -$cmp;
@@ -214,15 +225,14 @@ function ordenamientoRides($rides, $columna = 'dia', $direccion = 'ASC') {
 }
 
 /**
- * Función principal para buscar rides filtrados y ordenados
+ * Busca rides según filtros y orden
  */
-function buscarRides($salida = '', $llegada = '', $columna = 'dia', $direccion = 'ASC') {
-    $rides = consultarRides($salida, $llegada);
+function buscarRides($fecha = '', $salida = '', $llegada = '', $columna = 'dia', $direccion = 'ASC') {
+    $rides = consultarRides($fecha, $salida, $llegada);
     $rides = filtrarEspaciosDisponibles($rides);
     $rides = ordenamientoRides($rides, $columna, $direccion);
     return $rides;
 }
-
 
 /**
  * Obtiene la cantidad de espacios disponibles para un ride

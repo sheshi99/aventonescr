@@ -6,7 +6,7 @@ include_once("../datos/rides.php");
  * Guarda un mensaje en sesión y redirige.
  */
 function mostrarMensajeYRedirigir($mensaje, $tipo = 'info', $destino = '../interfaz/buscarRide.php') {
-    $_SESSION['mensaje'] = ['texto' => $mensaje, 'tipo' => $tipo];
+    $_SESSION['mensaje_esperado'] = ['texto' => $mensaje, 'tipo' => $tipo];
     header("Location: $destino");
     exit;
 }
@@ -38,7 +38,15 @@ function ejecutarBusqueda($salida, $llegada) {
         mostrarMensajeYRedirigir("Debe ingresar al menos un filtro.", "error");
     }
 
-    $rides = buscarRides($salida, $llegada);
+    // --- Obtener rides filtrados ---
+    $fecha = '';
+    $rides = buscarRides($fecha, $salida, $llegada);
+
+    // --- Agregar campo espacios_disponibles para cada ride ---
+    foreach ($rides as &$r) {
+        $r['espacios_disponibles'] = obtenerEspaciosDisponibles($r['id_ride']);
+    }
+    unset($r); // buena práctica
 
     if (empty($rides)) {
         $_SESSION['mensaje'] = ['texto' => 'No se encontraron rides.', 'tipo' => 'info'];
@@ -55,4 +63,4 @@ function ejecutarBusqueda($salida, $llegada) {
 validarMetodoPOST();
 list($salida, $llegada) = obtenerFiltros();
 ejecutarBusqueda($salida, $llegada);
-?>
+

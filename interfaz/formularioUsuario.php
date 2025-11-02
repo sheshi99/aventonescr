@@ -16,20 +16,26 @@ session_start();
 include_once("../datos/usuarios.php");
 
 // ----------------------------
+// DETECTAR SI VIENE DE PÁGINA PÚBLICA
+// ----------------------------
+$esPublico = isset($_GET['publico']) && $_GET['publico'] == 1;
+
+// ----------------------------
 // DETECTAR ROL DEL USUARIO PARA EL BOTÓN VOLVER
 // ----------------------------
 $rolUsuario = $_SESSION['usuario']['rol'] ?? null;
 
-if ($rolUsuario === 'Chofer') {
+if ($esPublico) {
+    $urlVolver = 'index.php'; // visitante público
+} elseif ($rolUsuario === 'Chofer') {
     $urlVolver = 'choferPanel.php';
 } elseif ($rolUsuario === 'Pasajero') {
     $urlVolver = 'pasajeroPanel.php';
-} else if($rolUsuario === 'administrador'){
+} elseif ($rolUsuario === 'administrador') {
     $urlVolver = 'adminPanel.php';
-}else {
-    $urlVolver = 'Login.php'; // fallback por si no hay sesión
-}
-    
+} else {
+    $urlVolver = 'Login.php'; // fallback
+}  
 // ----------------------------
 // OBTENER DATOS DEL USUARIO
 // ----------------------------

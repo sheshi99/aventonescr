@@ -211,6 +211,4 @@ function editarUsuario($id_usuario, $nombre, $apellido, $cedula, $fecha_nacimien
 }
 
 
-
-
 ?>

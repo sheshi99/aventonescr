@@ -17,20 +17,30 @@ $nombre_chofer = isset($_SESSION['usuario']['nombre']) ? $_SESSION['usuario']['n
 <head>
     <meta charset="UTF-8">
     <title>Panel del Chofer</title>
-    <link rel="stylesheet" href="../Estilos/estilosPanelChofer.css?v=2">
+    <link rel="stylesheet" href="../Estilos/estilosPanelUsuarios.css?v=2">
 </head>
 <body>
     <!-- Header con bienvenida -->
     <header class="chofer-header">
-        <form action="registroUsuario.php" method="get" style="display:inline;">
-            <input type="hidden" name="editar" value="1">
-            <button type="submit" class="btn-editar"> ✏️ </button>
+        <form action="registroUsuario.php" method="POST">
+            <input type="hidden" name="accion" value="actualizar">
+            <input type="hidden" name="id_usuario" value="<?= $_SESSION['usuario']['id_usuario'] ?>">
+            <button type="submit" class="btn-editarPasajero">✏️</button>
         </form>
+
         <h2>Bienvenido al Panel de Chofer, <?= htmlspecialchars($nombre_chofer) ?></h2>
+
         <form action="../logica/cerrarSesion.php" method="post">
             <button type="submit" class="btn-cerrar">Cerrar</button>
         </form>
     </header>
+
+            <?php if(!empty($_SESSION['mensaje'])): ?>
+                <p style="color: <?= $_SESSION['mensaje']['tipo'] === 'error' ? 'red' : 'green' ?>; font-weight: bold;">
+                    <?= htmlspecialchars($_SESSION['mensaje']['texto']) ?>
+                </p>
+                <?php unset($_SESSION['mensaje']); ?>
+            <?php endif; ?>
 
     <!-- Tarjeta principal con botones -->
     <div class="chofer-card">

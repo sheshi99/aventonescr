@@ -17,7 +17,7 @@ $id_vehiculo = $_POST['id_vehiculo'] ?? $vehiculo['id_vehiculo'] ?? null;
 <head>
     <meta charset="UTF-8">
     <title><?= $accion === 'actualizar' ? "Editar Vehículo" : "Registrar Vehículo" ?></title>
-    <link rel="stylesheet" href="../Estilos/estilosRegistroUsuario.css">
+    <link rel="stylesheet" href="../Estilos/estilosRegistro.css?v=2">
 </head>
 <body>
 

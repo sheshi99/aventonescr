@@ -55,13 +55,15 @@ function validarCostoEspacios($datos, $id_ride = null) {
     if (!is_numeric($datos['costo']) || $datos['costo'] <= 0) {
         redirigirMsjRide(
             "❌ Costo inválido", "../interfaz/formularioRide.php",
-            "error", $datos, 'costo', $id_ride, $id_ride ? 'actualizar' : 'insertar'
+            "error", $datos, 'costo', $id_ride, $id_ride ? 
+            'actualizar' : 'insertar'
         );
     }
     if (!is_numeric($datos['espacios']) || $datos['espacios'] < 1) {
         redirigirMsjRide(
             "❌ Espacios inválidos", "../interfaz/formularioRide.php",
-            "error", $datos, 'espacios', $id_ride, $id_ride ? 'actualizar' : 'insertar'
+            "error", $datos, 'espacios', $id_ride, $id_ride ? '
+            actualizar' : 'insertar'
         );
     }
 }
@@ -71,19 +73,20 @@ function validarCapacidadesVehiculo($datos, $id_ride = null) {
     if (!$vehiculo) {
         redirigirMsjRide(
             "❌ Vehículo no encontrado", "../interfaz/formularioRide.php",
-            "error", $datos,'id_vehiculo', $id_ride, $id_ride ? 'actualizar' : 'insertar'
+            "error", $datos,'id_vehiculo', $id_ride, $id_ride ? 
+            'actualizar' : 'insertar'
         );
     }
     if ($datos['espacios'] > $vehiculo['capacidad_asientos']) {
         redirigirMsjRide(
-            "⚠️ El vehículo solo tiene {$vehiculo['capacidad_asientos']} asientos disponibles.",
-            "../interfaz/formularioRide.php","error", $datos,'espacios',
-            $id_ride, $id_ride ? 'actualizar' : 'insertar'
+            "⚠️ El vehículo solo tiene {$vehiculo['capacidad_asientos']} 
+            asientos disponibles.", "../interfaz/formularioRide.php","error",
+            $datos,'espacios', $id_ride, $id_ride ? 'actualizar' : 'insertar'
         );
     }
 }
 
-function vehiculoOcupado($id_vehiculo, $dia, $hora, $id_ride_actual = null) {  // CORREGIDO
+function vehiculoOcupado($id_vehiculo, $dia, $hora, $id_ride_actual = null) { 
     $horaNorm = date('H:i', strtotime($hora));
     $diaNorm = date('Y-m-d', strtotime($dia));
 
@@ -92,7 +95,7 @@ function vehiculoOcupado($id_vehiculo, $dia, $hora, $id_ride_actual = null) {  /
     foreach ($ridesVehiculo as $ride) {
         if ($id_ride_actual && $ride['id_ride'] == $id_ride_actual) continue;
 
-        $rideDia = date('Y-m-d', strtotime($ride['dia'])); // CORREGIDO
+        $rideDia = date('Y-m-d', strtotime($ride['dia'])); 
         $rideHora = date('H:i', strtotime($ride['hora']));
 
         if ($rideDia === $diaNorm && $rideHora === $horaNorm) {
@@ -191,12 +194,14 @@ function actualizarRideAction($id_ride) {
     validarRide($datos, $id_ride);
 
     $ok = actualizarRide(
-        $id_ride, $datos['id_vehiculo'], $datos['nombre'], $datos['salida'], $datos['llegada'],
-        $datos['dia'], $datos['hora'], $datos['costo'], $datos['espacios']
+        $id_ride, $datos['id_vehiculo'], $datos['nombre'], $datos['salida'], 
+        $datos['llegada'], $datos['dia'], $datos['hora'], $datos['costo'], 
+        $datos['espacios']
     );
 
     if ($ok) {
-        redirigirMsjRide("✅ Ride actualizado", "../interfaz/gestionRides.php", "success");
+        redirigirMsjRide("✅ Ride actualizado", "../interfaz/gestionRides.php", 
+                        "success");
     } else {
         redirigirMsjRide(
             "❌ Error al actualizar",
@@ -223,7 +228,8 @@ function insertarRideAction($id_chofer) {
     );
 
     if ($ok) {
-        redirigirMsjRide("✅ Ride registrado", "../interfaz/gestionRides.php", "success");
+        redirigirMsjRide("✅ Ride registrado", "../interfaz/gestionRides.php", 
+                        "success");
     } else {
         redirigirMsjRide(
             "❌ Error al registrar",

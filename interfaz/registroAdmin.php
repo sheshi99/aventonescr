@@ -9,24 +9,26 @@ if (!isset($_SESSION['usuario'])) {
     exit;
 }
 
-// Preparar datos del formulario
+
 $preparacion = prepararFormularioUsuario();
 $usuario = $preparacion['usuario'];
 $accion = $preparacion['accion'];
 $mensaje = $preparacion['mensaje'];
 $datosFormulario = $preparacion['datosFormulario'];
 ?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title><?= $accion === 'actualizar' ? "Editar Perfil" : "Registrar Administrador" ?></title>
-    <link rel="stylesheet" href="../Estilos/estilosRegistroUsuario.css">
+    <title><?= $accion==='actualizar' ? "Editar Administrador" : "Registrar Administrador" ?></title>
+    <link rel="stylesheet" href="../Estilos/estilosRegistro.css">
 </head>
 <body>
 <div class="registro-container">
     <div class="form-card">
-        <h2><?= $accion === 'actualizar' ? "Editar Perfil" : "Registrar Administrador" ?></h2>
+        <h2><?= $accion === 'actualizar' ? "Editar Administrador" : "Registrar Administrador" ?></h2>
 
         <!-- Mensaje -->
         <?php if (!empty($mensaje)): 
@@ -39,7 +41,7 @@ $datosFormulario = $preparacion['datosFormulario'];
             <div class="alert <?= $clase ?>"><?= htmlspecialchars($mensaje['texto']) ?></div><br>
         <?php endif; ?>
 
-        <form action="../logica/procesarRegistro.php" method="POST" enctype="multipart/form-data">
+        <form action="../logica/procesarUsuarios.php" method="POST" enctype="multipart/form-data">
             
             <!-- Hidden inputs -->
             <?php if($accion === 'actualizar'): ?>

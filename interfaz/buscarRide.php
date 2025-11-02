@@ -23,7 +23,7 @@ unset($_SESSION['mensaje_reserva']);
 <head>
     <meta charset="UTF-8">
     <title>Buscar Rides</title>
-    <link rel="stylesheet" href="../Estilos/estilosBuscarRide.css">
+    <link rel="stylesheet" href="../Estilos/estilosBuscarRide.css?v=2">
 </head>
 <body>
 

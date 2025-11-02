@@ -2,48 +2,41 @@
 <?php
 
 
-function origenFormulario($rol = '', $editar = false) {
-    return ($rol === 'Administrador') ? "../interfaz/registroAdmin.php" 
-                                     : "../interfaz/registroUsuario.php";
-}
-
-function redirigirMsjUsuario($mensaje, $tipo = 'info', $datosFormulario = [], 
-    $campoError = null, $idUsuario = null, $accion = null
-) {
+function redirigirMsjUsuario($mensaje, $destino, $tipo = 'info', $datosFormulario = [], 
+                             $campoError = null, $idUsuario = null, $accion = null) {
     // Guardar mensaje en sesión
     $_SESSION['mensaje'] = ['texto' => $mensaje, 'tipo' => $tipo];
 
-    // Limpiar contraseñas si hubo error
-    if (in_array($campoError, ['contrasena','contrasena2'])) {
-        $datosFormulario['contrasena'] = '';
-        $datosFormulario['contrasena2'] = '';
-    }
+    // Limpiar contraseñas por seguridad
+    if (isset($datosFormulario['contrasena'])) $datosFormulario['contrasena'] = '';
+    if (isset($datosFormulario['contrasena2'])) $datosFormulario['contrasena2'] = '';
 
-    // Limpiar solo el campo específico si es otro error
-    if ($campoError && !in_array($campoError, ['contrasena','contrasena2']) && isset($datosFormulario[$campoError])) {
+    // Limpiar campo con error si existe
+    if ($campoError && isset($datosFormulario[$campoError])) {
         $datosFormulario[$campoError] = '';
     }
 
     // Guardar ID y acción si se proporcionan
-    if ($idUsuario) {
+    if ($idUsuario !== null) {
         $datosFormulario['id_usuario'] = $idUsuario;
     }
-    if ($accion) {
-        $datosFormulario['editar'] = ($accion === 'actualizar');
+    if ($accion !== null) {
+        $datosFormulario['accion'] = $accion;
     }
 
     // Guardar datos del formulario en sesión
     $_SESSION['datos_formulario'] = $datosFormulario;
 
-    // Determinar rol y si es edición
-    $rol = $datosFormulario['rol'] ?? '';
-    $editar = $datosFormulario['editar'] ?? false;
-
-    // Redirigir al formulario correcto según rol y edición
-    header("Location: " . origenFormulario($rol, $editar));
+    // Redirigir
+    header("Location: $destino");
     exit;
 }
 
+
+
+function valorUsuario($campo, $datosFormulario, $usuario) {
+    return htmlspecialchars($datosFormulario[$campo] ?? $usuario[$campo] ?? '');
+}
 
 
 function redirigirMsjRide($mensaje, $destino, $tipo = 'info', $datosFormulario = [], 

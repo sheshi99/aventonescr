@@ -57,6 +57,7 @@ input[type="password"],
 input[type="date"],
 input[type="file"],
 input[type="number"],
+input[type="time"],
 select {
     width: 100% !important;
     padding: 10px 12px;

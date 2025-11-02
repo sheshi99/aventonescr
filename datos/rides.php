@@ -150,6 +150,9 @@ function consultarRides($salida = '', $llegada = '') {
         $tipos .= 's';
     }
 
+    // ===== Agregar condición para rides que no han ocurrido aún =====
+    $sql .= " AND STR_TO_DATE(CONCAT(r.dia,' ',r.hora), '%Y-%m-%d %H:%i:%s') > NOW()";
+
     $stmt = mysqli_prepare($conexion, $sql);
     if ($params) {
         mysqli_stmt_bind_param($stmt, $tipos, ...$params);
@@ -168,6 +171,7 @@ function consultarRides($salida = '', $llegada = '') {
 
     return $rides;
 }
+
 
 /**
  * Filtra solo los rides que tienen espacios disponibles.

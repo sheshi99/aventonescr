@@ -13,15 +13,16 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
 <head>
     <meta charset="UTF-8">
     <title>Panel de Administrador</title>
-    <link rel="stylesheet" href="../Estilos/estilosPanelAdmin.css">
+    <link rel="stylesheet" href="../Estilos/estilosTablas.css?v=2">
 </head>
 <body>
     <header class="admin-header">
         <div class="admin-header-left">
             <!-- Botón Editar Perfil a la izquierda -->
-            <form action="registroAdmin.php" method="get" style="display:inline;">
-                <input type="hidden" name="editar" value="1">
-                <button type="submit" class="btn-editar"> ✏️ </button>
+             <form action="registroAdmin.php" method="POST">                
+                <input type="hidden" name="accion" value="actualizar">
+                <input type="hidden" name="id_usuario" value="<?= $_SESSION['usuario']['id_usuario'] ?>">
+                <button type="submit" class="btn-editarAdmin">✏️</button>
             </form>
 
             <h1>Panel de Administración</h1>
@@ -76,6 +77,7 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
                             <th>Correo</th>
                             <th>Teléfono</th>
                             <th>Estado</th>
+                            <th>Fotografía</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -93,11 +95,22 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
                                     </span>
                                 </td>
                                 <td>
+                                    <?php if (!empty($usuario['fotografia'])): ?>
+                                        <img src="<?php echo '../logica/' . htmlspecialchars($usuario['fotografia']); ?>"
+                                             alt="<?= htmlspecialchars($usuario['nombre']); ?>" 
+                                             class="foto-usuario">
+                                    <?php else: ?>
+                                        <span>No hay foto</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
                                     <form method="POST" class="form-accion">
                                         <input type="hidden" name="id_usuario" value="<?php echo $usuario['id_usuario']; ?>">
-                                        <input type="hidden" name="accion" value="<?php echo $usuario['estado']==='Activo' ? 'desactivar' : 'activar'; ?>">
+                                        <input type="hidden" name="accion" value="<?php echo $usuario
+                                        ['estado']==='Activo' ? 'desactivar' : 'activar'; ?>">
                                         <input type="hidden" name="filtro_rol" value="<?php echo htmlspecialchars($rolFiltrado); ?>"> 
-                                        <button type="submit" class="<?php echo $usuario['estado']==='Activo' ? 'btn-desactivar' : 'btn-activar'; ?>">
+                                        <button type="submit" class="<?php echo $usuario
+                                        ['estado']==='Activo' ? 'btn-desactivar' : 'btn-activar'; ?>">
                                             <?php echo $usuario['estado']==='Activo' ? 'Desactivar' : 'Activar'; ?>
                                         </button>
                                     </form>

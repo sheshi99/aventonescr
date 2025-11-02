@@ -1,0 +1,297 @@
+/* ===== Estilos generales ===== */
+body {
+    font-family: "Poppins", Arial, sans-serif;
+    background: linear-gradient(135deg, #d3e4fa);
+    margin: 0;
+    color: #333;
+}
+
+/* ===== Encabezado ===== */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* separa izquierda y derecha */
+    background-color: #00609f;
+    color: #fff;
+    padding: 15px 40px;
+    position: relative;
+}
+
+/* Contenedor del título de la izquierda */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-right {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.header-right form {
+    display: inline-block;
+    margin: 0;
+}
+
+.header h2 {
+    color: #ffffff;
+    font-size: 26px;
+    margin: 0;
+}
+
+/* CENTRAR el nombre de usuario */
+.header h2:nth-child(2), .user-info h2 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+}
+
+.user-info {
+    font-weight: 500;
+    font-size: 15px;
+}
+
+/* ===== Contenido principal ===== */
+.main {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* ===== Sección de filtros ===== */
+.filtros {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.form-filtro label {
+    font-weight: 600;
+    margin-right: 10px;
+    color: #005ab5;
+}
+
+select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* ===== Botones generales ===== */
+.btn {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-nuevo {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-nuevo:hover {
+    background-color: #1e8449;
+}
+
+
+.btn-cerrar {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cerrar:hover {
+    background-color: #c9302c;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.btn-cerrar:active {
+    background-color: #a94442;
+    transform: scale(0.97);
+}
+
+.btn-login,
+.btn-panel {
+    background-color: #ffffff;
+    color: #00609f;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-login:hover,
+.btn-panel:hover {
+    background-color: #d0e9ff;
+}
+
+/* ===== Tabla ===== */
+.tabla h2 {
+    color: #005ab5;
+    margin-bottom: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+thead {
+    background-color: #00609f;
+    color: white;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: center;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f7f9fc;
+}
+
+tbody tr:hover {
+    background-color: #ecf5ff;
+}
+
+/* ===== Estado visual ===== */
+.estado.activo {
+    color: #27ae60;
+    font-weight: 600;
+}
+
+.estado.inactivo {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+/* ===== Botones de acción en tabla ===== */
+.form-accion {
+    display: inline;
+}
+.btn-rojo,
+.btn-verde {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.btn-verde {
+    background-color:#27ae60;
+
+}
+
+.btn-verde:hover {
+    background-color: #1e8449;
+}
+
+.btn-rojo {
+    background-color: #d9534f;
+
+}
+
+.btn-rojo:hover {
+    background-color: #c9302c;
+}
+
+/* ===== Fotos ===== */
+.foto {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* ===== Menú desplegable ===== */
+.menu-contenedor {
+    position: relative;
+    display: inline-block;
+    margin-left: 10px; /* ← separa del borde izquierdo */
+}
+
+.toggle-menu {
+    display: none;
+}
+
+.btn-menu {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+.btn-menu:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.menu-opciones {
+    display: none;
+    position: absolute;
+    top: 35px;
+    left: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    min-width: 180px;
+    z-index: 100;
+    flex-direction: column;
+    padding: 8px 0;
+}
+
+.toggle-menu:checked ~ .menu-opciones {
+    display: flex;
+}
+
+.menu-boton {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    color: #00609f;
+    font-weight: 600;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.menu-boton:hover {
+    background-color: #e7f1fb;
+}

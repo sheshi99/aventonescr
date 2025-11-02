@@ -1,0 +1,170 @@
+/* ===== Fondo general ===== */
+body {
+    font-family: "Poppins", Arial, sans-serif;
+    background: linear-gradient(135deg, #d3e4fa, #5bb4f0);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: #2c3e50;
+}
+
+/* ===== Header con bienvenida ===== */
+/* ===== Header con bienvenida ===== */
+.header {
+    width: 100%;
+    max-width: 2000px;
+    background-color: #00609f;
+    padding: 20px 60px; /* más espacio interno */
+    border-radius: 15px;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.1);
+    text-align: center;
+    margin-bottom: 40px;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative; /* necesario para posicionar el botón dentro */
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header h2 {
+    color: #ffffff;
+    font-size: 26px;
+    margin: 0;
+}
+
+/* ===== Botón cerrar sesión ===== */
+.btn-cerrar {
+    position: absolute;
+    right: 75px;  /* 🔹 antes no tenía esto */
+    top: 18px;    /* 🔹 baja un poco el botón para que quede centrado verticalmente */
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 25px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cerrar:hover {
+    background-color: #c9302c;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.btn-cerrar:active {
+    background-color: #a94442;
+    transform: scale(0.97);
+}
+
+/* ===== Tarjeta principal (botones) ===== */
+.card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 120px 100px;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+}
+
+/* ===== Menú de botones ===== */
+.menu {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* ===== Botones del menú ===== */
+.menu button {
+    background-color: #00609f;
+    color: #fff;
+    border: none;
+    padding: 60px 40px;
+    border-radius: 10px;
+    font-size: 24px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+    min-width: 180px;
+}
+
+.menu button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+/* ===== Menú desplegable ===== */
+.menu-contenedor {
+    position: relative;
+    display: inline-block;
+    margin-left: 10px; /* ← separa del borde izquierdo */
+}
+
+.toggle-menu {
+    display: none;
+}
+
+.btn-menu {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+.btn-menu:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.menu-opciones {
+    display: none;
+    position: absolute;
+    top: 35px;
+    left: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    min-width: 180px;
+    z-index: 100;
+    flex-direction: column;
+    padding: 8px 0;
+}
+
+.toggle-menu:checked ~ .menu-opciones {
+    display: flex;
+}
+
+.menu-boton {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    color: #00609f;
+    font-weight: 600;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.menu-boton:hover {
+    background-color: #e7f1fb;
+}

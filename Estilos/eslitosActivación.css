@@ -1,0 +1,37 @@
+body { 
+    font-family: Arial, sans-serif; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
+    background: #f0f8ff; 
+}
+
+.mensaje {
+    padding: 20px 30px;
+    border-radius: 8px;
+    text-align: center;
+    color: #fff;
+}
+
+.success { 
+    background-color: #2196F3; /* azul */
+}
+
+.error { 
+    background-color: #f44336; /* rojo */
+}
+
+a { 
+    display: inline-block; 
+    margin-top: 15px; 
+    padding: 8px 16px; 
+    color: #fff; 
+    text-decoration: none; 
+    background: #1976D2; 
+    border-radius: 5px;
+}
+
+a:hover {
+    background: #115293;
+}

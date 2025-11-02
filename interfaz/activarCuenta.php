@@ -1,4 +1,15 @@
 <?php
+
+/*
+ * --------------------------------------------------------------
+ * Archivo: actiivarCuenta.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Fecha: 01/11/2025
+ * Descripción:
+ * Activa la cuenta de un usuario mediante un token y muestra un mensaje de éxito o error.
+ * --------------------------------------------------------------
+ */
+
 include_once ("../datos/usuarios.php");
 
 $mensaje = '';
@@ -26,33 +37,7 @@ if (!isset($_GET['token'])) {
 <head>
     <meta charset="UTF-8">
     <title>Activación de Cuenta</title>
-    <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            background: #f0f8ff; 
-        }
-        .mensaje {
-            padding: 20px 30px;
-            border-radius: 8px;
-            text-align: center;
-            color: #fff;
-        }
-        .success { background-color: #2196F3; } /* azul */
-        .error { background-color: #f44336; }   /* rojo */
-        a { 
-            display: inline-block; 
-            margin-top: 15px; 
-            padding: 8px 16px; 
-            color: #fff; 
-            text-decoration: none; 
-            background: #1976D2; 
-            border-radius: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="../Estilos/estilosActivacion.css">
 </head>
 <body>
     <div class="mensaje <?= $tipo ?>">

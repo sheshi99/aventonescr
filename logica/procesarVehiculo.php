@@ -70,11 +70,13 @@ function procesarFotografiaVehiculo($datos) {
 
     $ext = strtolower(pathinfo($archivo['name'], PATHINFO_EXTENSION));
     if (!in_array($ext, ['jpg','jpeg','png','gif'])) {
-        redirigirMsjVehiculo("❌ Formato no permitido. Solo JPG, PNG o GIF", "../interfaz/registroVehiculo.php", "error", $datos, 'fotografia_existente');
+        redirigirMsjVehiculo("❌ Formato no permitido. Solo JPG, PNG o GIF", "../interfaz/registroVehiculo.php", 
+        "error", $datos, 'fotografia_existente');
     }
 
     if ($archivo['size'] > 2*1024*1024) {
-        redirigirMsjVehiculo("❌ La fotografía supera los 2MB", "../interfaz/registroVehiculo.php", "error", $datos, 'fotografia_existente');
+        redirigirMsjVehiculo("❌ La fotografía supera los 2MB", "../interfaz/registroVehiculo.php", 
+        "error", $datos, 'fotografia_existente');
     }
 
     $nombreArchivo = preg_replace('/[^A-Za-z0-9]/', '', $datos['placa']) . '.' . $ext;
@@ -83,7 +85,8 @@ function procesarFotografiaVehiculo($datos) {
     if (file_exists($destino)) unlink($destino);
 
     if (!move_uploaded_file($archivo['tmp_name'], $destino)) {
-        redirigirMsjVehiculo("❌ Error al guardar la fotografía", "../interfaz/registroVehiculo.php", "error", $datos, 'fotografia_existente');
+        redirigirMsjVehiculo("❌ Error al guardar la fotografía", "../interfaz/registroVehiculo.php", "error", 
+        $datos, 'fotografia_existente');
     }
 
     return $destino;

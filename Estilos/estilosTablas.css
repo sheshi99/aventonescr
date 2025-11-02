@@ -7,63 +7,56 @@ body {
 }
 
 /* ===== Encabezado ===== */
-.reserva-header,
-.gestion-header,
-.admin-header {
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* separa izquierda y derecha */
     background-color: #00609f;
     color: #fff;
-    padding: 20px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-    flex-wrap: wrap; /* para que en pantallas pequeñas no se rompa */
+    padding: 15px 40px;
+    position: relative;
 }
 
-.reserva-header-left,
-.gestion-header-left,
-.admin-header-left {
+/* Contenedor del título de la izquierda */
+.header-left {
     display: flex;
     align-items: center;
-    gap: 10px; /* espacio entre botón y título */
+    gap: 15px;
 }
 
-.reserva-header-right,
-.gestion-header-right,
-.admin-header-right {
-    display: flex;          /* pone los elementos en fila */
-    gap: 10px;              /* espacio entre botones */
-    align-items: center;    /* centra verticalmente */
-    flex-wrap: wrap;        /* opcional: que no se rompa en pantallas muy pequeñas */
+.header-right {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
-.reserva-header-right form,
-.gestion-header-right form,
-.admin-header-right form {
-    display: inline-block;  /* evita que los formularios sean bloques completos */
+.header-right form {
+    display: inline-block;
     margin: 0;
 }
 
-.reserva-header h1,
-.gestion-header h1,
-.admin-header h1 {
+.header h2 {
+    color: #ffffff;
+    font-size: 26px;
     margin: 0;
-    font-size: 22px;
-    letter-spacing: 1px;
 }
 
-.reserva-user,
-.gestion-user,
-.admin-user {
+/* CENTRAR el nombre de usuario */
+.header h2:nth-child(2), .user-info h2 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+}
+
+.user-info {
     font-weight: 500;
     font-size: 15px;
 }
 
-
 /* ===== Contenido principal ===== */
-.reserva-main,
-.gestion-main,
-.admin-main {
+.main {
     max-width: 1100px;
     margin: 30px auto;
     padding: 0 20px;
@@ -82,7 +75,7 @@ body {
 .form-filtro label {
     font-weight: 600;
     margin-right: 10px;
-    color:#005ab5;
+    color: #005ab5;
 }
 
 select {
@@ -90,6 +83,16 @@ select {
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 14px;
+}
+
+/* ===== Botones generales ===== */
+.btn {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
 }
 
 .btn-nuevo {
@@ -107,10 +110,51 @@ select {
     background-color: #1e8449;
 }
 
-/* ===== Tabla de usuarios ===== */
-.tabla-reserva h2,
-.tabla-gestion h2,
-.tabla-usuarios h2 {
+
+.btn-cerrar {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cerrar:hover {
+    background-color: #c9302c;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.btn-cerrar:active {
+    background-color: #a94442;
+    transform: scale(0.97);
+}
+
+.btn-login,
+.btn-panel {
+    background-color: #ffffff;
+    color: #00609f;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-login:hover,
+.btn-panel:hover {
+    background-color: #d0e9ff;
+}
+
+/* ===== Tabla ===== */
+.tabla h2 {
     color: #005ab5;
     margin-bottom: 15px;
 }
@@ -153,14 +197,12 @@ tbody tr:hover {
     font-weight: 600;
 }
 
-/* ===== Botones de acción ===== */
+/* ===== Botones de acción en tabla ===== */
 .form-accion {
     display: inline;
 }
-
-.btn-editar, .btn-eliminar,
-.btn-aceptar, .btn-cancelar, .btn-rechazar,
-.btn-activar, .btn-desactivar {
+.btn-rojo,
+.btn-verde {
     border: none;
     padding: 8px 12px;
     border-radius: 6px;
@@ -170,86 +212,28 @@ tbody tr:hover {
     transition: 0.3s ease;
 }
 
-.btn-editar,
-.btn-aceptar,
-.btn-activar {
-    background-color: #27ae60;
+.btn-verde {
+    background-color:#27ae60;
+
 }
 
-.btn-eliminar,
-.btn-rechazar,
-.btn-cancelar,
-.btn-desactivar {
-    background-color: #e74c3c;
-}
-
-.btn-ediar:hover,
-.btn-aceptar:hover,
-.btn-activar:hover {
+.btn-verde:hover {
     background-color: #1e8449;
 }
 
-.btn-eliminar:hover,
-.btn-rechazar:hover,
-.btn-cancelar:hover,
-.btn-desactivar:hover {
-    background-color: #c0392b;
+.btn-rojo {
+    background-color: #d9534f;
+
 }
 
-/* ===== Botón Cerrar sesión ===== */
-.btn-cerrar {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    transition: 0.3s ease;
+.btn-rojo:hover {
+    background-color: #c9302c;
 }
 
-.btn-cerrar:hover {
-    background-color: #c0392b;
-}
-
-/* ===== Botón Editar Perfil (misma forma que btn-nuevo) ===== */
-.btn-editarAdmin {
-    background-color: #d4e7f4; /* un tono más oscuro al pasar el mouse */
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: 0.3s;
-}
-
-.btn-editarAdmin:hover {
-    background-color: #75bceb;
-}
-
-.btn-login,
-.btn-panel {
-    background-color: #ffffff;
-    color: #00609f;
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: 0.3s ease;
-    text-decoration: none;
-}
-
-.btn-login:hover,
-.btn-panel:hover {
-    background-color: #d0e9ff;
-}
-.foto-vehiculo,
-.foto-usuario {
-    width: 60px;    /* ancho fijo */
-    height: 60px;   /* alto fijo */
-    object-fit: cover; /* recorta para que se vea bien */
-    border-radius: 50%; /* opcional, redondear */
+/* ===== Fotos ===== */
+.foto {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
 }

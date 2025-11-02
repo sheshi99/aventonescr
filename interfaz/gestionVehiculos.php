@@ -1,4 +1,17 @@
 <?php
+
+/*
+ * --------------------------------------------------------------
+ * Archivo: gestionVehiculos.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Fecha: 01/11/2025
+ * Descripción:
+ * Es la interfaz de gestión de vehículos para choferes, que muestra todos los vehículos
+ * registrados por el chofer, permite editarlos o eliminarlos, y ofrece
+ * un botón para agregar un nuevo vehículo. También muestra mensajes de éxito o error según las acciones realizadas.
+ * --------------------------------------------------------------
+ */
+
 session_start();
 include_once("../datos/vehiculos.php");
 
@@ -24,11 +37,11 @@ $rol = htmlspecialchars($usuario['rol']);
     <link rel="stylesheet" href="../estilos/estilosTablas.css?v=2">
 </head>
 <body>
-    <div class="gestion-header">
-        <div class="gestion-header-left">
+    <div class="header">
+        <div class="header-left">
             <h1>Gestión de Vehiculos</h1>
         </div>
-        <div class="gestion-header-right">
+        <div class="header-right">
             <form action="choferPanel.php" method="get">
                 <button type="submit" class="btn-panel">Ir al Panel</button>
             </form>
@@ -36,8 +49,8 @@ $rol = htmlspecialchars($usuario['rol']);
     </div>
 
 
-<div class="gestion-main">
-    <div class="tabla-gestion">
+<div class="main">
+    <div class="tabla">
         <h2>Mis Vehículos</h2>
 
         <?php if(!empty($_SESSION['mensaje'])): ?>
@@ -73,7 +86,7 @@ $rol = htmlspecialchars($usuario['rol']);
                         <?php if (!empty($vehiculo['fotografia'])): ?>
                             <img src="../logica/<?= htmlspecialchars($vehiculo['fotografia']); ?>"
                                 alt="<?= htmlspecialchars($vehiculo['marca'] . ' ' . $vehiculo['modelo']); ?>"
-                                class="foto-vehiculo">
+                                class="foto">
                         <?php else: ?>
                             <span>No hay foto</span>
                         <?php endif; ?>
@@ -81,13 +94,13 @@ $rol = htmlspecialchars($usuario['rol']);
                     <td>
                         <form action="../interfaz/formularioVehiculo.php" method="post" class="form-accion">
                             <input type="hidden" name="id_vehiculo" value="<?= $vehiculo['id_vehiculo'] ?>">
-                            <button type="submit" class="btn-editar">Editar</button>
+                            <button type="submit" class="btn-verde">Editar</button>
                         </form>
 
                         <form action="../logica/procesarVehiculo.php" method="post" class="form-accion">
                             <input type="hidden" name="accion" value="eliminar">
                             <input type="hidden" name="id_vehiculo" value="<?= $vehiculo['id_vehiculo'] ?>">
-                            <button type="submit" class="btn-eliminar" 
+                            <button type="submit" class="btn-rojo" 
                             onclick="return confirm('¿Seguro que desea eliminar?')">Eliminar</button>
                         </form>
                     </td>

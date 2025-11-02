@@ -1,4 +1,18 @@
 <?php
+
+/*
+ * --------------------------------------------------------------
+ * Archivo: buscarRide.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Fecha: 01/11/2025
+ * Descripción:
+ * Este archivo muestra un formulario para que el usuario busque rides por salida y llegada,
+ * luego lista los rides disponibles en una tabla con detalles (nombre, vehículo, día, hora,
+ * costo, espacios) y permite reservarlos. Además muestra mensajes de éxito
+ * o error y tiene un botón para regresar al panel del usuario.
+ * --------------------------------------------------------------
+ */
+
 session_start();
 include_once("../datos/rides.php");
 

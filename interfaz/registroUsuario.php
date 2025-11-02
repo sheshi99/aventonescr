@@ -1,4 +1,17 @@
 <?php
+
+/*
+ * --------------------------------------------------------------
+ * Archivo: registroUsuario.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Fecha: 01/11/2025
+ * Descripción:
+ * Es un formulario independiente para registrar o editar usuarios, 
+ * que carga los datos existentes si se edita, muestra mensajes de éxito/error, 
+ * y redirige con el botón “Volver” según el rol del usuario.
+ * --------------------------------------------------------------
+ */
+
 session_start();
 include_once("../datos/usuarios.php");
 
@@ -11,10 +24,12 @@ if ($rolUsuario === 'Chofer') {
     $urlVolver = 'choferPanel.php';
 } elseif ($rolUsuario === 'Pasajero') {
     $urlVolver = 'pasajeroPanel.php';
-} else {
+} else if($rolUsuario === 'administrador'){
+    $urlVolver = 'adminPanel.php';
+}else {
     $urlVolver = 'Login.php'; // fallback por si no hay sesión
 }
-
+    
 // ----------------------------
 // OBTENER DATOS DEL USUARIO
 // ----------------------------
@@ -41,11 +56,16 @@ unset($_SESSION['form_data'], $_SESSION['mensaje']);
 <head>
     <meta charset="UTF-8">
     <title><?= $editar ? "Editar Usuario" : "Registrar Usuario" ?></title>
-    <link rel="stylesheet" href="../Estilos/estilosRegistro.css">
+    <link rel="stylesheet" href="../Estilos/estilosRegistro.css?V=2">
 </head>
 <body>
 <div class="registro-container">
     <div class="form-card">
+
+        <form action="<?= $urlVolver ?>" method="get" class="form-salir">
+            <button type="submit" class="btn-cerrar-x">✖</button>
+        </form>
+
         <h2><?= $editar ? "Editar Usuario" : "Registrar Usuario" ?></h2>
 
         <!-- Mensaje -->
@@ -126,7 +146,6 @@ unset($_SESSION['form_data'], $_SESSION['mensaje']);
             <?php endif; ?>
 
             <button type="submit" class="btn-registrar"><?= $editar ? "Actualizar" : "Registrar" ?></button>
-            <a href="<?= $urlVolver ?>" class="btn-volver">⬅ Volver</a>
         </form>
     </div>
 </div>

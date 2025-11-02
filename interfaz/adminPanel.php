@@ -13,32 +13,40 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
 <head>
     <meta charset="UTF-8">
     <title>Panel de Administrador</title>
-    <link rel="stylesheet" href="../Estilos/estilosTablas.css?v=2">
+    <link rel="stylesheet" href="../Estilos/estilosTablas.css?v=3">
 </head>
 <body>
-    <header class="admin-header">
-        <div class="admin-header-left">
-            <!-- Botón Editar Perfil a la izquierda -->
-            <form action="registroAdmin.php" method="get" style="display:inline;">
-                <input type="hidden" name="editar" value="1">
-                <button type="submit" class="btn-editarAdmin"> ✏️ </button>
-            </form>
+<header class="header">
+    <div class="header-left">
+        <div class="menu-contenedor">
+            <input type="checkbox" id="toggle-menu" class="toggle-menu">
+            <label for="toggle-menu" class="btn-menu">⋮</label>
 
-            <h1>Panel de Administración</h1>
+            <div class="menu-opciones">
+                <form action="cambioContraseña.php" method="get">
+                    <input type="hidden" name="cambio" value="1">
+                    <button type="submit" class="menu-boton">🔑 Cambiar Contraseña</button>
+                </form>
+                <form action="registroAdmin.php" method="get">
+                    <input type="hidden" name="editar" value="1">
+                    <button type="submit" class="menu-boton">✏️ Editar Perfil</button>
+                </form>
+
+            </div>
         </div>
+    </div>
 
-        <div class="admin-user">
-            👤 <?= htmlspecialchars($_SESSION['usuario']['nombre']); ?> (Administrador)
+    <div class="user-info">
+        <h2>Bienvenido a Panel de administración, <?= htmlspecialchars($_SESSION['usuario']['nombre']); ?></h2>
+        <form action="../logica/cerrarSesion.php" method="post" style="display:inline;">
+            <button type="submit" class="btn-cerrar">Cerrar</button>
+        </form>
+    </div>
+    
+</header>
 
-            <form action="../logica/cerrarSesion.php" method="post" style="display:inline;">
-                <button type="submit" class="btn-cerrar">Cerrar</button>
-            </form>
-        </div>
-    </header>
 
-    <main class="admin-main">
-
-        <!-- MENSAJE GLOBAL -->
+    <main class="main">
         <?php if(!empty($_SESSION['mensaje'])): ?>
             <p style="color: <?= $_SESSION['mensaje']['tipo'] === 'error' ? 'red' : 'green' ?>; font-weight: bold;">
                 <?= htmlspecialchars($_SESSION['mensaje']['texto']) ?>
@@ -63,10 +71,9 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
             </form>
         </section>
 
-        <section class="tabla-usuarios">
+        <section class="tabla">
             <?php if (!$sinRolSeleccionado): ?>
-                <h2>Usuarios <?php echo htmlspecialchars($rolFiltrado); ?></h2>
-
+                <h2>Usuarios <?= htmlspecialchars($rolFiltrado); ?></h2>
                 <table>
                     <thead>
                         <tr>
@@ -83,34 +90,34 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
                     <tbody>
                         <?php foreach ($usuarios as $usuario): ?>
                             <tr>
-                                <td><?php echo $usuario['id_usuario']; ?></td>
-                                <td><?php echo htmlspecialchars($usuario['nombre'].' '.$usuario['apellido']); ?></td>
-                                <td><?php echo htmlspecialchars($usuario['cedula']); ?></td>
-                                <td><?php echo htmlspecialchars($usuario['correo']); ?></td>
-                                <td><?php echo htmlspecialchars($usuario['telefono']); ?></td>
+                                <td><?= $usuario['id_usuario']; ?></td>
+                                <td><?= htmlspecialchars($usuario['nombre'].' '.$usuario['apellido']); ?></td>
+                                <td><?= htmlspecialchars($usuario['cedula']); ?></td>
+                                <td><?= htmlspecialchars($usuario['correo']); ?></td>
+                                <td><?= htmlspecialchars($usuario['telefono']); ?></td>
                                 <td>
-                                    <span class="estado <?php echo strtolower($usuario['estado']); ?>">
-                                        <?php echo $usuario['estado']; ?>
+                                    <span class="estado <?= strtolower($usuario['estado']); ?>">
+                                        <?= $usuario['estado']; ?>
                                     </span>
                                 </td>
                                 <td>
                                     <?php if (!empty($usuario['fotografia'])): ?>
-                                        <img src="<?php echo '../logica/' . htmlspecialchars($usuario['fotografia']); ?>"
+                                        <img src="<?= '../logica/' . htmlspecialchars($usuario['fotografia']); ?>" 
                                              alt="<?= htmlspecialchars($usuario['nombre']); ?>" 
-                                             class="foto-usuario">
+                                             class="foto">
                                     <?php else: ?>
                                         <span>No hay foto</span>
                                     <?php endif; ?>
                                 </td>
                                 <td>
                                     <form method="POST" class="form-accion">
-                                        <input type="hidden" name="id_usuario" value="<?php echo $usuario['id_usuario']; ?>">
-                                        <input type="hidden" name="accion" value="<?php echo $usuario
+                                        <input type="hidden" name="id_usuario" value="<?= $usuario['id_usuario']; ?>">
+                                        <input type="hidden" name="accion" value="<?= $usuario
                                         ['estado']==='Activo' ? 'desactivar' : 'activar'; ?>">
-                                        <input type="hidden" name="filtro_rol" value="<?php echo htmlspecialchars($rolFiltrado); ?>"> 
-                                        <button type="submit" class="<?php echo $usuario
-                                        ['estado']==='Activo' ? 'btn-desactivar' : 'btn-activar'; ?>">
-                                            <?php echo $usuario['estado']==='Activo' ? 'Desactivar' : 'Activar'; ?>
+                                        <input type="hidden" name="filtro_rol" value="<?= htmlspecialchars($rolFiltrado); ?>"> 
+                                        <button type="submit" class="<?= $usuario
+                                        ['estado']==='Activo' ? 'btn-rojo' : 'btn-verde'; ?>">
+                                            <?= $usuario['estado']==='Activo' ? 'Desactivar' : 'Activar'; ?>
                                         </button>
                                     </form>
                                 </td>

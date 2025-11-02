@@ -1,4 +1,17 @@
 <?php
+
+/*
+ * --------------------------------------------------------------
+ * Archivo: choferPanel.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Fecha: 01/11/2025
+ * Descripción:
+ * Es la interfaz del panel del chofer, que muestra un mensaje de bienvenida, permite
+ * editar el perfil, cerrar sesión y acceder a las secciones de gestión de vehículos, gestión
+ * de rides y ver sus reservas.
+ * --------------------------------------------------------------
+ */
+
 session_start();
 include_once("../datos/usuarios.php");
 
@@ -21,11 +34,26 @@ $nombre_chofer = isset($_SESSION['usuario']['nombre']) ? $_SESSION['usuario']['n
 </head>
 <body>
     <!-- Header con bienvenida -->
-    <header class="chofer-header">
-        <form action="registroUsuario.php" method="get">
-            <input type="hidden" name="editar" value="1">
-            <button type="submit" class="btn-editarChofer"> ✏️ </button>
-        </form>
+    <header class="header">
+        
+        <div class="header-left">
+            <div class="menu-contenedor">
+                <input type="checkbox" id="toggle-menu" class="toggle-menu">
+                <label for="toggle-menu" class="btn-menu">⋮</label>
+
+                <div class="menu-opciones">
+                    <form action="cambioContraseña.php" method="get">
+                        <input type="hidden" name="cambio" value="1">
+                        <button type="submit" class="menu-boton">🔑 Cambiar Contraseña</button>
+                    </form>
+                    <form action="registroUsuario.php" method="get">
+                        <input type="hidden" name="editar" value="1">
+                        <button type="submit" class="menu-boton">✏️ Editar Perfil</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
 
         <h2>Bienvenido al Panel de Chofer, <?= htmlspecialchars($nombre_chofer) ?></h2>
 
@@ -42,8 +70,8 @@ $nombre_chofer = isset($_SESSION['usuario']['nombre']) ? $_SESSION['usuario']['n
             <?php endif; ?>
 
     <!-- Tarjeta principal con botones -->
-    <div class="chofer-card">
-        <div class="menu-chofer">
+    <div class="card">
+        <div class="menu">
             <button onclick="location.href='gestionVehiculos.php'">Gestión de Vehículos</button>
             <button onclick="location.href='gestionRides.php'">Gestión de Rides</button>
             <button onclick="location.href='misReservas.php'">Mis Reservas</button>

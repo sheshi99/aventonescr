@@ -1,4 +1,16 @@
 <?php
+
+/*
+ * --------------------------------------------------------------
+ * Archivo: login.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Fecha: 01/11/2025
+ * Descripción:
+ * Es la página de inicio de sesión, donde el usuario ingresa su cédula y contraseña para acceder al sistema.
+ * Muestra mensajes de error o éxito según la sesión y ofrece un enlace para registrarse si no tiene cuenta.
+ * --------------------------------------------------------------
+ */
+
 session_start();
 ?>
 <!DOCTYPE html>
@@ -13,12 +25,14 @@ session_start();
         <div class="login-card">
             <h1>Iniciar Sesión</h1>
             <form action="../logica/procesarLogin.php" method="POST">
-                <?php if(!empty($_SESSION['mensaje'])): ?>
-                    <p style="color: <?= $_SESSION['mensaje']['tipo'] === 'error' ? 'red' : 'green' ?>; font-weight: bold;">
-                        <?= htmlspecialchars($_SESSION['mensaje']['texto']) ?>
+
+                <?php if(!empty($_SESSION['mensaje_login']['texto'])): ?>
+                    <p style="color: <?= ($_SESSION['mensaje_login']['tipo'] ?? '') === 'error' ? 'red' : 'green' ?>; font-weight: bold;">
+                        <?= htmlspecialchars($_SESSION['mensaje_login']['texto']) ?>
                     </p>
-                    <?php unset($_SESSION['mensaje']); ?>
+                    <?php unset($_SESSION['mensaje_login']); ?>
                 <?php endif; ?>
+
                 <div class="input-group">
                     <label>Usuario</label>
                     <input type="text" name="cedula" placeholder="Ingrese su cédula" required>

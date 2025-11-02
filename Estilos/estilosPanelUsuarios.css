@@ -7,17 +7,16 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    padding: 20px;
     color: #2c3e50;
 }
 
 /* ===== Header con bienvenida ===== */
-.pasajero-header,
-.chofer-header {
+/* ===== Header con bienvenida ===== */
+.header {
     width: 100%;
     max-width: 2000px;
     background-color: #00609f;
-    padding: 20px 30px;
+    padding: 20px 60px; /* más espacio interno */
     border-radius: 15px;
     box-shadow: 0 4px 25px rgba(0,0,0,0.1);
     text-align: center;
@@ -26,21 +25,31 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative; /* necesario para posicionar el botón dentro */
 }
-.pasajero-header h2,
-.chofer-header h2 {
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header h2 {
     color: #ffffff;
     font-size: 26px;
     margin: 0;
 }
 
-/* ===== Botón de cerrar sesión ===== */
+/* ===== Botón cerrar sesión ===== */
 .btn-cerrar {
+    position: absolute;
+    right: 75px;  /* 🔹 antes no tenía esto */
+    top: 18px;    /* 🔹 baja un poco el botón para que quede centrado verticalmente */
     background-color: #d9534f;
     color: white;
     border: none;
     border-radius: 8px;
-    padding: 10px 20px;
+    padding: 10px 25px;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
@@ -60,8 +69,7 @@ body {
 }
 
 /* ===== Tarjeta principal (botones) ===== */
-.pasajero-card,
-.chofer-card {
+.card {
     background: #ffffff;
     border-radius: 15px;
     padding: 120px 100px;
@@ -71,14 +79,13 @@ body {
     text-align: center;
     transition: transform 0.2s ease;
 }
-.pasajero-card:hover,
-.chofer-card:hover {
+
+.card:hover {
     transform: translateY(-3px);
 }
 
 /* ===== Menú de botones ===== */
-.menu-pasajero,
-.menu-chofer {
+.menu {
     display: flex;
     justify-content: center;
     gap: 20px;
@@ -86,8 +93,7 @@ body {
 }
 
 /* ===== Botones del menú ===== */
-.menu-pasajero button,
-.menu-chofer button {
+.menu button {
     background-color: #00609f;
     color: #fff;
     border: none;
@@ -99,25 +105,66 @@ body {
     transition: 0.3s ease;
     min-width: 180px;
 }
-.menu-pasajero button:hover,
-.menu-chofer button:hover {
+
+.menu button:hover {
     background-color: #2980b9;
     transform: translateY(-2px);
 }
-.btn-editarPasajero,
-.btn-editarChofer {
-    background-color: #d4e7f4; /* un tono más oscuro al pasar el mouse */
-    color: white;
+
+/* ===== Menú desplegable ===== */
+.menu-contenedor {
+    position: relative;
+    display: inline-block;
+    margin-left: 10px; /* ← separa del borde izquierdo */
+}
+
+.toggle-menu {
+    display: none;
+}
+
+.btn-menu {
+    background: none;
     border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
+    color: white;
+    font-size: 22px;
     cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+.btn-menu:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.menu-opciones {
+    display: none;
+    position: absolute;
+    top: 35px;
+    left: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    min-width: 180px;
+    z-index: 100;
+    flex-direction: column;
+    padding: 8px 0;
+}
+
+.toggle-menu:checked ~ .menu-opciones {
+    display: flex;
+}
+
+.menu-boton {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    color: #00609f;
     font-weight: 600;
-    transition: 0.3s;
+    padding: 10px 15px;
+    cursor: pointer;
 }
 
-.btn-editarPasajero:hover,
-.btn-editarChofer:hover {
-    background-color: #75bceb;
+.menu-boton:hover {
+    background-color: #e7f1fb;
 }
-

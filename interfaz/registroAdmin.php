@@ -1,4 +1,17 @@
 <?php
+
+/*
+ * --------------------------------------------------------------
+ * Archivo: registroAdmin.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Fecha: 01/11/2025
+ * Descripción:
+ * Es un formulario independiente para registrar un nuevo administrador
+ * o editar el perfil de uno existente, mostrando los datos actuales si se edita,
+ * mensajes de éxito/error, y un botón para volver al panel de administración.
+ * --------------------------------------------------------------
+ */
+
 session_start();
 include_once("../datos/usuarios.php");
 
@@ -26,11 +39,16 @@ unset($_SESSION['form_data'], $_SESSION['mensaje']);
 <head>
     <meta charset="UTF-8">
     <title><?= $editar ? "Editar Perfil" : "Registrar Administrador" ?></title>
-    <link rel="stylesheet" href="../Estilos/estilosRegistro.css">
+    <link rel="stylesheet" href="../Estilos/estilosRegistro.css?v=">
 </head>
 <body>
 <div class="registro-container">
     <div class="form-card">
+
+        <form action="<?= $editar ? 'adminPanel.php' : 'adminPanel.php' ?>" method="get" class="form-salir">
+             <button type="submit" class="btn-cerrar-x" title="Volver al Panel">✖</button>
+        </form>
+
         <h2><?= $editar ? "Editar Perfil" : "Registrar Administrador" ?></h2>
 
         <!-- Mensaje -->
@@ -102,9 +120,6 @@ unset($_SESSION['form_data'], $_SESSION['mensaje']);
             <?php endif; ?>
 
             <button type="submit" class="btn-registrar"><?= $editar ? "Actualizar" : "Registrar" ?></button>
-            <a href="<?= $editar ? 'adminPanel.php' : 'adminPanel.php' ?>" class="btn-volver">
-                ⬅ <?= $editar ? "Regresar al Panel" : "Volver al Panel" ?>
-            </a>
         </form>
     </div>
 </div>

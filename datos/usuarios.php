@@ -209,4 +209,47 @@ function editarUsuario($id_usuario, $nombre, $apellido, $cedula, $fecha_nacimien
         return ["success" => false, "error" => $e->getMessage()];
     }
 }
+
+// Verifica si la contraseña proporcionada coincide con la del usuario
+function confirmarContrasena($id_usuario, $contrasena) {
+    try {
+        $conexion = conexionBD();
+        $sql = "SELECT contrasena FROM usuarios WHERE id_usuario = ?";
+        $consulta = mysqli_prepare($conexion, $sql);
+        mysqli_stmt_bind_param($consulta, "i", $id_usuario);
+        mysqli_stmt_execute($consulta);
+        $resultado = mysqli_stmt_get_result($consulta);
+        $usuario = mysqli_fetch_assoc($resultado);
+        mysqli_stmt_close($consulta);
+        mysqli_close($conexion);
+
+        if (!$usuario) return false;
+
+        return password_verify($contrasena, $usuario['contrasena']);
+    } catch (Exception $e) {
+        error_log("Error en verificarContrasena: " . $e->getMessage());
+        return false;
+    }
+}
+
+// Actualiza la contraseña del usuario
+function actualizarContrasena($id_usuario, $nueva_contrasena) {
+    try {
+        $hash = password_hash($nueva_contrasena, PASSWORD_DEFAULT);
+
+        $conexion = conexionBD();
+        $sql = "UPDATE usuarios SET contrasena = ? WHERE id_usuario = ?";
+        $consulta = mysqli_prepare($conexion, $sql);
+        mysqli_stmt_bind_param($consulta, "si", $hash, $id_usuario);
+        mysqli_stmt_execute($consulta);
+        mysqli_stmt_close($consulta);
+        mysqli_close($conexion);
+
+        return ["success" => true];
+    } catch (Exception $e) {
+        error_log("Error en actualizarContrasena: " . $e->getMessage());
+        return ["success" => false, "error" => $e->getMessage()];
+    }
+}
+
 ?>

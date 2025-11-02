@@ -1,7 +1,19 @@
 <?php
+
+/*
+ * --------------------------------------------------------------
+ * Archivo: pasajeroPanel.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Fecha: 01/11/2025
+ * Descripción:
+ * Es la interfaz del panel de pasajero, que permite editar su perfil, cerrar sesión,
+ * y ofrece botones para ver sus reservas o buscar nuevos rides, con
+ * validación de sesión para que solo un pasajero pueda acceder.
+ * --------------------------------------------------------------
+ */
+
 session_start();
 
-// Validar que haya un usuario logueado y que sea pasajero
 if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'Pasajero') {
     $_SESSION['mensaje'] = ['texto' => 'Debes iniciar sesión como pasajero para acceder al panel.', 'tipo' => 'error'];
     header("Location: ../interfaz/login.php");
@@ -19,13 +31,27 @@ $usuario = $_SESSION['usuario'];
     <link rel="stylesheet" href="../Estilos/estilosPanelUsuarios.css?v=2">
 </head>
 <body>
-    <!-- Header -->
-    <header class="pasajero-header">
 
-        <form action="registroUsuario.php" method="get">
-            <input type="hidden" name="editar" value="1">
-            <button type="submit" class="btn-editarChofer"> ✏️ </button>
-        </form>
+    <header class="header">
+
+        <div class="header-left">
+            <div class="menu-contenedor">
+                <input type="checkbox" id="toggle-menu" class="toggle-menu">
+                <label for="toggle-menu" class="btn-menu">⋮</label>
+
+                <div class="menu-opciones">
+                    <form action="cambioContraseña.php" method="get">
+                        <input type="hidden" name="cambio" value="1">
+                        <button type="submit" class="menu-boton">🔑 Cambiar Contraseña</button>
+                    </form>
+                    <form action="registroAdmin.php" method="get">
+                        <input type="hidden" name="editar" value="1">
+                        <button type="submit" class="menu-boton">✏️ Editar Perfil</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
 
         <h2>Bienvenido al Panel de Pasajeros, <?= htmlspecialchars($usuario['nombre']) ?> 
         <?= htmlspecialchars($usuario['apellido']) ?></h2>
@@ -35,7 +61,6 @@ $usuario = $_SESSION['usuario'];
         </form>
     </header>
 
-        <!-- Mensaje opcional -->
     <?php if (isset($_SESSION['mensaje'])): ?>
         <?php 
             $mensaje = $_SESSION['mensaje']['texto'];
@@ -48,16 +73,14 @@ $usuario = $_SESSION['usuario'];
         </p>
     <?php endif; ?>
 
-    <!-- Tarjeta principal -->
-    <div class="pasajero-card">
-        <div class="menu-pasajero">
-            <!-- Botón Mis Reservas -->
+    <div class="card">
+        <div class="menu">
+
             <form action="misReservas.php" method="post">
                 <input type="hidden" name="desde_panel" value="1">
                 <button type="submit">Mis Reservas</button>
             </form>
 
-            <!-- Botón Buscar Rides -->
             <form action="buscarRide.php" method="post">
                 <input type="hidden" name="desde_panel" value="1">
                 <button type="submit">Buscar Rides</button>

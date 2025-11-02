@@ -1,112 +1,109 @@
 <?php
 session_start();
+
 include_once("../datos/usuarios.php");
+include_once("../utilidades/formulariosUtilidades.php");
 
-// Determinar si estamos editando o registrando
-$editar = $_GET['editar'] ?? 0;
-$datosUsuario = [];
-
-// Si estamos editando y hay usuario logueado
-if ($editar == 1 && isset($_SESSION['usuario'])) {
-    $datosUsuario = obtenerUsuarioPorId($_SESSION['usuario']['id_usuario']);
+if (!isset($_SESSION['usuario'])) {
+    header("Location: ../interfaz/login.php");
+    exit;
 }
 
-// Recuperar datos del formulario desde sesión (si hubo error)
-$formData = $_SESSION['form_data'] ?? $datosUsuario ?? [];
-
-// Recuperar mensaje
-$mensaje = $_SESSION['mensaje']['texto'] ?? '';
-$tipo = $_SESSION['mensaje']['tipo'] ?? 'info';
-
-// Limpiar sesión para evitar mostrar mensajes repetidos
-unset($_SESSION['form_data'], $_SESSION['mensaje']);
+// Preparar datos del formulario
+$preparacion = prepararFormularioUsuario();
+$usuario = $preparacion['usuario'];
+$accion = $preparacion['accion'];
+$mensaje = $preparacion['mensaje'];
+$datosFormulario = $preparacion['datosFormulario'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title><?= $editar ? "Editar Perfil" : "Registrar Administrador" ?></title>
+    <title><?= $accion === 'actualizar' ? "Editar Perfil" : "Registrar Administrador" ?></title>
     <link rel="stylesheet" href="../Estilos/estilosRegistroUsuario.css">
 </head>
 <body>
 <div class="registro-container">
     <div class="form-card">
-        <h2><?= $editar ? "Editar Perfil" : "Registrar Administrador" ?></h2>
+        <h2><?= $accion === 'actualizar' ? "Editar Perfil" : "Registrar Administrador" ?></h2>
 
         <!-- Mensaje -->
         <?php if (!empty($mensaje)): 
-            $clase = match($tipo) {
+            $clase = match($mensaje['tipo'] ?? 'info') {
                 'success' => 'alert-success',
                 'error'   => 'alert-error',
                 default   => 'alert-info',
             };
         ?>
-            <div class="alert <?= $clase ?>"><?= htmlspecialchars($mensaje) ?></div><br>
+            <div class="alert <?= $clase ?>"><?= htmlspecialchars($mensaje['texto']) ?></div><br>
         <?php endif; ?>
 
         <form action="../logica/procesarRegistro.php" method="POST" enctype="multipart/form-data">
-
-            <?php if($editar): ?>
-                <input type="hidden" name="editar" value="1">
-                <input type="hidden" name="id_usuario" value="<?= $formData['id_usuario'] ?? '' ?>">
-                <input type="hidden" name="fotografia_existente" value="<?= $formData['fotografia'] ?? '' ?>">
+            
+            <!-- Hidden inputs -->
+            <?php if($accion === 'actualizar'): ?>
+                <input type="hidden" name="id_usuario" value="<?= htmlspecialchars(valorUsuario('id_usuario', $datosFormulario, $usuario)) ?>">
+                <input type="hidden" name="fotografia_existente" value="<?= htmlspecialchars(valorUsuario('fotografia', $datosFormulario, $usuario)) ?>">
+                <input type="hidden" name="accion" value="actualizar">
             <?php else: ?>
                 <input type="hidden" name="rol" value="Administrador">
+                <input type="hidden" name="accion" value="insertar">
             <?php endif; ?>
 
+            <!-- Campos del formulario -->
             <div class="input-group">
                 <label>Nombre</label>
-                <input type="text" name="nombre" value="<?= htmlspecialchars($formData['nombre'] ?? '') ?>" required>
+                <input type="text" name="nombre" value="<?= htmlspecialchars(valorUsuario('nombre', $datosFormulario, $usuario)) ?>" required>
             </div>
 
             <div class="input-group">
                 <label>Apellido</label>
-                <input type="text" name="apellido" value="<?= htmlspecialchars($formData['apellido'] ?? '') ?>" required>
+                <input type="text" name="apellido" value="<?= htmlspecialchars(valorUsuario('apellido', $datosFormulario, $usuario)) ?>" required>
             </div>
 
             <div class="input-group">
                 <label>Cédula</label>
-                <input type="text" name="cedula" value="<?= htmlspecialchars($formData['cedula'] ?? '') ?>" required>
+                <input type="text" name="cedula" value="<?= htmlspecialchars(valorUsuario('cedula', $datosFormulario, $usuario)) ?>" required>
             </div>
 
             <div class="input-group">
                 <label>Fecha de Nacimiento</label>
-                <input type="date" name="fecha_nacimiento" value="<?= htmlspecialchars($formData['fecha_nacimiento'] ?? '') ?>" required>
+                <input type="date" name="fecha_nacimiento" value="<?= htmlspecialchars(valorUsuario('fecha_nacimiento', $datosFormulario, $usuario)) ?>" required>
             </div>
 
             <div class="input-group">
                 <label>Correo</label>
-                <input type="email" name="correo" value="<?= htmlspecialchars($formData['correo'] ?? '') ?>" required>
+                <input type="email" name="correo" value="<?= htmlspecialchars(valorUsuario('correo', $datosFormulario, $usuario)) ?>" required>
             </div>
 
             <div class="input-group">
                 <label>Teléfono</label>
-                <input type="text" name="telefono" value="<?= htmlspecialchars($formData['telefono'] ?? '') ?>" required>
+                <input type="text" name="telefono" value="<?= htmlspecialchars(valorUsuario('telefono', $datosFormulario, $usuario)) ?>" required>
             </div>
 
             <div class="input-group">
                 <label>Fotografía</label>
-                <input type="file" name="fotografia" accept="image/*" <?= $editar ? '' : 'required' ?>>
+                <input type="file" name="fotografia" accept="image/*" <?= $accion === 'insertar' ? 'required' : '' ?>>
             </div>
 
-            <?php if(!$editar): ?>
-            <div class="input-group">
-                <label>Contraseña</label>
-                <input type="password" name="contrasena" value="<?= htmlspecialchars($formData['contrasena'] ?? '') ?>" required>
-            </div>
+            <?php if($accion === 'insertar'): ?>
+                <div class="input-group">
+                    <label>Contraseña</label>
+                    <input type="password" name="contrasena" value="<?= htmlspecialchars(valorUsuario('contrasena', $datosFormulario, $usuario)) ?>" required>
+                </div>
 
-            <div class="input-group">
-                <label>Confirmar Contraseña</label>
-                <input type="password" name="contrasena2" value="<?= htmlspecialchars($formData['contrasena2'] ?? '') ?>" required>
-            </div>
+                <div class="input-group">
+                    <label>Confirmar Contraseña</label>
+                    <input type="password" name="contrasena2" value="<?= htmlspecialchars(valorUsuario('contrasena2', $datosFormulario, $usuario)) ?>" required>
+                </div>
             <?php endif; ?>
 
-            <button type="submit" class="btn-registrar"><?= $editar ? "Actualizar" : "Registrar" ?></button>
-            <a href="<?= $editar ? 'adminPanel.php' : 'adminPanel.php' ?>" class="btn-volver">
-                ⬅ <?= $editar ? "Regresar al Panel" : "Volver al Panel" ?>
-            </a>
+            <button type="submit" class="btn-registrar"><?= $accion === 'actualizar' ? "Actualizar" : "Registrar" ?></button>
+            <a href="adminPanel.php" class="btn-volver">⬅ Volver al Panel</a>
         </form>
     </div>
 </div>
 </body>
 </html>
+

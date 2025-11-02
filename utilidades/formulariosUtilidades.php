@@ -1,6 +1,62 @@
 <?php
+include_once("../datos/usuarios.php");
 include_once("../datos/rides.php");
 include_once("../datos/vehiculos.php");
+
+
+// ==================== USUARIO ====================
+
+function prepararFormularioUsuario() {
+    $datosGuardados = $_SESSION['datos_formulario'] ?? [];
+    $mensaje = $_SESSION['mensaje'] ?? null;
+
+    unset($_SESSION['mensaje'], $_SESSION['datos_formulario']);
+
+    $id_usuario = $_POST['id_usuario'] ?? $datosGuardados['id_usuario'] ?? null;
+
+    if ($id_usuario) {
+        // Edición
+        if (!empty($datosGuardados)) {
+            $usuario = $datosGuardados;
+        } else {
+            $usuario = obtenerUsuarioPorId($id_usuario) ?? [];
+        }
+        $accion = 'actualizar';
+    } else {
+        // Nuevo usuario
+        $usuario = [
+            'id_usuario'           => '',
+            'nombre'               => '',
+            'apellido'             => '',
+            'correo'               => '',
+            'telefono'             => '',
+            'rol'                  => '',
+            'contrasena'           => '',
+            'contrasena2'          => '',
+            'cedula'               => '',
+            'fecha_nacimiento'     => '',
+            'fotografia_existente' => ''
+        ];
+        // Sobreescribir con datos guardados si hubo error previo
+        if (!empty($datosGuardados)) {
+            $usuario = array_merge($usuario, $datosGuardados);
+        }
+        $accion = 'insertar';
+    }
+
+    return [
+        'usuario'         => $usuario,
+        'accion'          => $accion,
+        'datosFormulario' => $datosGuardados,
+        'mensaje'         => $mensaje
+    ];
+}
+
+
+function valorUsuario($campo, $datosFormulario, $usuario) {
+    return htmlspecialchars($datosFormulario[$campo] ?? $usuario[$campo] ?? '');
+}
+
 
 // ==================== VEHICULO ====================
 

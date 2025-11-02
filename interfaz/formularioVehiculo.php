@@ -1,8 +1,21 @@
 <?php
+
+/*
+ * --------------------------------------------------------------
+ * Archivo: formularioVehiculo.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Fecha: 01/11/2025
+ * Descripción:
+ * Es la interfaz de registro y edición de vehículos para choferes, que permite agregar un nuevo
+ * vehículo o actualizar uno existente, completando campos como placa, color, marca, modelo,
+ * año, asientos y fotografía. También muestra mensajes de éxito o error según la acción
+ * realizada y ofrece un botón para regresar al panel del chofer.
+ * --------------------------------------------------------------
+ */
+
 session_start();
 include_once("../utilidades/formulariosUtilidades.php"); 
 
-// Preparar datos del formulario y mensaje
 $formulario = prepararFormularioVehiculo();
 $vehiculo = $formulario['vehiculo'];
 $accion = $formulario['accion'];
@@ -17,12 +30,17 @@ $id_vehiculo = $_POST['id_vehiculo'] ?? $vehiculo['id_vehiculo'] ?? null;
 <head>
     <meta charset="UTF-8">
     <title><?= $accion === 'actualizar' ? "Editar Vehículo" : "Registrar Vehículo" ?></title>
-    <link rel="stylesheet" href="../Estilos/estilosRegistro.css?v=2">
+    <link rel="stylesheet" href="../Estilos/estilosRegistro.css?v=3">
 </head>
 <body>
 
 <div class="registro-container">
     <div class="form-card">
+
+        <form action="gestionVehiculos.php" method="get" class="form-salir">
+            <button type="submit" class="btn-cerrar-x" title="Volver a la gestión de rides">✖</button>
+        </form>
+
         <h2><?= $accion === 'actualizar' ? "Editar Vehículo" : "Registrar Vehículo" ?></h2>
 
         <?php if ($mensaje): ?>

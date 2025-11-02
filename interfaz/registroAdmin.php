@@ -1,4 +1,17 @@
 <?php
+
+/*
+ * --------------------------------------------------------------
+ * Archivo: registroAdmin.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Fecha: 01/11/2025
+ * Descripción:
+ * Es un formulario independiente para registrar un nuevo administrador
+ * o editar el perfil de uno existente, mostrando los datos actuales si se edita,
+ * mensajes de éxito/error, y un botón para volver al panel de administración.
+ * --------------------------------------------------------------
+ */
+
 session_start();
 
 include_once("../datos/usuarios.php");

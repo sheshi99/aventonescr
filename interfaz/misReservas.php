@@ -1,4 +1,15 @@
 <?php
+/*
+ * --------------------------------------------------------------
+ * Archivo: misReservas.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Fecha: 01/11/2025
+ * Descripción:
+ * Muestra al usuario sus reservas activas y pasadas en tablas, permite cancelar reservas
+ * pendientes o aceptadas (si es pasajero) o aceptar/rechazar reservas pendientes (si es chofer),
+ * y tiene un botón para volver al panel correspondiente según el rol del usuario.
+ * --------------------------------------------------------------
+ */
 session_start();
 include_once("../datos/reservas.php");
 
@@ -20,13 +31,12 @@ $reservas = obtenerReservasPorUsuario($usuario['id_usuario'], $usuario['rol']);
 </head>
 <body>
 
-    <!-- ===== ENCABEZADO ===== -->
-    <header class="reserva-header">
-        <div class="reserva-header-left">
+    <header class="header">
+        <div class="header-left">
             <h1>Mis Reservas</h1>
         </div>
 
-        <div class="reserva-user">
+        <div class="user-info">
             <?php
             $destinoPanel = ($usuario['rol'] === 'Chofer')
                 ? '../interfaz/choferPanel.php'
@@ -38,11 +48,9 @@ $reservas = obtenerReservasPorUsuario($usuario['id_usuario'], $usuario['rol']);
         </div>
     </header>
 
-    <!-- ===== CONTENIDO PRINCIPAL ===== -->
-    <main class="reserva-main">
-        <section class="tabla-reserva">
+    <main class="main">
+        <section class="tabla">
 
-            <!-- ===== RESERVAS ACTIVAS ===== -->
             <h2>Reservas Activas</h2>
             <table>
                 <thead>
@@ -67,13 +75,13 @@ $reservas = obtenerReservasPorUsuario($usuario['id_usuario'], $usuario['rol']);
                             <?php if ($usuario['rol'] === 'Chofer' && $r['estado'] === 'Pendiente'): ?>
                                 <form action="../logica/procesarAccionReserva.php" method="post">
                                     <input type="hidden" name="id_reserva" value="<?= $r['id_reserva'] ?>">
-                                    <button type="submit" name="accion" value="aceptar" class="btn-acepatar">Aceptar</button>
-                                    <button type="submit" name="accion" value="rechazar" class="btn-rechazar">Rechazar</button>
+                                    <button type="submit" name="accion" value="aceptar" class="btn-verde">Aceptar</button>
+                                    <button type="submit" name="accion" value="rechazar" class="btn-rojo">Rechazar</button>
                                 </form>
                             <?php elseif ($usuario['rol'] === 'Pasajero' && in_array($r['estado'], ['Pendiente','Aceptada'])): ?>
                                 <form action="../logica/procesarAccionReserva.php" method="post">
                                     <input type="hidden" name="id_reserva" value="<?= $r['id_reserva'] ?>">
-                                    <button type="submit" name="accion" value="cancelar" class="btn-cancelar">Cancelar</button>
+                                    <button type="submit" name="accion" value="cancelar" class="btn-rojo">Cancelar</button>
                                 </form>
                             <?php else: ?>
                                 —
@@ -84,7 +92,6 @@ $reservas = obtenerReservasPorUsuario($usuario['id_usuario'], $usuario['rol']);
                 </tbody>
             </table>
 
-            <!-- ===== RESERVAS PASADAS ===== -->
             <h2>Reservas Pasadas</h2>
             <table>
                 <thead>

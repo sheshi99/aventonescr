@@ -2,7 +2,6 @@
 session_start();
 include_once ("../datos/usuarios.php");
 
-
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     die("Acceso no permitido.");
 }
@@ -14,24 +13,30 @@ function obtenerDatosFormulario() {
     ];
 }
 
+// Guarda el mensaje en sesión y detiene la ejecución
+function Mensaje($mensaje, $tipo = 'error') {
+    $_SESSION['mensaje_login'] = ['texto' => $mensaje, 'tipo' => $tipo];
+    header("Location: ../interfaz/login.php"); // Redirige al login
+    exit;
+}
+
+// Verifica la contraseña usando hash
 function verificarContrasena($contrasenaIngresada, $hashAlmacenado) {
     return password_verify($contrasenaIngresada, $hashAlmacenado);
 }
 
-
+// Verifica el estado del usuario
 function verificarEstado($estado) {
     if ($estado === 'Pendiente') {
-        echo "❌ Su cuenta está pendiente de activación.";
-        return false;
+        Mensaje("Su cuenta está pendiente de activación.");
     }
     if ($estado === 'Inactivo') {
-        echo "❌ Su cuenta está inactiva.";
-        return false;
+        Mensaje("Su cuenta está inactiva.");
     }
     return true;
 }
 
-
+// Inicia la sesión y redirige según rol
 function iniciarSesion($usuario) {
     $_SESSION['usuario'] = $usuario;
 
@@ -44,27 +49,26 @@ function iniciarSesion($usuario) {
             exit;
         case 'Pasajero':
             header("Location: ../interfaz/pasajeroPanel.php");
-            break;
+            exit;
         default:
-            echo "Rol no reconocido.";
+            Mensaje("Rol no reconocido.");
     }
 }
 
+// Procesa el login
 function procesarLogin() {
     $datos = obtenerDatosFormulario();
 
     $usuario = obtenerUsuarioPorCedula($datos['cedula']);
     if (!$usuario) {
-        die("❌ Usuario no encontrado.");
+        Mensaje("Usuario no encontrado.");
     }
 
     if (!verificarContrasena($datos['contrasena'], $usuario['contrasena'])) {
-        die("❌ Contraseña incorrecta.");
+        Mensaje("Contraseña incorrecta.");
     }
 
-    if (!verificarEstado($usuario['estado'])) {
-        exit;
-    }
+    verificarEstado($usuario['estado']);
 
     iniciarSesion($usuario);
 }

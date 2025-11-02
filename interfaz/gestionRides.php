@@ -1,4 +1,18 @@
 <?php
+
+/*
+ * --------------------------------------------------------------
+ * Archivo: gestionRides.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Fecha: 01/11/2025
+ * Descripción:
+ * Es la interfaz de gestión de rides para choferes, que muestra todos los rides registrados por el chofer,
+ * con detalles como vehículo, ruta, día, hora, costo y espacios. Permite editar, eliminar
+ * rides existentes y ofrece un botón para agregar un nuevo ride, mostrando
+ * además mensajes de éxito o error según las acciones realizadas.
+ * --------------------------------------------------------------
+ */
+
 session_start();
 include_once("../datos/rides.php");
 
@@ -20,11 +34,11 @@ $rides = obtenerRidesPorChofer($id_chofer); // Debes tener esta función en dato
 </head>
 <body>
    
-    <div class="gestion-header">
-        <div class="gestion-header-left">
+    <div class="header">
+        <div class="header-left">
             <h1>Gestión Rides</h1>
         </div>
-        <div class="gestion-header-right">
+        <div class="header-right">
             <form action="choferPanel.php" method="get">
                 <button type="submit" class="btn-panel">Ir al Panel</button>
             </form>   
@@ -32,8 +46,8 @@ $rides = obtenerRidesPorChofer($id_chofer); // Debes tener esta función en dato
     </div>
 
 
-    <div class="gestion-main">
-        <div class="tabla-gestion">
+    <div class="main">
+        <div class="tabla">
 
             <?php if(!empty($_SESSION['mensaje'])): ?>
                 <p style="color: <?= $_SESSION['mensaje']['tipo'] === 'error' ? 'red' : 'green' ?>;">
@@ -72,13 +86,13 @@ $rides = obtenerRidesPorChofer($id_chofer); // Debes tener esta función en dato
                         <td>
                             <form action="../interfaz/formularioRide.php" method="post" class="form-accion">
                                 <input type="hidden" name="id_ride" value="<?= $ride['id_ride'] ?>">
-                                <button type="submit" class="btn-editar">Editar</button>
+                                <button type="submit" class="btn-verde">Editar</button>
                             </form>
 
                             <form action="../logica/procesarRide.php" method="post" class="form-accion">
                                 <input type="hidden" name="accion" value="eliminar">
                                 <input type="hidden" name="id_ride" value="<?= $ride['id_ride'] ?>">
-                                <button type="submit" class="btn-eliminar" 
+                                <button type="submit" class="btn-rojo" 
                                 onclick="return confirm('¿Seguro que desea eliminar este ride?')">Eliminar</button>
                             </form>
                         </td>

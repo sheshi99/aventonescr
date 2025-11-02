@@ -68,11 +68,11 @@ body {
 .btn-cerrar {
     background-color: #e74c3c;
     color: white;
-    border: none;
     padding: 8px 12px;
     border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
+    border: none;
     text-decoration: none;
     transition: 0.3s ease;
 }
@@ -89,21 +89,22 @@ body {
     margin: 40px auto;
     width: 100%;
     padding: 0 20px;
-    box-sizing: border-box; /* Asegura que padding no rompa el ancho */
+    box-sizing: border-box;
 }
 
-/* ===== TARJETA DE BÚSQUEDA ===== */
+/* ===== TARJETA DE BÚSQUEDA / TABLA ===== */
 .buscar-card,
 .tabla-container {
     width: 100%;
-    max-width: 900px; /* Ambos con mismo ancho máximo */
+    max-width: 900px;
     background-color: #fff;
     border-radius: 15px;
     padding: 30px;
     margin-top: 30px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     overflow-x: auto;
-    box-sizing: border-box; /* Importante para que padding no agrande el div */
+    box-sizing: border-box;
+    position: relative;
 }
 
 .buscar-card h2,
@@ -112,7 +113,19 @@ body {
     margin-bottom: 25px;
 }
 
-/* Campos de formulario */
+/* ===== CARD HEADER (Título + Botón) ===== */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.boton-buscar-card form {
+    margin: 0;
+}
+
+/* ===== CAMPOS DE FORMULARIO ===== */
 .input-group {
     margin-bottom: 15px;
     text-align: left;
@@ -124,7 +137,8 @@ label {
     margin-bottom: 5px;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="date"] {
     width: 100%;
     padding: 10px 12px;
     border: 1px solid #ccc;
@@ -134,12 +148,34 @@ input[type="text"] {
     transition: 0.3s ease;
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus,
+input[type="date"]:focus {
     border-color: #2980b9;
     box-shadow: 0 0 6px rgba(41, 128, 185, 0.3);
     outline: none;
 }
 
+/* ===== ESTILO SELECT ===== */
+select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #fff;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: 0.3s ease;
+}
+
+select:focus {
+    border-color: #2980b9;
+    box-shadow: 0 0 6px rgba(41, 128, 185, 0.3);
+    outline: none;
+}
+
+
+/* Botón Buscar */
 .btn-buscar {
     width: 100%;
     background-color: #00609f;
@@ -156,6 +192,41 @@ input[type="text"]:focus {
 .btn-buscar:hover {
     background-color: #2980b9;
     transform: translateY(-2px);
+}
+
+/* ===== BOTÓN ORDENAR ===== */
+.btn-ordenar {
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: #00609f;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s;
+}
+
+.btn-ordenar:hover {
+    background-color: #2980b9;
+}
+
+/* ===== ORDENAMIENTO HORIZONTAL ===== */
+.ordenamiento-horizontal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.filtro-campo {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+}
+
+.boton-ordenar {
+    display: flex;
+    align-items: flex-end;
 }
 
 /* ===== TABLA DE RIDES ===== */
@@ -210,4 +281,29 @@ tbody tr:hover {
 
 .mensaje.error {
     color: #e74c3c;
+}
+
+/* ===== Botón tipo X (Cerrar / Cancelar) ===== */
+.btn-cerrar-x {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-cerrar-x:hover {
+    background: #c0392b;
+    transform: scale(1.1);
 }

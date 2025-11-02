@@ -24,6 +24,7 @@ body {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
     text-align: center;
     transition: transform 0.2s ease;
+    position: relative;
 }
 
 .login-card:hover {
@@ -102,4 +103,29 @@ input:focus {
 
 .registro-texto a:hover {
     text-decoration: underline;
+}
+
+/* ===== Botón tipo X (Cerrar / Cancelar) ===== */
+.btn-cerrar-x {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-cerrar-x:hover {
+    background: #c0392b;
+    transform: scale(1.1);
 }

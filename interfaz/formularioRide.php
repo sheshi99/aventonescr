@@ -1,4 +1,16 @@
 <?php
+/*
+ * --------------------------------------------------------------
+ * Archivo: formularioRides.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Fecha: 01/11/2025
+ * Descripción:
+ * Es la interfaz de registro y edición de rides para choferes, que permite crear un nuevo ride o
+ * actualizar uno existente, asignándole un vehículo, nombre, ruta (salida y llegada), día, hora,
+ * costo y cantidad de espacios. También muestra mensajes de éxito o error según la acción realizada.
+ * --------------------------------------------------------------
+ */
+
 session_start();
 include_once("../datos/vehiculos.php");  
 include_once("../datos/rides.php"); 
@@ -24,12 +36,18 @@ $vehiculos = obtenerVehiculosPorChofer($id_chofer);
 <head>
 <meta charset="UTF-8">
 <title><?= $accion==='actualizar' ? "Editar Ride" : "Registrar Ride" ?></title>
-<link rel="stylesheet" href="../Estilos/estilosRegistro.css?v=2"> <!-- tu CSS existente -->
+<link rel="stylesheet" href="../Estilos/estilosRegistro.css?v=3">
 </head>
 <body>
 
 <div class="registro-container">
     <div class="form-card">
+
+        <!-- Botón tipo X arriba a la derecha -->
+        <form action="gestionRides.php" method="get" class="form-salir">
+            <button type="submit" class="btn-cerrar-x" title="Volver a la gestión de rides">✖</button>
+        </form>
+
         <h2><?= $accion==='actualizar' ? "Editar Ride" : "Registrar Ride" ?></h2>
 
         <?php if($mensaje): ?>
@@ -92,10 +110,13 @@ $vehiculos = obtenerVehiculosPorChofer($id_chofer);
                 <input type="number" name="espacios" min="1" required value="<?= valor('espacios',$datosFormulario,$ride) ?>">
             </div>
 
-            <button type="submit" class="btn-registrar"><?= $accion==='actualizar' ? "Actualizar Ride" : "Registrar Ride" ?></button>
+            <button type="submit" class="btn-registrar">
+                <?= $accion==='actualizar' ? "Actualizar Ride" : "Registrar Ride" ?>
+            </button>
         </form>
     </div>
 </div>
 
 </body>
 </html>
+

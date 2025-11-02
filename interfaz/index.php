@@ -46,8 +46,17 @@ unset($_SESSION['filtros_orden']);
                 <a href="login.php" class="btn btn-login">Iniciar sesión</a>
                 <a href="formularioUsuario.php?publico=1" class="btn btn-registrar">Registrarse</a>
             </div>
-        <?php endif; ?>
-    </div>
+            <?php else: ?>
+                <p class="usuario-nombre">👋 Hola, <?= htmlspecialchars($usuario['nombre'] ?? $usuario['rol']) ?></p>
+                <div class="header-right">
+                    <?php if ($usuario['rol'] === 'Pasajero'): ?>
+                        <form action="pasajeroPanel.php" method="get" style="display:inline;">
+                            <button type="submit" class="btn btn-panel">Ir al Panel</button>
+                        </form>
+                    <?php endif; ?>
+                </div>
+             <?php endif; ?>
+        </div>
 </header>
 
 <main class="buscar-container">

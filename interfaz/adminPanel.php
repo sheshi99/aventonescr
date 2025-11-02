@@ -27,10 +27,12 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
                     <input type="hidden" name="cambio" value="1">
                     <button type="submit" class="menu-boton">🔑 Cambiar Contraseña</button>
                 </form>
-                <form action="registroAdmin.php" method="get">
-                    <input type="hidden" name="editar" value="1">
+
+                <form action="registroAdmin.php" method="POST">                
+                    <input type="hidden" name="accion" value="actualizar">
+                    <input type="hidden" name="id_usuario" value="<?= $_SESSION['usuario']['id_usuario'] ?>">
                     <button type="submit" class="menu-boton">✏️ Editar Perfil</button>
-                </form>
+                </form>
 
             </div>
         </div>

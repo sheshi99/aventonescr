@@ -46,7 +46,7 @@ $nombre_chofer = isset($_SESSION['usuario']['nombre']) ? $_SESSION['usuario']['n
                         <input type="hidden" name="cambio" value="1">
                         <button type="submit" class="menu-boton">🔑 Cambiar Contraseña</button>
                     </form>
-                    <form action="registroUsuario.php" method="get">
+                    <form action="formularioUsuario.php" method="get">
                         <input type="hidden" name="editar" value="1">
                         <button type="submit" class="menu-boton">✏️ Editar Perfil</button>
                     </form>

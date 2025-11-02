@@ -237,3 +237,61 @@ tbody tr:hover {
     object-fit: cover;
     border-radius: 50%;
 }
+
+/* ===== Menú desplegable ===== */
+.menu-contenedor {
+    position: relative;
+    display: inline-block;
+    margin-left: 10px; /* ← separa del borde izquierdo */
+}
+
+.toggle-menu {
+    display: none;
+}
+
+.btn-menu {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+.btn-menu:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.menu-opciones {
+    display: none;
+    position: absolute;
+    top: 35px;
+    left: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    min-width: 180px;
+    z-index: 100;
+    flex-direction: column;
+    padding: 8px 0;
+}
+
+.toggle-menu:checked ~ .menu-opciones {
+    display: flex;
+}
+
+.menu-boton {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    color: #00609f;
+    font-weight: 600;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.menu-boton:hover {
+    background-color: #e7f1fb;
+}

@@ -3,28 +3,21 @@ session_start();
 include_once("../datos/reservas.php"); // insertarReserva()
 include_once("../datos/rides.php");    // obtenerEspaciosDisponibles()
 
-/**
- * Redirige con mensaje a una página determinada.
- */
+
 function redirigirConMensaje($mensaje, $tipo = 'info', $destino = '../interfaz/buscarRide.php') {
     $_SESSION['mensaje_esperado'] = ['texto' => $mensaje, 'tipo' => $tipo];
     header("Location: $destino");
     exit;
 }
 
-/**
- * Valida que la petición sea POST y que se reciba id_ride.
- */
+
 function validarPeticion() {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['id_ride'])) {
         redirigirConMensaje('Solicitud inválida.', 'error');
     }
 }
 
-/**
- * Valida que el usuario esté logueado y sea pasajero.
- * Retorna el usuario.
- */
+
 function validarUsuario() {
     $usuario = $_SESSION['usuario'] ?? null;
     if ($usuario['rol'] !== 'Pasajero') {
@@ -33,9 +26,7 @@ function validarUsuario() {
     return $usuario;
 }
 
-/**
- * Valida que haya espacios disponibles para el ride.
- */
+
 function validarEspaciosDisponibles($idRide) {
     $espacios = obtenerEspaciosDisponibles($idRide);
     if ($espacios < 1) {
@@ -43,9 +34,6 @@ function validarEspaciosDisponibles($idRide) {
     }
 }
 
-/**
- * Crea la reserva.
- */
 function crearReserva($idRide, $idPasajero) {
     validarEspaciosDisponibles($idRide);
 
@@ -58,9 +46,7 @@ function crearReserva($idRide, $idPasajero) {
     }
 }
 
-/**
- * Función principal que ejecuta el proceso.
- */
+
 function procesarReserva() {
     validarPeticion();
     $usuario = validarUsuario();

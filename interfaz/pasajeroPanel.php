@@ -4,7 +4,6 @@
  * --------------------------------------------------------------
  * Archivo: pasajeroPanel.php
  * Autores: Seidy Alanis y Walbyn González
- * Fecha: 01/11/2025
  * Descripción:
  * Es la interfaz del panel de pasajero, que permite editar su perfil, cerrar sesión,
  * y ofrece botones para ver sus reservas o buscar nuevos rides, con

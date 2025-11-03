@@ -1,11 +1,19 @@
 <?php
+
+
+/*
+ * Archivo: cerrarSesion.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Descripción: Elimina todas las variables de sesión y cierra la sesión del usuario, 
+ * luego redirige al login.
+ */
+
+
 session_start();
 
-// Destruir toda la sesión
-session_unset(); // limpia todas las variables de sesión
-session_destroy(); // destruye la sesión
+session_unset(); 
+session_destroy(); 
 
-// Redirigir al login u otra página pública
 header("Location: ../interfaz/login.php");
 exit;
 ?>

@@ -1,4 +1,14 @@
 <?php
+
+/*
+ * Archivo: procesarBuscarRide.php
+ * Autores: Seidy Alanis y Walbyn González
+ *
+ * Descripción:
+ * Procesa la búsqueda de rides según filtros de salida y llegada,
+ * guarda los resultados en sesión y redirige a la página de búsqueda.
+ */
+
 session_start();
 include_once("../datos/rides.php");
 
@@ -24,9 +34,7 @@ function obtenerFiltros() {
     return [$salida, $llegada];
 }
 
-/**
- * Ejecuta la búsqueda de rides y guarda resultados en sesión.
- */
+
 function ejecutarBusqueda($salida, $llegada) {
     if ($salida === '' && $llegada === '') {
         mostrarMensajeYRedirigir("Debe ingresar al menos un filtro.", "error");
@@ -40,7 +48,7 @@ function ejecutarBusqueda($salida, $llegada) {
     foreach ($rides as &$r) {
         $r['espacios_disponibles'] = obtenerEspaciosDisponibles($r['id_ride']);
     }
-    unset($r); // buena práctica
+    unset($r); 
 
     if (empty($rides)) {
         $_SESSION['mensaje'] = ['texto' => 'No se encontraron rides.', 'tipo' => 'info'];

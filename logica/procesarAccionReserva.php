@@ -1,4 +1,18 @@
 <?php
+
+/*
+ * Archivo: procesarAccionReserva.php
+ * Autores: Seidy Alanis y Walbyn González
+ * 
+ * Descripción:
+ * Procesa las acciones sobre las reservas según el rol del usuario:
+ * - Chofer: puede aceptar o rechazar reservas pendientes.
+ * - Pasajero: puede cancelar reservas pendientes o aceptadas.
+ * 
+ * Valida la sesión del usuario y los parámetros enviados por POST,
+ * ejecuta la acción correspondiente y redirige de vuelta a la página de mis reservas.
+ */
+
 session_start();
 include_once("../datos/reservas.php");
 include_once("../datos/rides.php"); 

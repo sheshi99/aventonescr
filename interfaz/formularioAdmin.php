@@ -1,4 +1,13 @@
 <?php
+
+/*
+ * Archivo: formularioAdmin.php
+* Autores: Seidy Alanis y Walbyn González
+ * Descripción: Formulario para registrar o editar un administrador. 
+ * Permite mostrar mensajes de error o éxito y manejar campos según si 
+ * se inserta o actualiza.
+ */
+
 session_start();
 
 include_once("../datos/usuarios.php");
@@ -28,6 +37,12 @@ $datosFormulario = $preparacion['datosFormulario'];
 <body>
 <div class="registro-container">
     <div class="form-card">
+
+
+        <form action="adminPanel.php" method="get" class="form-salir">
+            <button type="submit" class="btn-cerrar-x">✖</button>
+        </form>
+
         <h2><?= $accion === 'actualizar' ? "Editar Administrador" : "Registrar Administrador" ?></h2>
 
         <!-- Mensaje -->
@@ -66,7 +81,7 @@ $datosFormulario = $preparacion['datosFormulario'];
 
             <div class="input-group">
                 <label>Cédula</label>
-                <input type="text" name="cedula" value="<?= htmlspecialchars(valorUsuario('cedula', $datosFormulario, $usuario)) ?>" required>
+                <input type="text" name="cedula" value="<?= htmlspecialchars(valorUsuario('cedula', $datosFormulario, $usuario)) ?>" required required placeholder="Ej: 205670234">
             </div>
 
             <div class="input-group">
@@ -81,7 +96,7 @@ $datosFormulario = $preparacion['datosFormulario'];
 
             <div class="input-group">
                 <label>Teléfono</label>
-                <input type="text" name="telefono" value="<?= htmlspecialchars(valorUsuario('telefono', $datosFormulario, $usuario)) ?>" required>
+                <input type="text" name="telefono" value="<?= htmlspecialchars(valorUsuario('telefono', $datosFormulario, $usuario)) ?>" required required placeholder="Ej: 88080987">
             </div>
 
             <div class="input-group">
@@ -102,7 +117,7 @@ $datosFormulario = $preparacion['datosFormulario'];
             <?php endif; ?>
 
             <button type="submit" class="btn-registrar"><?= $accion === 'actualizar' ? "Actualizar" : "Registrar" ?></button>
-            <a href="adminPanel.php" class="btn-volver">⬅ Volver al Panel</a>
+          
         </form>
     </div>
 </div>

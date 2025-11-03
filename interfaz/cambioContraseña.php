@@ -1,4 +1,13 @@
 <?php
+
+/*
+ * Archivo: cambioContraseña.php
+ * Autores: Seidy Alanis y Walbyn González
+ * 
+ * Descripción: Formulario para que el usuario logueado pueda cambiar su contraseña.
+ * Muestra mensajes de éxito o error y redirige según el rol del usuario al cancelar.
+ */
+
 session_start();
 include_once("../datos/usuarios.php");
 

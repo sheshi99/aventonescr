@@ -1,4 +1,4 @@
-/* ===== Fondo general ===== */
+
 body {
     font-family: "Poppins", Arial, sans-serif;
     background: linear-gradient(135deg, #d3e4fa, #5bb4f0);
@@ -9,14 +9,14 @@ body {
     margin: 0;
 }
 
-/* ===== Contenedor del formulario ===== */
+
 .registro-container {
     width: 100%;
     max-width: 500px;
     padding: 20px;
 }
 
-/* ===== Tarjeta ===== */
+
 .form-card {
     background: #ffffff;
     border-radius: 15px;
@@ -31,7 +31,7 @@ body {
     transform: translateY(-3px);
 }
 
-/* ===== Título ===== */
+
 h2 {
     text-align: center;
     color: #2c3e50;
@@ -40,7 +40,7 @@ h2 {
     letter-spacing: 0.5px;
 }
 
-/* ===== Grupos de campos ===== */
+
 .input-group {
     margin-bottom: 18px;
 }
@@ -52,7 +52,7 @@ label {
     color: #34495e;
 }
 
-/* ===== Campos ===== */
+
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -79,7 +79,7 @@ select:focus {
     outline: none;
 }
 
-/* ===== Botón ===== */
+
 .btn-registrar {
     width: 100%;
     background: #3498db;
@@ -98,13 +98,13 @@ select:focus {
     transform: translateY(-2px);
 }
 
-/* ===== Efectos visuales ===== */
+
 input:hover,
 select:hover {
     background-color: #fafafa;
 }
 
-/* ===== Botón tipo X (Cerrar / Cancelar) ===== */
+
 .btn-cerrar-x {
     position: absolute;
     top: 15px;

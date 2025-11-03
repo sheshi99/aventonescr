@@ -4,7 +4,6 @@
  * --------------------------------------------------------------
  * Archivo: buscarRide.php
  * Autores: Seidy Alanis y Walbyn González
- * Fecha: 01/11/2025
  * Descripción:
  * Este archivo muestra un formulario para que el usuario busque rides por salida y llegada,
  * luego lista los rides disponibles en una tabla con detalles (nombre, vehículo, día, hora,
@@ -49,8 +48,8 @@ $usuario = $_SESSION['usuario'] ?? null;
                 <p class="usuario-nombre">👋 Hola, <?= htmlspecialchars($usuario['nombre'] ?? $usuario['rol']) ?></p>
                 <div class="header-right">
                     <?php if ($usuario['rol'] === 'Pasajero'): ?>
-                        <form action="pasajeroPanel.php" method="get" style="display:inline;">
-                            <button type="submit" class="btn btn-panel">Ir al Panel</button>
+                        <form action="index.php" method="get" style="display:inline;">
+                            <button type="submit" class="btn btn-panel"> 🡸 </button>
                         </form>
                     <?php endif; ?>
                 </div>

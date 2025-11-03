@@ -3,11 +3,12 @@
  * --------------------------------------------------------------
  * Archivo: misReservas.php
  * Autores: Seidy Alanis y Walbyn González
- * Fecha: 01/11/2025
+ * 
  * Descripción:
- * Muestra al usuario sus reservas activas y pasadas en tablas, permite cancelar reservas
- * pendientes o aceptadas (si es pasajero) o aceptar/rechazar reservas pendientes (si es chofer),
- * y tiene un botón para volver al panel correspondiente según el rol del usuario.
+ * Muestra al usuario sus reservas activas y pasadas en tablas, permite cancelar 
+ * reservas pendientes o aceptadas (si es pasajero) o aceptar/rechazar reservas 
+ * pendientes (si es chofer), y tiene un botón para volver al panel correspondiente 
+ * según el rol del usuario.
  * --------------------------------------------------------------
  */
 session_start();
@@ -43,7 +44,7 @@ $reservas = obtenerReservasPorUsuario($usuario['id_usuario'], $usuario['rol']);
                 : '../interfaz/pasajeroPanel.php';
             ?>
             <form action="<?= $destinoPanel ?>" method="get" style="display:inline;">
-                <button type="submit" class="btn-panel">Ir al Panel</button>
+                <button type="submit" class="btn-panel"> 🡸 </button>
             </form>
         </div>
     </header>
@@ -59,6 +60,8 @@ $reservas = obtenerReservasPorUsuario($usuario['id_usuario'], $usuario['rol']);
                         <th>Llegada</th>
                         <th>Fecha</th>
                         <th>Hora</th>
+                        <th>Vehículo</th>
+                        <th><?= ($usuario['rol'] === 'Chofer') ? 'Pasajero' : 'Chofer' ?></th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -70,6 +73,14 @@ $reservas = obtenerReservasPorUsuario($usuario['id_usuario'], $usuario['rol']);
                         <td><?= htmlspecialchars($r['llegada']) ?></td>
                         <td><?= htmlspecialchars($r['dia']) ?></td>
                         <td><?= htmlspecialchars($r['hora']) ?></td>
+                        <td><?= htmlspecialchars($r['numero_placa']) ?> (<?= htmlspecialchars($r['marca']) ?> <?= htmlspecialchars($r['modelo']) ?> <?= htmlspecialchars($r['anno']) ?>)</td>
+                        <td>
+                            <?php if ($usuario['rol'] === 'Chofer'): ?>
+                                <?= htmlspecialchars($r['pasajero_nombre'] . ' ' . $r['pasajero_apellido']) ?>
+                            <?php else: ?>
+                                <?= htmlspecialchars($r['chofer_nombre'] . ' ' . $r['chofer_apellido']) ?>
+                            <?php endif; ?>
+                        </td>
                         <td class="estado <?= strtolower($r['estado']) ?>"><?= htmlspecialchars($r['estado']) ?></td>
                         <td>
                             <?php if ($usuario['rol'] === 'Chofer' && $r['estado'] === 'Pendiente'): ?>
@@ -100,6 +111,8 @@ $reservas = obtenerReservasPorUsuario($usuario['id_usuario'], $usuario['rol']);
                         <th>Llegada</th>
                         <th>Fecha</th>
                         <th>Hora</th>
+                        <th>Vehículo</th>
+                        <th><?= ($usuario['rol'] === 'Chofer') ? 'Pasajero' : 'Chofer' ?></th>
                         <th>Estado</th>
                     </tr>
                 </thead>
@@ -110,6 +123,15 @@ $reservas = obtenerReservasPorUsuario($usuario['id_usuario'], $usuario['rol']);
                         <td><?= htmlspecialchars($r['llegada']) ?></td>
                         <td><?= htmlspecialchars($r['dia']) ?></td>
                         <td><?= htmlspecialchars($r['hora']) ?></td>
+
+                        <td><?= htmlspecialchars($r['numero_placa']) ?> (<?= htmlspecialchars($r['marca']) ?> <?= htmlspecialchars($r['modelo']) ?> <?= htmlspecialchars($r['anno']) ?>)</td>
+                        <td>
+                            <?php if ($usuario['rol'] === 'Chofer'): ?>
+                                <?= htmlspecialchars($r['pasajero_nombre'] . ' ' . $r['pasajero_apellido']) ?>
+                            <?php else: ?>
+                                <?= htmlspecialchars($r['chofer_nombre'] . ' ' . $r['chofer_apellido']) ?>
+                            <?php endif; ?>
+                        </td>
                         <td class="estado <?= strtolower($r['estado']) ?>"><?= htmlspecialchars($r['estado']) ?></td>
                     </tr>
                     <?php endforeach; ?>

@@ -1,4 +1,16 @@
 <?php
+
+/*
+ * Archivo: vehiculos.php
+ * Autores: Seidy Alanis y Walbyn González
+ * 
+ * Descripción:
+ * Funciones para gestionar vehículos mediante consultas SQL: 
+ * insertar, actualizar, eliminar, obtener por ID, obtener por chofer y verificar placas.
+ * Todas las funciones implementan manejo de errores mediante try-catch
+ * para capturar excepciones y registrar posibles fallos en la base de datos.
+ */
+
 include_once("../configuracion/conexion.php");
 
 function insertarVehiculo($id_chofer, $placa, $color, $marca, $modelo, $anno, $asientos, $foto) {
@@ -115,6 +127,27 @@ function actualizarVehiculo($id_vehiculo, $placa, $color, $marca, $modelo, $anno
     }
 }
 
+
+function vehiculoTieneRides($id_vehiculo) {
+    try {
+        $conexion = conexionBD();
+        $sql = "SELECT COUNT(*) AS total FROM rides WHERE id_vehiculo = ?";
+        $consulta = mysqli_prepare($conexion, $sql);
+        mysqli_stmt_bind_param($consulta, "i", $id_vehiculo);
+        mysqli_stmt_execute($consulta);
+        $resultado = mysqli_stmt_get_result($consulta);
+        $fila = mysqli_fetch_assoc($resultado);
+        mysqli_stmt_close($consulta);
+        mysqli_close($conexion);
+
+        return $fila['total'] > 0; // true si tiene rides
+    } catch (Exception $e) {
+        error_log("Error en vehiculoTieneRides: " . $e->getMessage());
+        return true; // Por seguridad, bloquear edición/eliminación
+    }
+}
+
+
 function obtenerVehiculoPorId($id_vehiculo) {
     $conexion = conexionBD();
     try {
@@ -152,8 +185,9 @@ function eliminarVehiculo($id_vehiculo) {
             mysqli_close($conexion);
 
             // Error por restricción de clave foránea
-            if ($errno == 1451) { // Código MySQL: Cannot delete or update a parent row
-                throw new Exception("El vehículo está asociado a un ride y no se puede eliminar.");
+            if ($errno == 1451) { 
+                throw new Exception("El vehículo está está asociado a otra información
+                 y no se puede eliminar.");
             } else {
                 throw new Exception($error);
             }

@@ -4,12 +4,12 @@
  * --------------------------------------------------------------
  * Archivo: gestionRides.php
  * Autores: Seidy Alanis y Walbyn González
- * Fecha: 01/11/2025
  * Descripción:
- * Es la interfaz de gestión de rides para choferes, que muestra todos los rides registrados por el chofer,
- * con detalles como vehículo, ruta, día, hora, costo y espacios. Permite editar, eliminar
- * rides existentes y ofrece un botón para agregar un nuevo ride, mostrando
- * además mensajes de éxito o error según las acciones realizadas.
+ * Es la interfaz de gestión de rides para choferes, que muestra todos 
+ * los rides registrados por el chofer.
+ * Permite editar, eliminar rides existentes y ofrece un botón para agregar
+ * un nuevo ride, mostrando además mensajes de éxito o error según las acciones 
+ * realizadas.
  * --------------------------------------------------------------
  */
 
@@ -40,7 +40,7 @@ $rides = obtenerRidesPorChofer($id_chofer); // Debes tener esta función en dato
         </div>
         <div class="header-right">
             <form action="choferPanel.php" method="get">
-                <button type="submit" class="btn-panel">Ir al Panel</button>
+                <button type="submit" class="btn-panel"> 🡸 </button>
             </form>   
         </div>
     </div>
@@ -66,38 +66,41 @@ $rides = obtenerRidesPorChofer($id_chofer); // Debes tener esta función en dato
                         <th>Llegada</th>
                         <th>Día</th>
                         <th>Hora</th>
-                        <th>Costo</th>
+                        <th>Costo Espacio</th>
                         <th>Espacios</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                 <?php foreach($rides as $ride): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($ride['nombre']) ?></td>
-                        <td><?= htmlspecialchars($ride['placa_vehiculo'] ?? 'N/A') ?></td>
-                        <td><?= htmlspecialchars($ride['salida']) ?></td>
-                        <td><?= htmlspecialchars($ride['llegada']) ?></td>
-                        <td><?= !empty($ride['dia']) ? date('d/m/Y', strtotime($ride['dia'])) : '' ?></td>
-                        <td><?= !empty($ride['hora']) ? date('H:i', strtotime($ride['hora'])) : '' ?></td>
+                <tr>
+                    <td><?= htmlspecialchars($ride['nombre']) ?></td>
+                    <td><?= htmlspecialchars($ride['placa_vehiculo'] ?? 'N/A') ?></td>
+                    <td><?= htmlspecialchars($ride['salida']) ?></td>
+                    <td><?= htmlspecialchars($ride['llegada']) ?></td>
+                    <td><?= !empty($ride['dia']) ? date('d/m/Y', strtotime($ride['dia'])) : '' ?></td>
+                    <td><?= !empty($ride['hora']) ? date('H:i', strtotime($ride['hora'])) : '' ?></td>
+                    <td><?= htmlspecialchars($ride['costo']) ?></td>
+                    <td><?= htmlspecialchars($ride['espacios']) ?></td>
+                    <td>
+                    <?php if (!rideTieneReservasRealizadas($ride['id_ride'])): ?>
+                        <form action="../interfaz/formularioRide.php" method="post" class="form-accion">
+                            <input type="hidden" name="id_ride" value="<?= $ride['id_ride'] ?>">
+                            <button type="submit" class="btn-verde">Editar</button>
+                        </form>
+                    <?php endif; ?>
 
-                        <td><?= htmlspecialchars($ride['costo']) ?></td>
-                        <td><?= htmlspecialchars($ride['espacios']) ?></td>
-                        <td>
-                            <form action="../interfaz/formularioRide.php" method="post" class="form-accion">
-                                <input type="hidden" name="id_ride" value="<?= $ride['id_ride'] ?>">
-                                <button type="submit" class="btn-verde">Editar</button>
-                            </form>
-
-                            <form action="../logica/procesarRide.php" method="post" class="form-accion">
-                                <input type="hidden" name="accion" value="eliminar">
-                                <input type="hidden" name="id_ride" value="<?= $ride['id_ride'] ?>">
-                                <button type="submit" class="btn-rojo" 
-                                onclick="return confirm('¿Seguro que desea eliminar este ride?')">Eliminar</button>
-                            </form>
-                        </td>
-                    </tr>
+                        <!-- Botón eliminar -->
+                        <form action="../logica/procesarRide.php" method="post" class="form-accion">
+                            <input type="hidden" name="accion" value="eliminar">
+                            <input type="hidden" name="id_ride" value="<?= $ride['id_ride'] ?>">
+                            <button type="submit" class="btn-rojo" 
+                            onclick="return confirm('¿Seguro que desea eliminar este ride?')">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
                 <?php endforeach; ?>
+
                 </tbody>
             </table>
 

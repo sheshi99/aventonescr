@@ -1,24 +1,21 @@
 <?php
 session_start();
 include_once("../datos/rides.php");
+include_once("../datos/reservas.php"); // insertarReserva(), obtenerEspaciosDisponibles()
 
-// ===== Funciones =====
-
-// Redirige con mensaje a la interfaz principal
+// ===== Funciones comunes =====
 function redirigirConMensaje($texto, $tipo = 'error') {
     $_SESSION['mensaje_reserva'] = ['texto' => $texto, 'tipo' => $tipo];
     header("Location: ../interfaz/index.php");
     exit;
 }
 
-// Validar método POST
 function validarMetodo() {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         redirigirConMensaje("Acceso no permitido.");
     }
 }
 
-// Validar usuario pasajero
 function validarUsuarioPasajero() {
     $usuario = $_SESSION['usuario'] ?? null;
     if (!$usuario || $usuario['rol'] !== 'Pasajero') {
@@ -27,7 +24,6 @@ function validarUsuarioPasajero() {
     return $usuario;
 }
 
-// Obtener ID del ride
 function obtenerIdRide() {
     $id_ride = $_POST['id_ride'] ?? null;
     if (!$id_ride) {
@@ -36,7 +32,6 @@ function obtenerIdRide() {
     return $id_ride;
 }
 
-// Validar espacios disponibles
 function validarEspaciosDisponibles($id_ride) {
     $espacios = obtenerEspaciosDisponibles($id_ride);
     if ($espacios <= 0) {
@@ -45,7 +40,6 @@ function validarEspaciosDisponibles($id_ride) {
     return $espacios;
 }
 
-// Obtener filtros enviados
 function obtenerCampos() {
     $fecha = trim($_POST['fecha'] ?? '');
     $salida = trim($_POST['salida'] ?? '');
@@ -54,56 +48,86 @@ function obtenerCampos() {
     return [$fecha, $salida, $llegada, $direccion];
 }
 
-// Validar que al menos un campo esté lleno
 function validarCamposLlenos($fecha, $salida, $llegada) {
     if ($fecha === '' && $salida === '' && $llegada === '') {
         redirigirConMensaje("Debes llenar al menos un campo para ordenar o filtrar.");
     }
 }
 
-// Buscar rides filtrados
 function buscarRidesFiltrados($fecha, $salida, $llegada, $direccion) {
     return buscarRides($fecha, $salida, $llegada, $direccion);
 }
 
-// ===== PROCESO PRINCIPAL =====
-validarMetodo();
+// ===== Funciones separadas =====
 
-// Si se envía para reservar ride
-if (isset($_POST['id_ride'])) {
+// 1️⃣ Función para procesar reservas
+function procesarReservaRide() {
     $usuario = validarUsuarioPasajero();
     $id_ride = obtenerIdRide();
     validarEspaciosDisponibles($id_ride);
 
-    // Guardar ride a reservar en sesión
-    $_SESSION['id_ride_a_reservar'] = $id_ride;
-    header("Location: ../logica/procesarReserva.php");
+    $exito = insertarReserva($id_ride, $usuario['id_usuario']);
+    if ($exito) {
+        $_SESSION['mensaje_reserva'] = [
+            'texto' => '✅ Reserva registrada.',
+            'tipo'  => 'success'
+        ];
+    } else {
+        $_SESSION['mensaje_reserva'] = [
+            'texto' => 'Error al registrar la reserva. Intente de nuevo.',
+            'tipo'  => 'error'
+        ];
+    }
+
+    header("Location: ../interfaz/index.php");
     exit;
 }
 
-// Si se envía para ordenar/filtrar
-list($fecha, $salida, $llegada, $direccion) = obtenerCampos();
-validarCamposLlenos($fecha, $salida, $llegada);
+// 2️⃣ Función para procesar filtrado/ordenamiento
+function procesarFiltradoRide() {
+    // Campos de orden enviados desde el combo
+    $campo = $_POST['campo_orden'] ?? 'dia';
+    $direccion = $_POST['orden_direccion'] ?? 'ASC';
 
-$rides = buscarRidesFiltrados($fecha, $salida, $llegada, $direccion);
-
-// Guardar resultados y filtros
-$_SESSION['rides_filtrados'] = $rides;
-$_SESSION['filtros_orden'] = [
-    'fecha' => $fecha,
-    'salida' => $salida,
-    'llegada' => $llegada,
-    'direccion' => $direccion
-];
-
-// Mensaje si no hay rides
-if (empty($rides)) {
-    $_SESSION['mensaje_reserva'] = [
-        'texto' => 'No hay rides disponibles con esos filtros.',
-        'tipo' => 'error'
+    // Guardar filtros en sesión
+    $_SESSION['filtros_orden'] = [
+        'campo_orden' => $campo,
+        'direccion' => $direccion
     ];
+
+    // Obtener todos los rides futuros
+    $rides = consultarRides(); // todos los rides
+    $rides = filtrarEspaciosDisponibles($rides); 
+    $rides = ordenamientoRides($rides, $campo, $direccion);
+
+    $_SESSION['rides_filtrados'] = $rides;
+
+    if (empty($rides)) {
+        $_SESSION['mensaje_reserva'] = [
+            'texto' => 'No hay rides disponibles.',
+            'tipo' => 'error'
+        ];
+    }
+
+    header("Location: ../interfaz/index.php");
+    exit;
 }
 
-header("Location: ../interfaz/index.php");
-exit;
+
+// ===== Función controladora =====
+function procesarIndexRide() {
+    validarMetodo();
+
+    if (isset($_POST['id_ride'])) {
+        // Si viene el ID del ride => procesar reserva
+        procesarReservaRide();
+    } else {
+        // Si vienen campos de filtrado => procesar filtrado
+        procesarFiltradoRide();
+    }
+}
+
+// ===== Ejecutar =====
+procesarIndexRide();
+
 ?>

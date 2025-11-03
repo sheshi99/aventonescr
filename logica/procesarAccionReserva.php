@@ -1,7 +1,7 @@
 <?php
 session_start();
 include_once("../datos/reservas.php");
-include_once("../datos/rides.php"); // necesario para obtenerEspaciosDisponibles
+include_once("../datos/rides.php"); 
 
 function redirigir($ruta = "../interfaz/misReservas.php") {
     header("Location: $ruta");

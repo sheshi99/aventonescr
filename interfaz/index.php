@@ -1,4 +1,15 @@
 <?php
+
+
+/*
+ * Archivo: index.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Descripción: 
+ * Muestra los rides disponibles para los usuarios, permite filtrar por fecha,
+ * salida y llegada, y reservar un ride si hay espacios disponibles. 
+ * También gestiona mensajes de reserva y ordenamiento.
+ */
+
 session_start();
 include_once("../datos/rides.php");
 
@@ -9,7 +20,7 @@ $usuario = $_SESSION['usuario'] ?? null;
 $mensajeReserva = $_SESSION['mensaje_reserva'] ?? '';
 unset($_SESSION['mensaje_reserva']);
 
-// Si hay filtros guardados en sesión, usarlos
+// Filtros guardados en sesión
 $filtros = $_SESSION['filtros_orden'] ?? [
     'fecha' => '',
     'salida' => '',
@@ -17,12 +28,24 @@ $filtros = $_SESSION['filtros_orden'] ?? [
     'direccion' => 'ASC'
 ];
 
-// Obtener rides según filtros, si no hay filtros mostrar todos
+// Obtener rides según filtros
 if (!empty($_SESSION['rides_filtrados'])) {
     $rides = $_SESSION['rides_filtrados'];
 } else {
-    // Si no hay filtros aplicados, pasar todos los rides futuros
-    $rides = buscarRides('', '', '', 'ASC'); // Sin filtros, solo orden por día ascendente
+    $fecha = $filtros['fecha'] ?? '';
+    $salida = $filtros['salida'] ?? '';
+    $llegada = $filtros['llegada'] ?? '';
+    $direccion = $filtros['direccion'] ?? 'ASC';
+
+    // Solo filtrar si el usuario realmente ingresó algo
+    if ($fecha !== '' || $salida !== '' || $llegada !== '') {
+        $rides = buscarRides($fecha, $salida, $llegada, 'dia', $direccion);
+    } else {
+        // Sin filtros: obtener todos los rides futuros
+        $rides = consultarRides(); // rides futuros
+        $rides = filtrarEspaciosDisponibles($rides);
+        $rides = ordenamientoRides($rides, 'dia', $direccion);
+    }
 }
 
 // Limpiar filtros y rides de sesión para que al refrescar se reinicien
@@ -34,7 +57,7 @@ unset($_SESSION['filtros_orden']);
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Rides Disponibles</title>
+    <title>Pagina Web</title>
     <link rel="stylesheet" href="../Estilos/estilosBuscarRide.css?v=7">
 </head>
 <body>
@@ -43,20 +66,20 @@ unset($_SESSION['filtros_orden']);
     <div class="header-content">
         <?php if (!$usuario): ?>
             <div class="auth-buttons">
-                <a href="login.php" class="btn btn-login">Iniciar sesión</a>
-                <a href="formularioUsuario.php?publico=1" class="btn btn-registrar">Registrarse</a>
+                <a href="Login.php" class="btn btn-login">Iniciar sesión</a>
+                <a href="formularioUsuario.php?publico=1" class="btn btn-registrar">Registrarme</a>
             </div>
-            <?php else: ?>
-                <p class="usuario-nombre">👋 Hola, <?= htmlspecialchars($usuario['nombre'] ?? $usuario['rol']) ?></p>
-                <div class="header-right">
-                    <?php if ($usuario['rol'] === 'Pasajero'): ?>
-                        <form action="pasajeroPanel.php" method="get" style="display:inline;">
-                            <button type="submit" class="btn btn-panel">Ir al Panel</button>
-                        </form>
-                    <?php endif; ?>
-                </div>
-             <?php endif; ?>
-        </div>
+        <?php else: ?>
+            <p class="usuario-nombre">👋 Hola, <?= htmlspecialchars($usuario['nombre'] ?? $usuario['rol']) ?></p>
+            <div class="header-right">
+                <?php if ($usuario['rol'] === 'Pasajero'): ?>
+                    <form action="pasajeroPanel.php" method="get" style="display:inline;">
+                        <button type="submit" class="btn btn-panel"> 🡸 </button>
+                    </form>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+    </div>
 </header>
 
 <main class="buscar-container">
@@ -85,22 +108,18 @@ unset($_SESSION['filtros_orden']);
     <div class="buscar-card">
         <form method="post" action="../logica/procesarIndexRide.php" class="ordenamiento-horizontal">
             <div class="filtro-campo">
-                <label for="fecha">Fecha:</label>
-                <input type="date" id="fecha" name="fecha" value="<?= htmlspecialchars($filtros['fecha']) ?>">
+                <label for="campo_orden">Ordenar por:</label>
+                <select name="campo_orden" id="campo_orden">
+                    <option value="dia" <?= ($filtros['campo_orden'] ?? '') === 'dia' ? 'selected' : '' ?>>Fecha</option>
+                    <option value="salida" <?= ($filtros['campo_orden'] ?? '') === 'salida' ? 'selected' : '' ?>>Lugar de salida</option>
+                    <option value="llegada" <?= ($filtros['campo_orden'] ?? '') === 'llegada' ? 'selected' : '' ?>>Lugar de llegada</option>
+                </select>
             </div>
             <div class="filtro-campo">
-                <label for="salida">Lugar de salida:</label>
-                <input type="text" id="salida" name="salida" placeholder="Origen" value="<?= htmlspecialchars($filtros['salida']) ?>">
-            </div>
-            <div class="filtro-campo">
-                <label for="llegada">Lugar de llegada:</label>
-                <input type="text" id="llegada" name="llegada" placeholder="Destino" value="<?= htmlspecialchars($filtros['llegada']) ?>">
-            </div>
-            <div class="filtro-campo">
-                <label for="orden_direccion">Orden:</label>
+                <label for="orden_direccion">Dirección:</label>
                 <select name="orden_direccion" id="orden_direccion">
-                    <option value="ASC" <?= ($filtros['direccion'] === 'ASC') ? 'selected' : '' ?>>Ascendente</option>
-                    <option value="DESC" <?= ($filtros['direccion'] === 'DESC') ? 'selected' : '' ?>>Descendente</option>
+                    <option value="ASC" <?= ($filtros['direccion'] ?? '') === 'ASC' ? 'selected' : '' ?>>Ascendente</option>
+                    <option value="DESC" <?= ($filtros['direccion'] ?? '') === 'DESC' ? 'selected' : '' ?>>Descendente</option>
                 </select>
             </div>
             <div class="filtro-campo boton-ordenar">
@@ -108,6 +127,7 @@ unset($_SESSION['filtros_orden']);
             </div>
         </form>
     </div>
+
 
     <!-- ===== Tabla de rides ===== -->
     <?php if (!empty($rides)): ?>

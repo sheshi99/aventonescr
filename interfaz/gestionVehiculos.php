@@ -4,11 +4,11 @@
  * --------------------------------------------------------------
  * Archivo: gestionVehiculos.php
  * Autores: Seidy Alanis y Walbyn González
- * Fecha: 01/11/2025
  * Descripción:
  * Es la interfaz de gestión de vehículos para choferes, que muestra todos los vehículos
  * registrados por el chofer, permite editarlos o eliminarlos, y ofrece
- * un botón para agregar un nuevo vehículo. También muestra mensajes de éxito o error según las acciones realizadas.
+ * un botón para agregar un nuevo vehículo. También muestra mensajes de éxito o 
+ * error según las acciones realizadas.
  * --------------------------------------------------------------
  */
 
@@ -43,7 +43,7 @@ $rol = htmlspecialchars($usuario['rol']);
         </div>
         <div class="header-right">
             <form action="choferPanel.php" method="get">
-                <button type="submit" class="btn-panel">Ir al Panel</button>
+                <button type="submit" class="btn-panel"> 🡸 </button>
             </form>
         </div>
     </div>
@@ -92,10 +92,12 @@ $rol = htmlspecialchars($usuario['rol']);
                         <?php endif; ?>
                     </td>
                     <td>
+                    <?php if (!vehiculoTieneRides($vehiculo['id_vehiculo'])): ?>
                         <form action="../interfaz/formularioVehiculo.php" method="post" class="form-accion">
                             <input type="hidden" name="id_vehiculo" value="<?= $vehiculo['id_vehiculo'] ?>">
                             <button type="submit" class="btn-verde">Editar</button>
                         </form>
+                    <?php endif; ?>
 
                         <form action="../logica/procesarVehiculo.php" method="post" class="form-accion">
                             <input type="hidden" name="accion" value="eliminar">

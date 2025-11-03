@@ -1,6 +1,22 @@
 <?php
+
+/*
+ * --------------------------------------------------------------
+ * Archivo: reservas.php
+ * Autores: Seidy Alanis y Walbyn González
+ * 
+ * Descripción:
+ * Funciones para gestionar reservas mediante SQL:
+ * insertar reservas, obtener reservas por usuario, actualizar estado,
+ * aceptar/rechazar por chofer y cancelar por pasajero.
+ * Todas las funciones implementan manejo de errores mediante try-catch
+ * para capturar excepciones y registrar posibles fallos en la base de datos.
+ * --------------------------------------------------------------
+ */
+
+
 include_once("../configuracion/conexion.php");
-include_once("rides.php"); // Necesario para obtenerEspaciosDisponibles
+include_once("rides.php"); 
 
 function insertarReserva($idRide, $idPasajero) {
     $conexion = conexionBD();
@@ -19,15 +35,47 @@ function obtenerReservasPorUsuario($idUsuario, $rol) {
     $conexion = conexionBD();
 
     if ($rol === 'Pasajero') {
-        $sql = "SELECT r.id_reserva, ri.nombre, ri.salida, ri.llegada, ri.dia, ri.hora, r.estado
+        // Cuando el usuario es Pasajero → mostrar info del chofer
+        $sql = "SELECT 
+                    r.id_reserva, 
+                    ri.nombre AS ride_nombre, 
+                    ri.salida, 
+                    ri.llegada,
+                    ri.dia, 
+                    ri.hora, 
+                    r.estado,
+                    v.numero_placa, 
+                    v.marca, 
+                    v.modelo, 
+                    v.anno,
+                    u.nombre AS chofer_nombre, 
+                    u.apellido AS chofer_apellido
                 FROM reservas r
                 JOIN rides ri ON r.id_ride = ri.id_ride
+                JOIN vehiculos v ON ri.id_vehiculo = v.id_vehiculo
+                JOIN usuarios u ON ri.id_chofer = u.id_usuario
                 WHERE r.id_pasajero = ?
                 ORDER BY ri.dia DESC, ri.hora DESC";
-    } else { // Chofer
-        $sql = "SELECT r.id_reserva, ri.nombre, ri.salida, ri.llegada, ri.dia, ri.hora, r.estado
+    } else {
+        // Cuando el usuario es Chofer → mostrar info del pasajero
+        $sql = "SELECT 
+                    r.id_reserva, 
+                    ri.nombre AS ride_nombre, 
+                    ri.salida, 
+                    ri.llegada,
+                    ri.dia, 
+                    ri.hora, 
+                    r.estado,
+                    v.numero_placa, 
+                    v.marca, 
+                    v.modelo, 
+                    v.anno,
+                    u.nombre AS pasajero_nombre, 
+                    u.apellido AS pasajero_apellido
                 FROM reservas r
                 JOIN rides ri ON r.id_ride = ri.id_ride
+                JOIN vehiculos v ON ri.id_vehiculo = v.id_vehiculo
+                JOIN usuarios u ON r.id_pasajero = u.id_usuario
                 WHERE ri.id_chofer = ?
                 ORDER BY ri.dia DESC, ri.hora DESC";
     }
@@ -45,14 +93,11 @@ function obtenerReservasPorUsuario($idUsuario, $rol) {
         $fechaHoraRide = $fila['dia'] . ' ' . $fila['hora'];
 
         if ($fechaHoraRide >= $now && in_array($fila['estado'], ['Pendiente', 'Aceptada'])) {
-            // Reservas activas
             $activas[] = $fila;
         } else {
-            // Reservas pasadas
             if ($fila['estado'] === 'Aceptada' && $fechaHoraRide < $now) {
                 $fila['estado'] = 'Realizado';
             }
-            // Las canceladas o rechazadas mantienen su estado
             $pasadas[] = $fila;
         }
     }
@@ -89,7 +134,7 @@ function actualizarEstadoReserva($idReserva, $nuevoEstado) {
     return $ok;
 }
 
-/* ✅ Chofer acepta o rechaza con validación de espacios */
+
 function aceptarReservaChofer($idReserva) {
     $reserva = obtenerReservaPorId($idReserva);
     if (!$reserva) return false;
@@ -104,7 +149,7 @@ function rechazarReservaChofer($idReserva) {
     return actualizarEstadoReserva($idReserva, 'Rechazada');
 }
 
-/* ✅ Pasajero cancela */
+
 function cancelarReservaPasajero($idReserva, $idPasajero) {
     $conexion = conexionBD();
     $sql = "UPDATE reservas 

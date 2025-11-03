@@ -6,8 +6,10 @@
  * Autores: Seidy Alanis y Walbyn González
  * Fecha: 01/11/2025
  * Descripción:
- * Es la página de inicio de sesión, donde el usuario ingresa su cédula y contraseña para acceder al sistema.
- * Muestra mensajes de error o éxito según la sesión y ofrece un enlace para registrarse si no tiene cuenta.
+ * Es la página de inicio de sesión, donde el usuario ingresa su cédula y 
+ * contraseña para acceder al sistema.
+ * Muestra mensajes de error o éxito según la sesión y ofrece un enlace 
+ * para registrarse si no tiene cuenta.
  * --------------------------------------------------------------
  */
 

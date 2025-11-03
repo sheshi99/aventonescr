@@ -4,11 +4,10 @@
  * --------------------------------------------------------------
  * Archivo: formularioVehiculo.php
  * Autores: Seidy Alanis y Walbyn González
- * Fecha: 01/11/2025
  * Descripción:
- * Es la interfaz de registro y edición de vehículos para choferes, que permite agregar un nuevo
- * vehículo o actualizar uno existente, completando campos como placa, color, marca, modelo,
- * año, asientos y fotografía. También muestra mensajes de éxito o error según la acción
+ * Es la interfaz de registro y edición de vehículos para choferes, que 
+ * permite agregar un nuevo vehículo o actualizar uno existente,  
+ * También muestra mensajes de éxito o error según la acción
  * realizada y ofrece un botón para regresar al panel del chofer.
  * --------------------------------------------------------------
  */
@@ -99,16 +98,8 @@ $id_vehiculo = $_POST['id_vehiculo'] ?? $vehiculo['id_vehiculo'] ?? null;
             <button type="submit" class="btn-registrar">
                 <?= $accion === 'actualizar' ? "Actualizar Vehículo" : "Registrar Vehículo" ?>
             </button>
-
-
-        </form>
-
-        
-            <form action="choferPanel.php" method="get" style="display:inline;">
-                <button type="submit" class="btn-salir">Salir</button>
-            </form>
+        </form>     
     </div>
 </div>
-
 </body>
 </html>

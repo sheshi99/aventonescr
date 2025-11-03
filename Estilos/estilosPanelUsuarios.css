@@ -1,4 +1,4 @@
-/* ===== Fondo general ===== */
+
 body {
     font-family: "Poppins", Arial, sans-serif;
     background: linear-gradient(135deg, #d3e4fa, #5bb4f0);
@@ -10,13 +10,12 @@ body {
     color: #2c3e50;
 }
 
-/* ===== Header con bienvenida ===== */
-/* ===== Header con bienvenida ===== */
+
 .header {
     width: 100%;
     max-width: 2000px;
     background-color: #00609f;
-    padding: 20px 60px; /* más espacio interno */
+    padding: 20px 60px; 
     border-radius: 15px;
     box-shadow: 0 4px 25px rgba(0,0,0,0.1);
     text-align: center;
@@ -25,7 +24,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: relative; /* necesario para posicionar el botón dentro */
+    position: relative; 
 }
 
 .header-left {
@@ -40,11 +39,11 @@ body {
     margin: 0;
 }
 
-/* ===== Botón cerrar sesión ===== */
+
 .btn-cerrar {
     position: absolute;
-    right: 75px;  /* 🔹 antes no tenía esto */
-    top: 18px;    /* 🔹 baja un poco el botón para que quede centrado verticalmente */
+    right: 75px;  
+    top: 18px;    
     background-color: #d9534f;
     color: white;
     border: none;
@@ -68,7 +67,7 @@ body {
     transform: scale(0.97);
 }
 
-/* ===== Tarjeta principal (botones) ===== */
+
 .card {
     background: #ffffff;
     border-radius: 15px;
@@ -84,7 +83,7 @@ body {
     transform: translateY(-3px);
 }
 
-/* ===== Menú de botones ===== */
+
 .menu {
     display: flex;
     justify-content: center;
@@ -92,7 +91,7 @@ body {
     flex-wrap: wrap;
 }
 
-/* ===== Botones del menú ===== */
+
 .menu button {
     background-color: #00609f;
     color: #fff;
@@ -111,11 +110,11 @@ body {
     transform: translateY(-2px);
 }
 
-/* ===== Menú desplegable ===== */
+
 .menu-contenedor {
     position: relative;
     display: inline-block;
-    margin-left: 10px; /* ← separa del borde izquierdo */
+    margin-left: 10px; 
 }
 
 .toggle-menu {
@@ -167,4 +166,29 @@ body {
 
 .menu-boton:hover {
     background-color: #e7f1fb;
+}
+
+.foto {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    vertical-align: middle; 
+    margin-left: 10px; 
+}
+
+.menu-boton {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    color: #00609f;
+    font-weight: 600;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.espacio-menu-foto {
+    margin-left: 10px;
+    display: inline-block;
 }

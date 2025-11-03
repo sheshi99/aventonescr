@@ -1,4 +1,18 @@
 <?php
+
+/*
+ * Archivo: usuarios.php
+ * Autores: Seidy Alanis y Walbyn González
+ * 
+ * Descripción:
+ * Funciones para gestionar usuarios mediante consultas SQL: 
+ * insertar, activar, editar, obtener por ID o cédula, listar por rol, 
+ * verificar duplicados, cambiar estado y actualizar contraseña.
+ * Todas las funciones implementan manejo de errores mediante try-catch
+ * para capturar excepciones y registrar posibles fallos en la base de datos.
+ */
+
+
 include_once ("../configuracion/conexion.php");
 include_once ("../configuracion/correo.php");
 
@@ -77,6 +91,63 @@ function activarUsuarioPorToken($token) {
     }
 }
 
+
+function verificarUsuarioDuplicado($cedula, $correo, $id_usuario = null) {
+    try {
+        $conexion = conexionBD();
+
+        $sql = "SELECT cedula, correo, id_usuario FROM usuarios WHERE cedula = ? OR correo = ?";
+        $consulta = mysqli_prepare($conexion, $sql);
+        mysqli_stmt_bind_param($consulta, "ss", $cedula, $correo);
+        mysqli_stmt_execute($consulta);
+        $resultado = mysqli_stmt_get_result($consulta);
+
+        while ($fila = mysqli_fetch_assoc($resultado)) {
+            // Ignorar la propia cédula/correo si es edición
+            if ($id_usuario && $fila['id_usuario'] == $id_usuario) continue;
+
+            if ($fila['cedula'] === $cedula) {
+                mysqli_stmt_close($consulta);
+                mysqli_close($conexion);
+                return 'cedula'; // duplicada la cédula
+            }
+
+            if ($fila['correo'] === $correo) {
+                mysqli_stmt_close($consulta);
+                mysqli_close($conexion);
+                return 'correo'; // duplicado el correo
+            }
+        }
+
+        mysqli_stmt_close($consulta);
+        mysqli_close($conexion);
+        return false; // no hay duplicados
+    } catch (Exception $e) {
+        error_log("Error en verificarUsuarioDuplicado: " . $e->getMessage());
+        return true; // asumir duplicado si falla
+    }
+}
+
+
+function obtenerUsuarioPorCedula($cedula) {
+    try {
+        $conexion = conexionBD();
+        $sql = "SELECT * FROM usuarios WHERE cedula = ?";
+        $consulta = mysqli_prepare($conexion, $sql);
+        mysqli_stmt_bind_param($consulta, "s", $cedula);
+        mysqli_stmt_execute($consulta);
+        $resultado = mysqli_stmt_get_result($consulta);
+        $usuario = mysqli_fetch_assoc($resultado);
+
+        mysqli_stmt_close($consulta);
+        mysqli_close($conexion);
+        return $usuario;
+    } catch (Exception $e) {
+        error_log("Error en obtenerUsuarioPorCedula: " . $e->getMessage());
+        return null;
+    }
+}
+
 function listarUsuariosPorRol($rol) {
     try {
         if (empty($rol)) return [];
@@ -102,44 +173,6 @@ function listarUsuariosPorRol($rol) {
     }
 }
 
-function verificarUsuarioExistente($cedula, $correo) {
-    try {
-        $conexion = conexionBD();
-        $sql = "SELECT COUNT(*) AS encontrado FROM usuarios WHERE cedula = ? OR correo = ?";
-        $consulta = mysqli_prepare($conexion, $sql);
-        mysqli_stmt_bind_param($consulta, "ss", $cedula, $correo);
-        mysqli_stmt_execute($consulta);
-        $resultado = mysqli_stmt_get_result($consulta);
-        $fila = mysqli_fetch_assoc($resultado);
-
-        mysqli_stmt_close($consulta);
-        mysqli_close($conexion);
-
-        return $fila['encontrado'] > 0;
-    } catch (Exception $e) {
-        error_log("Error en verificarUsuarioExistente: " . $e->getMessage());
-        return true; // Asumir que existe para no permitir duplicados si falla
-    }
-}
-
-function obtenerUsuarioPorCedula($cedula) {
-    try {
-        $conexion = conexionBD();
-        $sql = "SELECT * FROM usuarios WHERE cedula = ?";
-        $consulta = mysqli_prepare($conexion, $sql);
-        mysqli_stmt_bind_param($consulta, "s", $cedula);
-        mysqli_stmt_execute($consulta);
-        $resultado = mysqli_stmt_get_result($consulta);
-        $usuario = mysqli_fetch_assoc($resultado);
-
-        mysqli_stmt_close($consulta);
-        mysqli_close($conexion);
-        return $usuario;
-    } catch (Exception $e) {
-        error_log("Error en obtenerUsuarioPorCedula: " . $e->getMessage());
-        return null;
-    }
-}
 
 function obtenerUsuarioPorId($id_usuario) {
     try {
@@ -160,8 +193,7 @@ function obtenerUsuarioPorId($id_usuario) {
     }
 }
 
-
-
+// Cambiar estado de usuario
 function cambiarEstadoUsuario($id, $estado) {
     try {
         $conexion = conexionBD();
@@ -210,7 +242,7 @@ function editarUsuario($id_usuario, $nombre, $apellido, $cedula, $fecha_nacimien
     }
 }
 
-// Verifica si la contraseña proporcionada coincide con la del usuario
+
 function confirmarContrasena($id_usuario, $contrasena) {
     try {
         $conexion = conexionBD();
@@ -232,7 +264,7 @@ function confirmarContrasena($id_usuario, $contrasena) {
     }
 }
 
-// Actualiza la contraseña del usuario
+
 function actualizarContrasena($id_usuario, $nueva_contrasena) {
     try {
         $hash = password_hash($nueva_contrasena, PASSWORD_DEFAULT);

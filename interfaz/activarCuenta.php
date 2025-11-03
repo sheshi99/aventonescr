@@ -2,13 +2,14 @@
 
 /*
  * --------------------------------------------------------------
- * Archivo: actiivarCuenta.php
+ * Archivo: activarCuenta.php
  * Autores: Seidy Alanis y Walbyn González
- * Fecha: 01/11/2025
  * Descripción:
- * Activa la cuenta de un usuario mediante un token y muestra un mensaje de éxito o error.
+ * Activa la cuenta de un usuario mediante un token y muestra un 
+ * mensaje de éxito o error.
  * --------------------------------------------------------------
  */
+
 
 include_once ("../datos/usuarios.php");
 
@@ -37,14 +38,42 @@ if (!isset($_GET['token'])) {
 <head>
     <meta charset="UTF-8">
     <title>Activación de Cuenta</title>
-    <link rel="stylesheet" href="../Estilos/estilosActivacion.css">
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            background: #f0f8ff; 
+        }
+        .mensaje {
+            padding: 20px 30px;
+            border-radius: 8px;
+            text-align: center;
+            background-color: #555; /* gris neutro */
+            color: #fff;
+        }
+        a { 
+            display: inline-block; 
+            margin-top: 15px; 
+            padding: 8px 16px; 
+            color: #fff; 
+            text-decoration: none; 
+            background: #333; /* gris oscuro */
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        a:hover {
+            background: #111; /* gris más oscuro al pasar el mouse */
+        }
+    </style>
 </head>
 <body>
-    <div class="mensaje <?= $tipo ?>">
+    <div class="mensaje">
         <p><?= $mensaje ?></p>
-        <?php if ($tipo === 'success'): ?>
-            <a href="login.php">Ir al Login</a>
-        <?php endif; ?>
+        <a href="login.php">Ir al Login</a>
     </div>
 </body>
 </html>
+

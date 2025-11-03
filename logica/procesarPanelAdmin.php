@@ -1,19 +1,21 @@
 <?php
 
-include_once ("../datos/usuarios.php");
+include_once("../datos/usuarios.php");
 
-
-if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'Administrador') {
-    die("Acceso no permitido.");
+// ===== Función de mensaje y redirección =====
+function mensajeYRedirigir($texto, $tipo = 'error', $url = '../interfaz/adminPanel.php') {
+    $_SESSION['mensaje'] = ['texto' => $texto, 'tipo' => $tipo];
+    header("Location: $url");
+    exit;
 }
 
+// ===== Obtener usuarios filtrados =====
 function obtenerUsuariosFiltrados() {
     $rolesValidos = ['Administrador', 'Chofer', 'Pasajero'];
     $rolFiltrado = null;
     $usuarios = [];
     $sinRolSeleccionado = true;
 
-    // Buscar el rol desde POST o GET
     $seleccion = $_POST['filtro_rol'] ?? $_GET['filtro_rol'] ?? null;
 
     if ($seleccion && in_array($seleccion, $rolesValidos)) {
@@ -25,29 +27,36 @@ function obtenerUsuariosFiltrados() {
     return [$rolFiltrado, $usuarios, $sinRolSeleccionado];
 }
 
-
+// ===== Procesar acción de desactivar =====
 function procesarAccion() {
     if (isset($_POST['accion'], $_POST['id_usuario'])) {
         $id = $_POST['id_usuario'];
         $accion = $_POST['accion'];
 
-        if (!in_array($accion, ['activar', 'desactivar'])) return;
+        // Solo se permite desactivar
+        if ($accion !== 'desactivar') {
+            mensajeYRedirigir("Acción no permitida.", "error");
+        }
 
-        $estado = ($accion === 'activar') ? 'Activo' : 'Inactivo';
-        cambiarEstadoUsuario($id, $estado);
+        $usuario = obtenerUsuarioPorId($id);
+        if (!$usuario) {
+            mensajeYRedirigir("Usuario no encontrado.", "error");
+        }
 
-        // Recupera el rol actual desde POST o GET
-        $rolActual = isset($_POST['filtro_rol']) ? urlencode($_POST['filtro_rol']) 
-                    : (isset($_GET['filtro_rol']) ? urlencode($_GET['filtro_rol']) : '');
+        if ($usuario['estado'] !== 'Activo' && $usuario['estado'] !== 'Pendiente') {
+        mensajeYRedirigir("Error al desactivar usuario", "error");
+        }
 
-        // Redirige conservando el rol seleccionado
-        echo "<script>
-                alert('✅ Estado modificado correctamente');
-                window.location.href = '../interfaz/adminPanel.php" . ($rolActual ? "?filtro_rol={$rolActual}" : "") . "';
-              </script>";
-        exit;
+        // Cambiar estado a Inactivo
+        cambiarEstadoUsuario($id, 'Inactivo');
+        mensajeYRedirigir("✅ Usuario desactivado correctamente.", "success");
     }
 }
 
+// ===== Ejecutar si viene acción =====
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'], $_POST['id_usuario'])) {
+    procesarAccion();
+}
+?>
 
 

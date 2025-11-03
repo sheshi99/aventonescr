@@ -15,11 +15,11 @@ body {
 }
 
 .success { 
-    background-color: #2196F3; /* azul */
+    background-color: #2196F3; 
 }
 
 .error { 
-    background-color: #f44336; /* rojo */
+    background-color: #f44336; 
 }
 
 a { 

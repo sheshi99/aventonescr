@@ -1,5 +1,19 @@
 <?php
 
+/*
+ * --------------------------------------------------------------
+ * Archivo: correo.php
+ * Autor: Seidy Alanis y Walbyn González
+ * 
+ * Descripción:
+ * Contiene la función enviarCorreoActivacion() que utiliza
+ * PHPMailer para enviar un correo de activación de cuenta
+ * a un usuario recién registrado en la plataforma Aventones CR.
+ * El correo incluye un enlace con un token único para activar
+ * la cuenta y un mensaje personalizado con el nombre y rol del usuario.
+ * --------------------------------------------------------------
+ */
+
 include_once 'config.php'; 
 
 require 'PHPMailer/src/PHPMailer.php';

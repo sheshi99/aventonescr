@@ -1,4 +1,4 @@
-/* ===== Estilos generales ===== */
+
 body {
     font-family: "Poppins", Arial, sans-serif;
     background: linear-gradient(135deg, #d3e4fa);
@@ -6,18 +6,18 @@ body {
     color: #333;
 }
 
-/* ===== Encabezado ===== */
+
 .header {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* separa izquierda y derecha */
+    justify-content: space-between; 
     background-color: #00609f;
     color: #fff;
-    padding: 15px 40px;
+    padding: 45px 40px;
     position: relative;
 }
 
-/* Contenedor del título de la izquierda */
+
 .header-left {
     display: flex;
     align-items: center;
@@ -42,7 +42,7 @@ body {
     margin: 0;
 }
 
-/* CENTRAR el nombre de usuario */
+
 .header h2:nth-child(2), .user-info h2 {
     position: absolute;
     left: 50%;
@@ -55,14 +55,14 @@ body {
     font-size: 15px;
 }
 
-/* ===== Contenido principal ===== */
+
 .main {
     max-width: 1100px;
     margin: 30px auto;
     padding: 0 20px;
 }
 
-/* ===== Sección de filtros ===== */
+
 .filtros {
     display: flex;
     justify-content: space-between;
@@ -85,7 +85,7 @@ select {
     font-size: 14px;
 }
 
-/* ===== Botones generales ===== */
+
 .btn {
     border: none;
     border-radius: 8px;
@@ -153,7 +153,7 @@ select {
     background-color: #d0e9ff;
 }
 
-/* ===== Tabla ===== */
+
 .tabla h2 {
     color: #005ab5;
     margin-bottom: 15px;
@@ -186,7 +186,7 @@ tbody tr:hover {
     background-color: #ecf5ff;
 }
 
-/* ===== Estado visual ===== */
+
 .estado.activo {
     color: #27ae60;
     font-weight: 600;
@@ -197,7 +197,7 @@ tbody tr:hover {
     font-weight: 600;
 }
 
-/* ===== Botones de acción en tabla ===== */
+
 .form-accion {
     display: inline;
 }
@@ -230,19 +230,21 @@ tbody tr:hover {
     background-color: #c9302c;
 }
 
-/* ===== Fotos ===== */
+
 .foto {
     width: 60px;
     height: 60px;
     object-fit: cover;
     border-radius: 50%;
+    vertical-align: middle; 
+    margin-left: 10px; 
 }
 
-/* ===== Menú desplegable ===== */
+
 .menu-contenedor {
     position: relative;
     display: inline-block;
-    margin-left: 10px; /* ← separa del borde izquierdo */
+    margin-left: 10px; 
 }
 
 .toggle-menu {
@@ -294,4 +296,9 @@ tbody tr:hover {
 
 .menu-boton:hover {
     background-color: #e7f1fb;
+}
+
+.espacio-menu-foto {
+    margin-left: 10px;
+    display: inline-block;
 }

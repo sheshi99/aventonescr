@@ -177,12 +177,12 @@ function validarRide($datos, $id_ride_actual = null) {
 // ==================== ACCIONES ====================
 
 function eliminarRideAction($id_ride) {
-    if (eliminarRide($id_ride)) {
-        redirigirMsjRide("✅ Ride eliminado", "../interfaz/gestionRides.php", 
-                                "success");
+    $resultado = eliminarRide($id_ride);
+
+    if ($resultado === true) {
+        redirigirMsjRide("✅ Ride eliminado", "../interfaz/gestionRides.php", "success");
     } else {
-        redirigirMsjRide("❌ Error al eliminar", "../interfaz/gestionRides.php", 
-                                "error");
+        redirigirMsjRide("❌ No se pudo eliminar: $resultado", "../interfaz/gestionRides.php", "error");
     }
 }
 

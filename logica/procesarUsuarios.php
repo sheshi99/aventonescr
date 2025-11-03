@@ -21,16 +21,15 @@ function obtenerDatosFormulario() {
 }
 
 
-
 function origenFormulario($datos) {
     $rol = $datos['rol'] ?? $_SESSION['usuario']['rol'] ?? '';
-    return $rol === 'Administrador' ? "../interfaz/registroAdmin.php" 
-                                    : "../interfaz/registroUsuario.php";
+    return $rol === 'Administrador' ? "../interfaz/formularioAdmin.php" 
+                                    : "../interfaz/formularioUsuario.php";
 }
 
 
 function panelSegunRol($datos) {
-    // Obtener rol del formulario o de la sesión si no existe
+
     $rol = $datos['rol'] ?? $_SESSION['usuario']['rol'] ?? '';
 
     switch (strtolower($rol)) {
@@ -41,15 +40,12 @@ function panelSegunRol($datos) {
         case 'pasajero':
             return "../interfaz/pasajeroPanel.php";
         default:
-            return "../interfaz/login.php"; // Por seguridad, si no hay rol
+            return "../interfaz/login.php"; 
     }
 }
 
 
-// ----------------------------
-// VALIDACIONES
-// ----------------------------
-
+// ==================== VALIDACIONES ====================
 
 function validarContrasena($contrasena, $contrasena2, $datos) {
     $id_usuario = $datos['id_usuario'] ?? null;
@@ -157,6 +153,30 @@ function validarTelefono($telefono, $datos) {
     }
 }
 
+
+function validarDuplicadosUsuario($datos, $id_usuario = null) {
+    $duplicado = verificarUsuarioDuplicado($datos['cedula'], $datos['correo'], $id_usuario); 
+
+    if ($duplicado) {
+        // $duplicado podría ser 'cedula' o 'correo'
+        $mensaje = $id_usuario 
+            ? "❌ Ya existe otro usuario con igual {$duplicado}" 
+            : "❌ Ya existe un usuario con igual {$duplicado}";
+
+        redirigirMsjUsuario(
+            $mensaje,
+            origenFormulario($datos),
+            "error",
+            $datos,
+            $duplicado,
+            $id_usuario,
+            $id_usuario ? 'actualizar' : 'insertar'
+        );
+    }
+}
+
+
+
 function ejecutarValidaciones($datos) {
     $id_usuario = $datos['id_usuario'] ?? null;
     $accion = $id_usuario ? 'actualizar' : 'insertar';
@@ -166,11 +186,10 @@ function ejecutarValidaciones($datos) {
         $datos['rol'] = 'Administrador'; // rol por defecto para administradores
     }
 
-    // Campos obligatorios
+
     $campos = ['nombre','apellido','cedula','fecha_nacimiento','correo','telefono'];
 
     if (!$id_usuario) {
-        // Solo validar contraseñas como obligatorias
         $campos[] = 'contrasena';
         $campos[] = 'contrasena2';
     }
@@ -189,12 +208,12 @@ function ejecutarValidaciones($datos) {
         }
     }
 
-    // Validaciones específicas
+
     validarCedula($datos['cedula'], $datos);
     validarTelefono($datos['telefono'], $datos);
     validarContrasena($datos['contrasena'], $datos['contrasena2'], $datos);
 
-    // Validar edad
+   
     $rolValidar = $datos['rol'];
     if ($id_usuario && empty($rolValidar)) {
         $usuarioExistente = obtenerUsuarioPorId($id_usuario);
@@ -202,20 +221,8 @@ function ejecutarValidaciones($datos) {
     }
     validarEdad($rolValidar, $datos['fecha_nacimiento'], $datos);
 
-    // Verificar usuario existente solo al registrar
-    if (!$id_usuario && verificarUsuarioExistente($datos['cedula'], $datos['correo'])) {
-        redirigirMsjUsuario(
-            "❌ Ya existe un usuario con esa cédula o correo",
-            origenFormulario($datos),
-            "error",
-            $datos,
-            'cedula',
-            null,
-            'insertar'
-        );
-    }
-
-    // Fotografía obligatoria solo al registrar
+    validarDuplicadosUsuario($datos, $id_usuario);
+    
     if (!$id_usuario && (!isset($_FILES['fotografia']) || $_FILES['fotografia']['error'] !== UPLOAD_ERR_OK)) {
         redirigirMsjUsuario(
             "❌ La fotografía es obligatoria",
@@ -228,7 +235,7 @@ function ejecutarValidaciones($datos) {
         );
     }
 
-    return $datos; // devolvemos datos actualizados con rol por defecto
+    return $datos; 
 }
 
 
@@ -294,9 +301,8 @@ function procesarFotografia($cedula, $nombre, $apellido, $rol, $datos) {
     return $destino;
 }
 
-// ----------------------------
-// ACTUALIZAR USUARIO
-// ----------------------------
+// ==================== ACCIONES ====================
+
 function actualizarUsuario($datos, $fotografia) {
     $id_usuario = $datos['id_usuario'];
 
@@ -335,9 +341,7 @@ function actualizarUsuario($datos, $fotografia) {
 }
 
 
-// ----------------------------
-// REGISTRAR USUARIO NUEVO
-// ----------------------------
+
 function registrarUsuario($datos, $fotografia) {
     $resultado = insertarUsuario(
         $datos['nombre'], $datos['apellido'], $datos['cedula'],
@@ -346,27 +350,31 @@ function registrarUsuario($datos, $fotografia) {
     );
 
     if ($resultado['success']) {
-        // Mensaje según rol
         if (strtolower($datos['rol'] ?? '') === 'administrador') {
             $_SESSION['mensaje'] = ['texto' => '✅ Administrador registrado con éxito', 'tipo' => 'success'];
+            header("Location: ../interfaz/adminPanel.php?filtro_rol=Administrador");
         } else {
-            $_SESSION['mensaje'] = ['texto' => '✅ Usuario registrado. Recibirá un correo para activar la cuenta', 'tipo' => 'success'];
+            $_SESSION['mensaje_login'] = [ // <-- aquí
+                'texto' => '✅ Usuario registrado. Recibirá un correo para activar la cuenta', 
+                'tipo' => 'success'
+            ];
+            header("Location: ../interfaz/Login.php");
         }
-
-        header("Location: " . panelSegunRol($datos, true));
         exit;
     } else {
-        // Error, también usando panel según rol
-        $_SESSION['mensaje'] = ['texto' => '❌ Ocurrió un error al registrar el usuario. Intente nuevamente.', 'tipo' => 'error'];
-        header("Location: " . panelSegunRol($datos, true));
+        $_SESSION['mensaje_login'] = [ // <-- y aquí
+            'texto' => '❌ Ocurrió un error al registrar el usuario. Intente nuevamente.', 
+            'tipo' => 'error'
+        ];
+        header("Location: ../interfaz/Login.php");
         exit;
     }
+
+    
 }
 
+// ==================== EJECUTAR ACCIÓN SEGÚN POST ===================
 
-// ----------------------------
-// FUNCION PRINCIPAL
-// ----------------------------
 function gestionarRegistro() {
     $datos = obtenerDatosFormulario();
 
@@ -387,9 +395,7 @@ function gestionarRegistro() {
     }
 }
 
-// ----------------------------
-// EJECUCIÓN
-// ----------------------------
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     gestionarRegistro();
 } else {

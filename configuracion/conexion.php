@@ -1,5 +1,18 @@
 <?php
 
+/*
+ * --------------------------------------------------------------
+ * Archivo: conexion.php
+ * 
+ * Autor: Seidy Alanis y Walbyn González
+ * Descripción:
+ * Contiene la función conexionBD() que establece la conexión
+ * a la base de datos 'aventones' usando MySQLi en estilo
+ * procedimental. Devuelve un objeto de conexión listo para
+ * ser utilizado en consultas y maneja errores de conexión.
+ * --------------------------------------------------------------
+ */
+
 function conexionBD() {
     $host = "localhost";
     $usuario = "admin";

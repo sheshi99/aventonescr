@@ -13,10 +13,8 @@
  */
 
 
-define('BASE_PATH', __DIR__ . '/');
-
-include_once(BASE_PATH . '../configuracion/conexion.php');
-include_once(BASE_PATH . '../configuracion/correo.php');
+include_once(__DIR__ . '/../configuracion/conexion.php');
+include_once(__DIR__ . '/../configuracion/correo.php');
 
 function inicializacionDatosUsuario($rol, $contrasena) {
     if ($rol === 'Administrador') {

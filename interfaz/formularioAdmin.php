@@ -10,6 +10,7 @@
 
 session_start();
 
+include_once("../logica/funcionesInterfaz.php");
 include_once("../utilidades/formulariosUtilidades.php");
 
 if (!isset($_SESSION['usuario'])) {
@@ -60,7 +61,7 @@ $datosFormulario = $preparacion['datosFormulario'];
             <!-- Hidden inputs -->
             <?php if($accion === 'actualizar'): ?>
                 <input type="hidden" name="id_usuario" value="<?= htmlspecialchars(valorUsuario('id_usuario', $datosFormulario, $usuario)) ?>">
-                <input type="hidden" name="fotografia_existente" value="<?= htmlspecialchars(valorUsuario('fotografia', $datosFormulario, $usuario)) ?>">
+                <input type="hidden" name="fotografia_existente" value="<?= htmlspecialchars(valorUsuario('fotografia_existente', $datosFormulario, $usuario)) ?>">
                 <input type="hidden" name="accion" value="actualizar">
             <?php else: ?>
                 <input type="hidden" name="rol" value="Administrador">

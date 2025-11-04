@@ -19,8 +19,9 @@ if (!isset($_GET['token'])) {
     $mensaje = "❌ Token no proporcionado.";
     $tipo = 'error';
 } else {
-    $token = $_GET['token'];
-    $activado = obtenerToken($token); 
+    $token = trim($_GET['token']);
+$activado = activarUsuarioPorToken($token);  
+ 
 
     if ($activado) {
         $mensaje = "✅ Cuenta activada correctamente. Ya puedes iniciar sesión.";

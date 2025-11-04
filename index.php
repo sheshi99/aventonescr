@@ -42,7 +42,7 @@ if (!empty($_SESSION['rides_filtrados'])) {
 
     // Solo filtrar si el usuario realmente ingresó algo
     if ($fecha !== '' || $salida !== '' || $llegada !== '') {
-        $rides = buscarRides($fecha, $salida, $llegada, 'dia', $direccion);
+        $rides = obtenerRidesFiltrados($fecha, $salida, $llegada, $direccion);
     } else {
         // Sin filtros: obtener todos los rides futuros
         $rides = consultarRides(); // rides futuros

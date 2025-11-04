@@ -11,9 +11,9 @@
  */
 
 session_start();
-include_once("../datos/vehiculos.php");  
-include_once("../datos/rides.php"); 
-include_once("../utilidades/formulariosUtilidades.php");    
+
+include_once("../utilidades/formulariosUtilidades.php");
+include_once("../logica/funcionesInterfaz.php");
 
 $id_chofer = $_SESSION['usuario']['id_usuario'] ?? null;
 if (!$id_chofer) {
@@ -27,7 +27,7 @@ $accion = $preparacion['accion'];
 $datosFormulario = $preparacion['datosFormulario'];
 $mensaje = $preparacion['mensaje'];
 
-$vehiculos = obtenerVehiculosPorChofer($id_chofer);
+$vehiculos = obtenerMisVehiculos($id_chofer);
 ?>
 
 <!DOCTYPE html>

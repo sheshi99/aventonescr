@@ -14,7 +14,7 @@
  */
 
 session_start();
-include_once("../datos/rides.php");
+include_once("../logica/funcionesInterfaz.php");
 
 if (!isset($_SESSION['usuario']['id_usuario'])) {
     header("Location: login.php");
@@ -22,7 +22,7 @@ if (!isset($_SESSION['usuario']['id_usuario'])) {
 }
 
 $id_chofer = $_SESSION['usuario']['id_usuario'];
-$rides = obtenerRidesPorChofer($id_chofer); // Debes tener esta función en datos/rides.php
+$rides = obtenerMisRides($id_chofer); // Debes tener esta función en datos/rides.php
 ?>
 
 <!DOCTYPE html>
@@ -83,14 +83,14 @@ $rides = obtenerRidesPorChofer($id_chofer); // Debes tener esta función en dato
                     <td><?= htmlspecialchars($ride['costo']) ?></td>
                     <td><?= htmlspecialchars($ride['espacios']) ?></td>
                     <td>
-                    <?php if (!rideTieneReservasRealizadas($ride['id_ride'])): ?>
+                    <?php if (!verificarRideTieneReservas($ride['id_ride'])): ?>
                         <form action="../interfaz/formularioRide.php" method="post" class="form-accion">
                             <input type="hidden" name="id_ride" value="<?= $ride['id_ride'] ?>">
                             <button type="submit" class="btn-verde">Editar</button>
                         </form>
                     <?php endif; ?>
 
-                        <!-- Botón eliminar -->
+                        
                         <form action="../logica/procesarRide.php" method="post" class="form-accion">
                             <input type="hidden" name="accion" value="eliminar">
                             <input type="hidden" name="id_ride" value="<?= $ride['id_ride'] ?>">

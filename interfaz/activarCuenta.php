@@ -10,8 +10,7 @@
  * --------------------------------------------------------------
  */
 
-
-include_once ("../datos/usuarios.php");
+include_once ("../logica/funcionesInterfaz.php");
 
 $mensaje = '';
 $tipo = '';
@@ -21,7 +20,7 @@ if (!isset($_GET['token'])) {
     $tipo = 'error';
 } else {
     $token = $_GET['token'];
-    $activado = activarUsuarioPorToken($token); 
+    $activado = obtenerToken($token); 
 
     if ($activado) {
         $mensaje = "✅ Cuenta activada correctamente. Ya puedes iniciar sesión.";
@@ -72,7 +71,7 @@ if (!isset($_GET['token'])) {
 <body>
     <div class="mensaje">
         <p><?= $mensaje ?></p>
-        <a href="login.php">Ir al Login</a>
+        <a href="Login.php">Ir al Login</a>
     </div>
 </body>
 </html>

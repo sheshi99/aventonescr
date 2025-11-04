@@ -9,7 +9,6 @@
  */
 
 session_start();
-include_once("../datos/usuarios.php");
 
 $usuario = $_SESSION['usuario'];
 switch ($usuario['rol']) {

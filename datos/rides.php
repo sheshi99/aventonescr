@@ -16,14 +16,17 @@
 include_once(__DIR__ . "/../configuracion/conexion.php");
 
 
-function insertarRide($id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios) {
+function insertarRide($id_chofer, $id_vehiculo, $nombre, $salida, 
+                    $llegada, $dia, $hora, $costo, $espacios) {
     $conexion = conexionBD();
     try {
-        $sql = "INSERT INTO rides (id_chofer, id_vehiculo, nombre, salida, llegada, dia, hora, costo, espacios)
+        $sql = "INSERT INTO rides (id_chofer, id_vehiculo, nombre, salida, llegada, 
+                                    dia, hora, costo, espacios)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $consulta = mysqli_prepare($conexion, $sql);
         mysqli_stmt_bind_param($consulta, "iisssssdi",
-            $id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios
+            $id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, 
+            $costo, $espacios
         );
         mysqli_stmt_execute($consulta);
         mysqli_stmt_close($consulta);
@@ -36,11 +39,13 @@ function insertarRide($id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia
 }
 
 
-function actualizarRide($id_ride, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios) {
+function actualizarRide($id_ride, $id_vehiculo, $nombre, $salida, $llegada, $dia, 
+                        $hora, $costo, $espacios) {
     $conexion = conexionBD();
     try {
         $sql = "UPDATE rides 
-                SET id_vehiculo=?, nombre=?, salida=?, llegada=?, dia=?, hora=?, costo=?, espacios=? 
+                SET id_vehiculo=?, nombre=?, salida=?, llegada=?, dia=?, hora=?, 
+                    costo=?, espacios=? 
                 WHERE id_ride=?";
         $consulta = mysqli_prepare($conexion, $sql);
         mysqli_stmt_bind_param($consulta, "isssssdii",

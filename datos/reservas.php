@@ -14,6 +14,11 @@
  * --------------------------------------------------------------
  */
 
+//C:\Aventones\httpdocs\aventonescr\configuracion\conexion.php
+// DIR captura la ruta del archivo.
+include_once(__DIR__ . '/../configuracion/conexion.php');
+include_once(__DIR__ . '/rides.php');
+
 
 include_once("../configuracion/conexion.php");
 include_once("rides.php"); 

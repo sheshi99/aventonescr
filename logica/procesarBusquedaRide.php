@@ -3,7 +3,6 @@
 /*
  * Archivo: procesarBuscarRide.php
  * Autores: Seidy Alanis y Walbyn González
- *
  * Descripción:
  * Procesa la búsqueda de rides según filtros de salida y llegada,
  * guarda los resultados en sesión y redirige a la página de búsqueda.

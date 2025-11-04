@@ -1,4 +1,17 @@
 <?php
+
+/**
+ * --------------------------------------------------------------
+ * Archivo: procesarLogin.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Descripción:
+ * Maneja el proceso de inicio de sesión de los usuarios. 
+ * Valida las credenciales (cédula y contraseña), verifica el 
+ * estado de la cuenta y redirige al panel correspondiente 
+ * según el rol del usuario (Administrador, Chofer o Pasajero).
+ * --------------------------------------------------------------
+ */
+
 session_start();
 include_once ("../datos/usuarios.php");
 

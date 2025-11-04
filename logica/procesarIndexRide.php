@@ -1,4 +1,17 @@
 <?php
+
+/**
+ * --------------------------------------------------------------
+ * Archivo: procesarIndexRide.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Descripción:
+ * Controla las acciones principales del index (página principal).
+ * Gestiona tanto las reservas de rides por parte de los pasajeros,
+ * como el filtrado y ordenamiento de rides disponibles.
+ * Incluye validaciones de sesión, rol, disponibilidad y método HTTP.
+ * --------------------------------------------------------------
+ */
+
 session_start();
 include_once("../datos/rides.php");
 include_once("../datos/reservas.php"); 

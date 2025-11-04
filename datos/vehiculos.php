@@ -11,7 +11,8 @@
  * para capturar excepciones y registrar posibles fallos en la base de datos.
  */
 
-include_once(BASE_PATH . '../configuracion/conexion.php');
+include_once(__DIR__ . "/../configuracion/conexion.php");
+
 
 function insertarVehiculo($id_chofer, $placa, $color, $marca, $modelo, $anno, $asientos, $foto) {
 
@@ -124,26 +125,6 @@ function actualizarVehiculo($id_vehiculo, $placa, $color, $marca, $modelo, $anno
     } catch (Exception $e) {
         error_log("Error en actualizarVehiculo: " . $e->getMessage());
         return false;
-    }
-}
-
-
-function vehiculoTieneRides($id_vehiculo) {
-    try {
-        $conexion = conexionBD();
-        $sql = "SELECT COUNT(*) AS total FROM rides WHERE id_vehiculo = ?";
-        $consulta = mysqli_prepare($conexion, $sql);
-        mysqli_stmt_bind_param($consulta, "i", $id_vehiculo);
-        mysqli_stmt_execute($consulta);
-        $resultado = mysqli_stmt_get_result($consulta);
-        $fila = mysqli_fetch_assoc($resultado);
-        mysqli_stmt_close($consulta);
-        mysqli_close($conexion);
-
-        return $fila['total'] > 0; // true si tiene rides
-    } catch (Exception $e) {
-        error_log("Error en vehiculoTieneRides: " . $e->getMessage());
-        return true; // Por seguridad, bloquear edición/eliminación
     }
 }
 

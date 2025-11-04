@@ -13,7 +13,6 @@
  */
 
 session_start();
-include_once("../datos/rides.php");
 
 // Recuperar mensajes y filtros
 $mensaje = $_SESSION['mensaje']['texto'] ?? '';

@@ -12,7 +12,6 @@
  */
 
 session_start();
-include_once("../datos/usuarios.php");
 
 // Verificar sesión
 if (!isset($_SESSION['usuario']['id_usuario'])) {

@@ -20,6 +20,9 @@ include_once(__DIR__ . '/../configuracion/conexion.php');
 include_once(__DIR__ . '/rides.php');
 
 
+include_once("../configuracion/conexion.php");
+include_once("rides.php"); 
+
 function insertarReserva($idRide, $idPasajero) {
     $conexion = conexionBD();
     $sql = "INSERT INTO reservas (id_ride, id_pasajero, estado) VALUES (?, ?, 'Pendiente')";
@@ -109,7 +112,6 @@ function obtenerReservasPorUsuario($idUsuario, $rol) {
 
     return ['activas' => $activas, 'pasadas' => $pasadas];
 }
-
 
 
 function obtenerReservaPorId($id_reserva) {

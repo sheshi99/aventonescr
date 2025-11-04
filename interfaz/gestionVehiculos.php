@@ -16,7 +16,7 @@ session_start();
 
 define('BASE_PATH', __DIR__ . '/');
 
-include_once("../datos/vehiculos.php");
+include_once("../logica/funcionesInterfaz.php");
 
 // Verifica sesión
 if (!isset($_SESSION['usuario']['id_usuario'])) {
@@ -25,7 +25,7 @@ if (!isset($_SESSION['usuario']['id_usuario'])) {
 }
 
 $id_chofer = $_SESSION['usuario']['id_usuario'];
-$vehiculos = obtenerVehiculosPorChofer($id_chofer);
+$vehiculos = obtenerMisVehiculos($id_chofer);
 
 // Datos del usuario para encabezado
 $usuario = $_SESSION['usuario'];
@@ -95,12 +95,10 @@ $rol = htmlspecialchars($usuario['rol']);
                         <?php endif; ?>
                     </td>
                     <td>
-                    <?php if (!vehiculoTieneRides($vehiculo['id_vehiculo'])): ?>
                         <form action="../interfaz/formularioVehiculo.php" method="post" class="form-accion">
                             <input type="hidden" name="id_vehiculo" value="<?= $vehiculo['id_vehiculo'] ?>">
                             <button type="submit" class="btn-verde">Editar</button>
                         </form>
-                    <?php endif; ?>
 
                         <form action="../logica/procesarVehiculo.php" method="post" class="form-accion">
                             <input type="hidden" name="accion" value="eliminar">

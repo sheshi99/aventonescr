@@ -12,10 +12,6 @@
  */
 
 session_start();
-
-
-
-include_once("../datos/usuarios.php");
 include_once("../utilidades/formulariosUtilidades.php");
 
 // ----------------------------

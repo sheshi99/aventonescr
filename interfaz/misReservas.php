@@ -12,9 +12,7 @@
  * --------------------------------------------------------------
  */
 session_start();
-
-define('BASE_PATH', __DIR__ . '/');
-include_once("../datos/reservas.php");
+include_once("../logica/funcionesInterfaz.php");
 
 if (!isset($_SESSION['usuario'])) {
     header("Location: login.php");
@@ -22,7 +20,7 @@ if (!isset($_SESSION['usuario'])) {
 }
 
 $usuario = $_SESSION['usuario'];
-$reservas = obtenerReservasPorUsuario($usuario['id_usuario'], $usuario['rol']);
+$reservas =  obtenerMisReservas($usuario['id_usuario'], $usuario['rol']);
 ?>
 
 <!DOCTYPE html>

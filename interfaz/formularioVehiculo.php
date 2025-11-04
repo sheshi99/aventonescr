@@ -87,7 +87,8 @@ $id_vehiculo = $_POST['id_vehiculo'] ?? $vehiculo['id_vehiculo'] ?? null;
             <div class="input-group">
                 <label for="asientos">Asientos:</label>
                 <input type="number" name="asientos" id="asientos" min="1"
-                       value="<?= valorVehiculo('asientos', $datosFormulario, $vehiculo) ?>" required>
+                       value="<?= valorVehiculo('asientos', $datosFormulario, $vehiculo) ?>"
+                       <?= $accion === 'actualizar' ? 'readonly' : 'required' ?>>
             </div>
      
             <div class="input-group">

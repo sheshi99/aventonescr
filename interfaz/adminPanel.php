@@ -90,7 +90,6 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Nombre</th>
                         <th>Cédula</th>
                         <th>Correo</th>
@@ -103,7 +102,6 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
                 <tbody>
                     <?php foreach ($usuarios as $usuario): ?>
                         <tr>
-                            <td><?= $usuario['id_usuario']; ?></td>
                             <td><?= htmlspecialchars($usuario['nombre'].' '.$usuario['apellido']); ?></td>
                             <td><?= htmlspecialchars($usuario['cedula']); ?></td>
                             <td><?= htmlspecialchars($usuario['correo']); ?></td>

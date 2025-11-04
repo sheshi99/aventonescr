@@ -12,6 +12,8 @@
  * --------------------------------------------------------------
  */
 session_start();
+
+define('BASE_PATH', __DIR__ . '/');
 include_once("../datos/reservas.php");
 
 if (!isset($_SESSION['usuario'])) {

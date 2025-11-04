@@ -92,7 +92,7 @@ $usuario = $_SESSION['usuario'];
                 <button type="submit">Mis Reservas</button>
             </form>
 
-            <form action="index.php" method="post">
+            <form action="../index.php" method="post">
                 <input type="hidden" name="desde_panel" value="1">
                 <button type="submit">Buscar Rides</button>
             </form>

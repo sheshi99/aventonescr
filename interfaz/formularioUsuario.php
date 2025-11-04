@@ -13,6 +13,8 @@
 
 session_start();
 
+
+
 include_once("../datos/usuarios.php");
 include_once("../utilidades/formulariosUtilidades.php");
 
@@ -27,7 +29,7 @@ $esPublico = isset($_GET['publico']) && $_GET['publico'] == 1;
 $rolUsuario = $_SESSION['usuario']['rol'] ?? null;
 
 if ($esPublico) {
-    $urlVolver = '../interfaz/index.php';
+    $urlVolver = '../index.php';
 } elseif ($rolUsuario === 'Chofer') {
     $urlVolver = 'choferPanel.php';
 } elseif ($rolUsuario === 'Pasajero') {

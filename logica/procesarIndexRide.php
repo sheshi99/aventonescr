@@ -1,12 +1,12 @@
 <?php
 session_start();
 include_once("../datos/rides.php");
-include_once("../datos/reservas.php"); // insertarReserva(), obtenerEspaciosDisponibles()
+include_once("../datos/reservas.php"); 
 
 // ===== Funciones comunes =====
 function redirigirConMensaje($texto, $tipo = 'error') {
     $_SESSION['mensaje_reserva'] = ['texto' => $texto, 'tipo' => $tipo];
-    header("Location: ../interfaz/index.php");
+    header("Location: ../index.php");
     exit;
 }
 
@@ -79,7 +79,7 @@ function procesarReservaRide() {
         ];
     }
 
-    header("Location: ../interfaz/index.php");
+    header("Location: ../index.php");
     exit;
 }
 
@@ -109,7 +109,7 @@ function procesarFiltradoRide() {
         ];
     }
 
-    header("Location: ../interfaz/index.php");
+    header("Location: ../index.php");
     exit;
 }
 

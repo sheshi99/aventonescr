@@ -11,7 +11,10 @@
  */
 
 session_start();
-include_once("../datos/rides.php");
+
+define('BASE_PATH', __DIR__ . '/');
+
+include_once(BASE_PATH . 'datos/rides.php');
 
 // Usuario logueado (puede ser null)
 $usuario = $_SESSION['usuario'] ?? null;
@@ -58,7 +61,7 @@ unset($_SESSION['filtros_orden']);
 <head>
     <meta charset="UTF-8">
     <title>Pagina Web</title>
-    <link rel="stylesheet" href="../Estilos/estilosBuscarRide.css?v=7">
+    <link rel="stylesheet" href="../Estilos/estilosBuscarRide.css?v=3">
 </head>
 <body>
 
@@ -66,14 +69,14 @@ unset($_SESSION['filtros_orden']);
     <div class="header-content">
         <?php if (!$usuario): ?>
             <div class="auth-buttons">
-                <a href="Login.php" class="btn btn-login">Iniciar sesión</a>
-                <a href="formularioUsuario.php?publico=1" class="btn btn-registrar">Registrarme</a>
+                <a href="/interfaz/Login.php" class="btn btn-login">Iniciar sesión</a>
+                <a href="/interfaz/formularioUsuario.php?publico=1" class="btn btn-registrar">Registrarme</a>
             </div>
         <?php else: ?>
             <p class="usuario-nombre">👋 Hola, <?= htmlspecialchars($usuario['nombre'] ?? $usuario['rol']) ?></p>
             <div class="header-right">
                 <?php if ($usuario['rol'] === 'Pasajero'): ?>
-                    <form action="pasajeroPanel.php" method="get" style="display:inline;">
+                    <form action="/interfaz/pasajeroPanel.php" method="get" style="display:inline;">
                         <button type="submit" class="btn btn-panel"> 🡸 </button>
                     </form>
                 <?php endif; ?>
@@ -91,7 +94,7 @@ unset($_SESSION['filtros_orden']);
                 <p>Estos son los rides próximos que tienen espacios disponibles:</p>
             </div>
             <div class="boton-buscar-card">
-                <form action="buscarRide.php" method="get">
+                <form action="/interfaz/buscarRide.php" method="get">
                     <button type="submit" class="btn-buscar">Buscar Rides Por Ubicación</button>
                 </form>
             </div>

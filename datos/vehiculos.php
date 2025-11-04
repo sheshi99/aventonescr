@@ -11,7 +11,7 @@
  * para capturar excepciones y registrar posibles fallos en la base de datos.
  */
 
-include_once("../configuracion/conexion.php");
+include_once(BASE_PATH . '../configuracion/conexion.php');
 
 function insertarVehiculo($id_chofer, $placa, $color, $marca, $modelo, $anno, $asientos, $foto) {
 

@@ -13,6 +13,9 @@
  */
 
 session_start();
+
+define('BASE_PATH', __DIR__ . '/');
+
 include_once("../datos/vehiculos.php");
 
 // Verifica sesión

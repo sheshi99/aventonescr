@@ -12,7 +12,8 @@
  * para capturar excepciones y registrar posibles fallos en la base de datos.
  */
 
-include_once("../configuracion/conexion.php");
+
+include_once(__DIR__ . "/../configuracion/conexion.php");
 
 
 function insertarRide($id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios) {

@@ -42,13 +42,13 @@ $usuario = $_SESSION['usuario'] ?? null;
             <?php if (!$usuario): ?>
                 <div class="auth-buttons">
                     <a href="login.php" class="btn btn-login">Iniciar sesión</a>
-                    <a href="registro.php" class="btn btn-registrar">Registrarse</a>
+                    <a href="formularioUsuario.php" class="btn btn-registrar">Registrarse</a>
                 </div>
             <?php else: ?>
                 <p class="usuario-nombre">👋 Hola, <?= htmlspecialchars($usuario['nombre'] ?? $usuario['rol']) ?></p>
                 <div class="header-right">
                     <?php if ($usuario['rol'] === 'Pasajero'): ?>
-                        <form action="index.php" method="get" style="display:inline;">
+                        <form action="../index.php" method="get" style="display:inline;">
                             <button type="submit" class="btn btn-panel"> 🡸 </button>
                         </form>
                     <?php endif; ?>
@@ -63,7 +63,7 @@ $usuario = $_SESSION['usuario'] ?? null;
 
             <?php if (!$usuario): ?>
                 <!-- Botón X en esquina superior derecha dentro del card -->
-                <form action="index.php" method="get" class="form-salir">
+                <form action="../index.php" method="get" class="form-salir">
                     <button type="submit" class="btn-cerrar-x" title="Salir">✖</button>
                 </form>
             <?php endif; ?>

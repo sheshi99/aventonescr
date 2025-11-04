@@ -26,7 +26,7 @@ session_start();
     <div class="login-container">
 
         <div class="login-card">
-            <form action="index.php" method="get" class="form-salir">
+            <form action="../index.php" method="get" class="form-salir">
                 <button type="submit" class="btn-cerrar-x">✖</button>
             </form>
 

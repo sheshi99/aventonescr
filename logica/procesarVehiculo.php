@@ -1,4 +1,16 @@
 <?php
+
+/**
+ * --------------------------------------------------------------
+ * Archivo: procesarVehiculo.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Descripción:
+ * Controla el registro, edición y eliminación de vehículos.
+ * Realiza validaciones sobre placa, año, asientos y fotografía.
+ * Redirige al panel o formulario según el resultado.
+ * --------------------------------------------------------------
+ */
+
 session_start();
 include_once("../datos/vehiculos.php");
 include_once("../utilidades/mensajes.php");

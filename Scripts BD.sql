@@ -1,6 +1,3 @@
-
-
-
 // Scripts de la Base de Datos
 CREATE TABLE usuarios (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,

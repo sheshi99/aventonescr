@@ -13,6 +13,9 @@
  * para capturar excepciones y registrar posibles fallos en la base de datos.
  * --------------------------------------------------------------
  */
+
+//C:\Aventones\httpdocs\aventonescr\configuracion\conexion.php
+// DIR captura la ruta del archivo.
 include_once(__DIR__ . '/../configuracion/conexion.php');
 include_once(__DIR__ . '/rides.php');
 

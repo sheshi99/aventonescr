@@ -1,4 +1,17 @@
 <?php
+
+/**
+ * --------------------------------------------------------------
+ * Archivo: procesarReserva.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Descripción:
+ * Maneja la lógica para registrar una reserva de ride por parte
+ * de un pasajero. Valida la sesión, el tipo de usuario, la
+ * disponibilidad de espacios y registra la reserva en la base
+ * de datos, mostrando mensajes según el resultado.
+ * --------------------------------------------------------------
+ */
+
 session_start();
 include_once("../datos/reservas.php"); // insertarReserva()
 include_once("../datos/rides.php");    // obtenerEspaciosDisponibles()

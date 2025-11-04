@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * --------------------------------------------------------------
+ * Archivo: procesarPanelAdmin.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Descripción:
+ * Controla la lógica del panel del administrador, permitiendo 
+ * listar usuarios por rol y desactivar cuentas. 
+ * Incluye validaciones de acción, rol y estado del usuario.
+ * --------------------------------------------------------------
+ */
 include_once("../datos/usuarios.php");
 
 // ===== Función de mensaje y redirección =====

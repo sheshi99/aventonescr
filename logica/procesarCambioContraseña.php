@@ -1,4 +1,16 @@
 <?php
+
+/**
+ * --------------------------------------------------------------
+ * Archivo: procesarCambioContrasena.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Descripción:
+ * Controla el proceso de cambio de contraseña de los usuarios.
+ * Valida la contraseña actual, revisa el formato de la nueva,
+ * confirma coincidencias, y actualiza la información en la base
+ * de datos según el rol del usuario.
+ * --------------------------------------------------------------
+ */
 session_start();
 include_once("../datos/usuarios.php");
 

@@ -1,4 +1,15 @@
 <?php
+
+/**
+ * --------------------------------------------------------------
+ * Archivo: procesarUsuarios.php
+ * Autores: Seidy Alanis y Walbyn González
+ * Descripción:
+ * Controla el registro, edición y validaciones de usuarios, 
+ * incluyendo contraseñas, roles y fotografías.
+ * --------------------------------------------------------------
+ */
+
 session_start();
 include_once("../datos/usuarios.php");
 include_once("../utilidades/mensajes.php");

@@ -82,6 +82,12 @@ list($rolFiltrado, $usuarios, $sinRolSeleccionado) = obtenerUsuariosFiltrados();
                 <option value="Administrador" <?= $rolFiltrado==='Administrador' ? 'selected' : '' ?>>Administrador</option>
             </select>
         </form>
+
+        <form action="formularioAdmin.php" method="get">
+            <input type="hidden" name="admin" value="1">
+            <button type="submit" class="btn-nuevo">➕ Crear Usuario Administrador</button>
+        </form>
+
     </section>
 
     <section class="tabla">

@@ -16,14 +16,14 @@ define('BASE_PATH', __DIR__ . '/');
 
 include_once(BASE_PATH . 'datos/rides.php');
 
-// Usuario logueado (puede ser null)
+
 $usuario = $_SESSION['usuario'] ?? null;
 
-// Mensajes de reserva u ordenamiento
+
 $mensajeReserva = $_SESSION['mensaje_reserva'] ?? '';
 unset($_SESSION['mensaje_reserva']);
 
-// Filtros guardados en sesión
+
 $filtros = $_SESSION['filtros_orden'] ?? [
     'fecha' => '',
     'salida' => '',
@@ -31,7 +31,7 @@ $filtros = $_SESSION['filtros_orden'] ?? [
     'direccion' => 'ASC'
 ];
 
-// Obtener rides según filtros
+
 if (!empty($_SESSION['rides_filtrados'])) {
     $rides = $_SESSION['rides_filtrados'];
 } else {
@@ -45,13 +45,13 @@ if (!empty($_SESSION['rides_filtrados'])) {
         $rides = obtenerRidesFiltrados($fecha, $salida, $llegada, $direccion);
     } else {
         // Sin filtros: obtener todos los rides futuros
-        $rides = consultarRides(); // rides futuros
+        $rides = consultarRides(); 
         $rides = filtrarEspaciosDisponibles($rides);
         $rides = ordenamientoRides($rides, 'dia', $direccion);
     }
 }
 
-// Limpiar filtros y rides de sesión para que al refrescar se reinicien
+
 unset($_SESSION['rides_filtrados']);
 unset($_SESSION['filtros_orden']);
 ?>

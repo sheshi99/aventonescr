@@ -36,13 +36,18 @@ CREATE TABLE rides (
     nombre VARCHAR(100) NOT NULL,
     salida VARCHAR(100) NOT NULL,
     llegada VARCHAR(100) NOT NULL,
-    dia DATE NOT NULL,         -- campo tipo DATE
+    dia DATE NOT NULL,
     hora TIME NOT NULL,
     costo NUMERIC(10,2) NOT NULL,
     espacios INT NOT NULL,
+    vehiculo_placa VARCHAR(20) NOT NULL,
+    vehiculo_marca VARCHAR(50) NOT NULL,
+    vehiculo_modelo VARCHAR(50) NOT NULL,
+    vehiculo_anio INT NOT NULL,
     CONSTRAINT fk_chofer_rides FOREIGN KEY (id_chofer) REFERENCES usuarios(id_usuario),
     CONSTRAINT fk_vehiculo_rides FOREIGN KEY (id_vehiculo) REFERENCES vehiculos(id_vehiculo)
 );
+
 
 CREATE TABLE reservas (
     id_reserva INT AUTO_INCREMENT PRIMARY KEY,

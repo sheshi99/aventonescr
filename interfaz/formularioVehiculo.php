@@ -15,6 +15,7 @@
 session_start();
 include_once("../utilidades/formulariosUtilidades.php"); 
 
+// función de formularioUtilidades
 $formulario = prepararFormularioVehiculo();
 $vehiculo = $formulario['vehiculo'];
 $accion = $formulario['accion'];
@@ -87,9 +88,10 @@ $id_vehiculo = $_POST['id_vehiculo'] ?? $vehiculo['id_vehiculo'] ?? null;
             <div class="input-group">
                 <label for="asientos">Asientos:</label>
                 <input type="number" name="asientos" id="asientos" min="1"
-                       value="<?= valorVehiculo('asientos', $datosFormulario, $vehiculo) ?>"
-                       <?= $accion === 'actualizar' ? 'readonly' : 'required' ?>>
+                    value="<?= valorVehiculo('asientos', $datosFormulario, $vehiculo) ?>"
+                    required>
             </div>
+
      
             <div class="input-group">
                 <label for="foto">Foto:</label>

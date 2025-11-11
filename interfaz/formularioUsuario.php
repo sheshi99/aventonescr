@@ -14,7 +14,6 @@
 session_start();
 
 
-
 include_once("../logica/funcionesInterfaz.php");
 include_once("../utilidades/formulariosUtilidades.php");
 
@@ -41,6 +40,8 @@ if ($esPublico) {
 // ----------------------------
 // PREPARAR DATOS DEL FORMULARIO
 // ----------------------------
+
+// función de formularioUtilidades
 $preparacion = prepararFormularioUsuario();
 $usuario = $preparacion['usuario'];
 $accion = $preparacion['accion'];

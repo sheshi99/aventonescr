@@ -10,7 +10,7 @@
 
 session_start();
 
-include_once("../logica/funcionesInterfaz.php");
+include_once("../logica/funcionesInterfaz.php"); 
 include_once("../utilidades/formulariosUtilidades.php");
 
 if (!isset($_SESSION['usuario'])) {
@@ -18,8 +18,8 @@ if (!isset($_SESSION['usuario'])) {
     exit;
 }
 
-
-$preparacion = prepararFormularioUsuario();
+// función de formularioUtilidades
+$preparacion = prepararFormularioUsuario(); 
 $usuario = $preparacion['usuario'];
 $accion = $preparacion['accion'];
 $mensaje = $preparacion['mensaje'];

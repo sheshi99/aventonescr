@@ -72,7 +72,6 @@ $activado = activarUsuarioPorToken($token);
 <body>
     <div class="mensaje">
         <p><?= $mensaje ?></p>
-        <a href="Login.php">Ir al Login</a>
     </div>
 </body>
 </html>

@@ -37,7 +37,7 @@ $rol = htmlspecialchars($usuario['rol']);
 <head>
     <meta charset="UTF-8">
     <title>Gestión de Vehículos</title>
-    <link rel="stylesheet" href="../estilos/estilosTablas.css?v=2">
+    <link rel="stylesheet" href="../estilos/estilosTablas.css?v=6">
 </head>
 <body>
     <div class="header">

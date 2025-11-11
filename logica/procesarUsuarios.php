@@ -362,7 +362,8 @@ function registrarUsuario($datos, $fotografia) {
 
     if ($resultado['success']) {
         if (strtolower($datos['rol'] ?? '') === 'administrador') {
-            $_SESSION['mensaje'] = ['texto' => '✅ Administrador registrado con éxito', 'tipo' => 'success'];
+            $_SESSION['mensaje'] = ['texto' => '✅ Administrador registrado con éxito', 
+                     'tipo' => 'success'];
             header("Location: ../interfaz/adminPanel.php?filtro_rol=Administrador");
         } else {
             $_SESSION['mensaje_login'] = [ // <-- aquí
@@ -397,7 +398,8 @@ function gestionarRegistro() {
         $datos['rol'] = $usuarioExistente['rol'] ?? 'Pasajero';
     }
 
-    $fotografia = procesarFotografia($datos['cedula'], $datos['nombre'], $datos['apellido'], $datos['rol'], $datos);
+    $fotografia = procesarFotografia($datos['cedula'], $datos['nombre'], $datos['apellido'], 
+                                    $datos['rol'], $datos);
 
     if (!empty($datos['id_usuario'])) {
         actualizarUsuario($datos, $fotografia);

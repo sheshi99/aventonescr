@@ -21,6 +21,7 @@ if (!$id_chofer) {
     exit;
 }
 
+// función de formularioUtilidades
 $preparacion = prepararFormularioRide();
 $ride = $preparacion['ride'];
 $accion = $preparacion['accion'];

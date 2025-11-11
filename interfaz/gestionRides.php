@@ -22,7 +22,7 @@ if (!isset($_SESSION['usuario']['id_usuario'])) {
 }
 
 $id_chofer = $_SESSION['usuario']['id_usuario'];
-$rides = obtenerMisRides($id_chofer); // Debes tener esta función en datos/rides.php
+$rides = obtenerMisRides($id_chofer); 
 ?>
 
 <!DOCTYPE html>
@@ -30,7 +30,7 @@ $rides = obtenerMisRides($id_chofer); // Debes tener esta función en datos/ride
 <head>
     <meta charset="UTF-8">
     <title>Gestión de Rides</title>
-    <link rel="stylesheet" href="../estilos/estilosTablas.css?v=2">
+    <link rel="stylesheet" href="../estilos/estilosTablas.css?v=6">
 </head>
 <body>
    

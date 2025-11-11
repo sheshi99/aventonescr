@@ -36,50 +36,29 @@ function insertarReserva($idRide, $idPasajero) {
     return $ok;
 }
 
-function obtenerReservasPorUsuario($idUsuario, $rol) {
-    $conexion = conexionBD();
 
+function obtenerReservasPorUsuarioSQL($idUsuario, $rol) {
+    $conexion = conexionBD();
+    
     if ($rol === 'Pasajero') {
-        // Cuando el usuario es Pasajero → mostrar info del chofer
         $sql = "SELECT 
-                    r.id_reserva, 
-                    ri.nombre AS ride_nombre, 
-                    ri.salida, 
-                    ri.llegada,
-                    ri.dia, 
-                    ri.hora, 
-                    r.estado,
-                    v.numero_placa, 
-                    v.marca, 
-                    v.modelo, 
-                    v.anno,
-                    u.nombre AS chofer_nombre, 
-                    u.apellido AS chofer_apellido
+                    r.id_reserva, ri.nombre AS ride_nombre, ri.salida, ri.llegada,
+                    ri.dia, ri.hora, ri.costo, r.estado,
+                    ri.vehiculo_placa, ri.vehiculo_marca, ri.vehiculo_modelo, ri.vehiculo_anio,
+                    u.nombre AS chofer_nombre, u.apellido AS chofer_apellido
                 FROM reservas r
                 JOIN rides ri ON r.id_ride = ri.id_ride
-                JOIN vehiculos v ON ri.id_vehiculo = v.id_vehiculo
                 JOIN usuarios u ON ri.id_chofer = u.id_usuario
                 WHERE r.id_pasajero = ?
                 ORDER BY ri.dia DESC, ri.hora DESC";
     } else {
-        // Cuando el usuario es Chofer → mostrar info del pasajero
         $sql = "SELECT 
-                    r.id_reserva, 
-                    ri.nombre AS ride_nombre, 
-                    ri.salida, 
-                    ri.llegada,
-                    ri.dia, 
-                    ri.hora, 
-                    r.estado,
-                    v.numero_placa, 
-                    v.marca, 
-                    v.modelo, 
-                    v.anno,
-                    u.nombre AS pasajero_nombre, 
-                    u.apellido AS pasajero_apellido
+                    r.id_reserva, ri.nombre AS ride_nombre, ri.salida, ri.llegada,
+                    ri.dia, ri.hora, ri.costo, r.estado,
+                    ri.vehiculo_placa, ri.vehiculo_marca, ri.vehiculo_modelo, ri.vehiculo_anio,
+                    u.nombre AS pasajero_nombre, u.apellido AS pasajero_apellido
                 FROM reservas r
                 JOIN rides ri ON r.id_ride = ri.id_ride
-                JOIN vehiculos v ON ri.id_vehiculo = v.id_vehiculo
                 JOIN usuarios u ON r.id_pasajero = u.id_usuario
                 WHERE ri.id_chofer = ?
                 ORDER BY ri.dia DESC, ri.hora DESC";
@@ -90,13 +69,24 @@ function obtenerReservasPorUsuario($idUsuario, $rol) {
     mysqli_stmt_execute($stmt);
     $resultado = mysqli_stmt_get_result($stmt);
 
+    $reservas = [];
+    while ($fila = mysqli_fetch_assoc($resultado)) {
+        $reservas[] = $fila;
+    }
+
+    mysqli_stmt_close($stmt);
+    mysqli_close($conexion);
+
+    return $reservas;
+}
+
+function clasificacionReservas($reservas) {
     $activas = [];
     $pasadas = [];
     $now = date('Y-m-d H:i:s');
 
-    while ($fila = mysqli_fetch_assoc($resultado)) {
+    foreach ($reservas as $fila) {
         $fechaHoraRide = $fila['dia'] . ' ' . $fila['hora'];
-
         if ($fechaHoraRide >= $now && in_array($fila['estado'], ['Pendiente', 'Aceptada'])) {
             $activas[] = $fila;
         } else {
@@ -107,12 +97,14 @@ function obtenerReservasPorUsuario($idUsuario, $rol) {
         }
     }
 
-    mysqli_stmt_close($stmt);
-    mysqli_close($conexion);
-
     return ['activas' => $activas, 'pasadas' => $pasadas];
 }
 
+
+function obtenerReservasPorUsuario($idUsuario, $rol) {
+    $reservas = obtenerReservasPorUsuarioSQL($idUsuario, $rol);
+    return clasificacionReservas($reservas);
+}
 
 function obtenerReservaPorId($id_reserva) {
     $conexion = conexionBD();

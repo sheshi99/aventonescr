@@ -16,17 +16,43 @@
 include_once(__DIR__ . "/../configuracion/conexion.php");
 
 
-function insertarRide($id_chofer, $id_vehiculo, $nombre, $salida, 
-                    $llegada, $dia, $hora, $costo, $espacios) {
+function obtenerDatosVehiculo($id_vehiculo) {
     $conexion = conexionBD();
     try {
-        $sql = "INSERT INTO rides (id_chofer, id_vehiculo, nombre, salida, llegada, 
-                                    dia, hora, costo, espacios)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "SELECT numero_placa AS placa, marca, modelo, anno 
+                FROM vehiculos 
+                WHERE id_vehiculo = ?";
+        $stmt = mysqli_prepare($conexion, $sql);
+        mysqli_stmt_bind_param($stmt, "i", $id_vehiculo);
+        mysqli_stmt_execute($stmt);
+        $resultado = mysqli_stmt_get_result($stmt);
+        $vehiculo = mysqli_fetch_assoc($resultado);
+        mysqli_stmt_close($stmt);
+        mysqli_close($conexion);
+        return $vehiculo;
+    } catch (Exception $e) {
+        error_log("Error en obtenerDatosVehiculo: " . $e->getMessage());
+        mysqli_close($conexion);
+        return null;
+    }
+}
+
+function insertarRide($id_chofer, $id_vehiculo, $nombre, $salida, 
+                      $llegada, $dia, $hora, $costo, $espacios) {
+    $conexion = conexionBD();
+    try {
+       
+        $vehiculo = obtenerDatosVehiculo($id_vehiculo);
+
+        $sql = "INSERT INTO rides 
+                (id_chofer, id_vehiculo, nombre, salida, llegada, dia, hora, costo, espacios,
+                 vehiculo_placa, vehiculo_marca, vehiculo_modelo, vehiculo_anio)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $consulta = mysqli_prepare($conexion, $sql);
-        mysqli_stmt_bind_param($consulta, "iisssssdi",
+        mysqli_stmt_bind_param($consulta, "iisssssdiisss",
             $id_chofer, $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, 
-            $costo, $espacios
+            $costo, $espacios,
+            $vehiculo['placa'], $vehiculo['marca'], $vehiculo['modelo'], $vehiculo['anno']
         );
         mysqli_stmt_execute($consulta);
         mysqli_stmt_close($consulta);
@@ -34,39 +60,81 @@ function insertarRide($id_chofer, $id_vehiculo, $nombre, $salida,
         return true;
     } catch (Exception $e) {
         error_log("Error al insertarRide: " . $e->getMessage());
+        mysqli_close($conexion);
         return false;
     }
 }
 
+function rideTieneReservasHistoricas($id_ride) {
+    $conexion = conexionBD();
+    $sql = "SELECT COUNT(*) AS total 
+            FROM reservas 
+            WHERE id_ride = ? 
+              AND estado IN ('Cancelada', 'Rechazada')";
+    $stmt = mysqli_prepare($conexion, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $id_ride);
+    mysqli_stmt_execute($stmt);
+    $resultado = mysqli_stmt_get_result($stmt);
+    $fila = mysqli_fetch_assoc($resultado);
+    mysqli_stmt_close($stmt);
+    mysqli_close($conexion);
+    return $fila['total'] > 0;
+}
 
 function actualizarRide($id_ride, $id_vehiculo, $nombre, $salida, $llegada, $dia, 
                         $hora, $costo, $espacios) {
+
     $conexion = conexionBD();
+
     try {
-        $sql = "UPDATE rides 
-                SET id_vehiculo=?, nombre=?, salida=?, llegada=?, dia=?, hora=?, 
-                    costo=?, espacios=? 
-                WHERE id_ride=?";
-        $consulta = mysqli_prepare($conexion, $sql);
-        mysqli_stmt_bind_param($consulta, "isssssdii",
-        $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios, $id_ride
-        );
+        if (rideTieneReservasHistoricas($id_ride)) {
+            // Solo actualizar campos editables, no tocamos snapshot del vehículo
+            $sql = "UPDATE rides 
+                    SET nombre=?, salida=?, llegada=?, dia=?, hora=?, costo=?, espacios=? 
+                    WHERE id_ride=?";
+            $consulta = mysqli_prepare($conexion, $sql);
+            mysqli_stmt_bind_param($consulta, "sssssdii", 
+                $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios, $id_ride
+            );
+        } else {
+            // Actualizar todos los campos incluyendo snapshot del vehículo
+            $vehiculo = obtenerDatosVehiculo($id_vehiculo);
+
+            $sql = "UPDATE rides 
+                    SET id_vehiculo=?, nombre=?, salida=?, llegada=?, dia=?, hora=?, 
+                        costo=?, espacios=?, vehiculo_placa=?, vehiculo_marca=?, 
+                        vehiculo_modelo=?, vehiculo_anio=? 
+                    WHERE id_ride=?";
+            $consulta = mysqli_prepare($conexion, $sql);
+            mysqli_stmt_bind_param($consulta, "isssssdissssi",
+                $id_vehiculo, $nombre, $salida, $llegada, $dia, $hora, $costo, $espacios,
+                $vehiculo['placa'], $vehiculo['marca'], $vehiculo['modelo'], $vehiculo['anno'],
+                $id_ride
+            );
+        }
+
         mysqli_stmt_execute($consulta);
         mysqli_stmt_close($consulta);
         mysqli_close($conexion);
         return true;
+
     } catch (Exception $e) {
         error_log("Error en actualizarRide: " . $e->getMessage());
+        mysqli_close($conexion);
         return false;
     }
 }
 
-function rideTieneReservasRealizadas($id_ride) {
+
+
+
+function rideTieneReservasAceptadas($id_ride) {
     try {
         $conexion = conexionBD();
         $sql = "SELECT COUNT(*) AS total 
                 FROM reservas 
-                WHERE id_ride = ? ";
+                WHERE id_ride = ? AND estado = 'aceptada'";
+                
         $consulta = mysqli_prepare($conexion, $sql);
         if (!$consulta) {
             throw new Exception("Error al preparar la consulta: " . mysqli_error($conexion));
@@ -84,10 +152,12 @@ function rideTieneReservasRealizadas($id_ride) {
         return $fila['total'] > 0;
 
     } catch (Exception $e) {
-        error_log("Error en rideTieneReservasRealizadas: " . $e->getMessage());
+        error_log("Error en rideTieneReservasAceptadas: " . $e->getMessage());
+        mysqli_close($conexion);
         return true; 
     }
 }
+
 
 
 function eliminarRide($id_ride) {
@@ -119,7 +189,7 @@ function eliminarRide($id_ride) {
         return true;
     } catch (Exception $e) {
         error_log("Error en eliminarRide: " . $e->getMessage());
-        // Aquí puedes devolver el mensaje para mostrar al usuario
+        mysqli_close($conexion);
         return $e->getMessage();
     }
 }
@@ -140,9 +210,11 @@ function obtenerRidePorId($id_ride) {
         return $ride;
     } catch (Exception $e) {
         error_log("Error en obtenerRidePorId: " . $e->getMessage());
+        mysqli_close($conexion);
         return null;
     }
 }
+
 function obtenerRidesPorVehiculo($id_vehiculo) {
     $conexion = conexionBD();
     try {
@@ -162,6 +234,7 @@ function obtenerRidesPorVehiculo($id_vehiculo) {
         return $rides;
     } catch (Exception $e) {
         error_log("Error en obtenerRidesPorVehiculo: " . $e->getMessage());
+        mysqli_close($conexion);
         return [];
     }
 }
@@ -188,6 +261,7 @@ function obtenerRidesPorChofer($id_chofer) {
         return $rides;
     } catch (Exception $e) {
         error_log("Error al obtenerRidesPorChofer: " . $e->getMessage());
+        mysqli_close($conexion);
         return [];
     }
 }
@@ -273,7 +347,8 @@ function ordenamientoRides($rides, $columna = 'dia', $direccion = 'ASC') {
 
     usort($rides, function($a, $b) use ($columna, $direccion) {
         if ($columna === 'dia') {
-            $cmp = strtotime($a['dia'] . ' ' . $a['hora']) <=> strtotime($b['dia'] . ' ' . $b['hora']);
+            $cmp = strtotime($a['dia'] . ' ' . $a['hora']) <=> strtotime($b['dia'] . ' ' . 
+                            $b['hora']);
         } else {
             // Comparación de strings insensible a mayúsculas/minúsculas
             $cmp = strcasecmp($a[$columna], $b[$columna]);
@@ -286,8 +361,8 @@ function ordenamientoRides($rides, $columna = 'dia', $direccion = 'ASC') {
 }
 
 
-
-function buscarRides($fecha = '', $salida = '', $llegada = '', $columna = 'dia', $direccion = 'ASC') {
+function buscarRides($fecha = '', $salida = '', $llegada = '', $columna = 'dia', 
+                    $direccion = 'ASC') {
     $rides = consultarRides($fecha, $salida, $llegada);
     $rides = filtrarEspaciosDisponibles($rides);
     $rides = ordenamientoRides($rides, $columna, $direccion);
@@ -308,13 +383,13 @@ function obtenerEspaciosDisponibles($idRide) {
         mysqli_stmt_close($consulta);
 
         $sql2 = "SELECT espacios FROM rides WHERE id_ride = ?";
-        $stmt2 = mysqli_prepare($conexion, $sql2);
-        if (!$stmt2) throw new Exception(mysqli_error($conexion));
-        mysqli_stmt_bind_param($stmt2, "i", $idRide);
-        mysqli_stmt_execute($stmt2);
-        $resultado2 = mysqli_stmt_get_result($stmt2);
+        $consulta2 = mysqli_prepare($conexion, $sql2);
+        if (!$consulta2) throw new Exception(mysqli_error($conexion));
+        mysqli_stmt_bind_param($consulta2, "i", $idRide);
+        mysqli_stmt_execute($consulta2);
+        $resultado2 = mysqli_stmt_get_result($consulta2);
         $total = mysqli_fetch_assoc($resultado2)['espacios'] ?? 0;
-        mysqli_stmt_close($stmt2);
+        mysqli_stmt_close($consulta2);
 
         mysqli_close($conexion);
         return $total - $ocupados;

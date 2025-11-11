@@ -4,7 +4,6 @@
  * --------------------------------------------------------------
  * Archivo: formulariosUtilidades.php
  * Autores: Seidy Alanis y Walbyn González
- * Fecha: 01/11/2025
  * 
  * Descripción:
  * Contiene funciones de utilidad para preparar y manejar formularios

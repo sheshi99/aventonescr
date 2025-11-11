@@ -17,7 +17,8 @@ include_once("../datos/reservas.php"); // insertarReserva()
 include_once("../datos/rides.php");    // obtenerEspaciosDisponibles()
 
 
-function redirigirConMensaje($mensaje, $tipo = 'info', $destino = '../interfaz/buscarRide.php') {
+function redirigirConMensaje($mensaje, $tipo = 'info', $destino = 
+                            '../interfaz/buscarRide.php') {
     $_SESSION['mensaje_esperado'] = ['texto' => $mensaje, 'tipo' => $tipo];
     header("Location: $destino");
     exit;

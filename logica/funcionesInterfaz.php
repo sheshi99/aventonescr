@@ -1,33 +1,34 @@
 
 <?php
 
-// Funciones auxiliares para gestionVehiculo, gestionRides, formularioRide y mis reservas
-
+// Funciones auxiliares para las interfaces
 include_once("../datos/reservas.php");
 include_once("../datos/vehiculos.php");
 include_once("../datos/rides.php");
 include_once("../datos/usuarios.php");
 
+//misReservas
 function obtenerMisReservas($idUsuario, $rol) {
     return obtenerReservasPorUsuario($idUsuario, $rol);
 }
 
+//gestionVehiculo
 function obtenerMisVehiculos($idChofer) {
     return obtenerVehiculosPorChofer($idChofer);
 }
 
+//gestionRides
 function obtenerMisRides($idChofer) {
     return obtenerRidesPorChofer($idChofer);
 }
 
+//gestionRides
 function verificarRideTieneReservas($idRide) {
-    return rideTieneReservasRealizadas($idRide);
+    return rideTieneReservasAceptadas($idRide);
 }
 
-function obtenerRidesFiltrados($fecha = '', $salida = '', $llegada = '', $orden = 'ASC') {
-    return buscarRides($fecha, $salida, $llegada, 'dia', $orden);
-}
 
+//activarCuenta
 function obtenerToken($token){
     activarUsuarioPorToken($token);
 }

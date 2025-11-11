@@ -193,7 +193,7 @@ function obtenerUsuarioPorId($id_usuario) {
     }
 }
 
-// Cambiar estado de usuario
+
 function cambiarEstadoUsuario($id, $estado) {
     try {
         $conexion = conexionBD();
@@ -210,26 +210,30 @@ function cambiarEstadoUsuario($id, $estado) {
     }
 }
 
-function editarUsuario($id_usuario, $nombre, $apellido, $cedula, $fecha_nacimiento, $correo, $telefono, $rol, $fotografia = null) {
+function editarUsuario($id_usuario, $nombre, $apellido, $cedula, $fecha_nacimiento, 
+                      $correo, $telefono, $rol, $fotografia = null) {
     try {
         $conexion = conexionBD();
 
         if ($fotografia) {
             $sql = "UPDATE usuarios 
-                    SET nombre = ?, apellido = ?, cedula = ?, fecha_nacimiento = ?, correo = ?, telefono = ?, rol = ?, fotografia = ?
+                    SET nombre = ?, apellido = ?, cedula = ?, fecha_nacimiento = ?, 
+                    correo = ?, telefono = ?, rol = ?, fotografia = ?
                     WHERE id_usuario = ?";
             $consulta = mysqli_prepare($conexion, $sql);
-            mysqli_stmt_bind_param($consulta, "ssssssssi", 
-                $nombre, $apellido, $cedula, $fecha_nacimiento, $correo, $telefono, $rol, $fotografia, $id_usuario
-            );
+
+            mysqli_stmt_bind_param($consulta, "ssssssssi", $nombre, $apellido, $cedula, 
+                                $fecha_nacimiento, $correo, $telefono, $rol, $fotografia, 
+                                $id_usuario);
         } else {
             $sql = "UPDATE usuarios 
-                    SET nombre = ?, apellido = ?, cedula = ?, fecha_nacimiento = ?, correo = ?, telefono = ?, rol = ?
+                    SET nombre = ?, apellido = ?, cedula = ?, fecha_nacimiento = ?, 
+                    correo = ?, telefono = ?, rol = ?
                     WHERE id_usuario = ?";
             $consulta = mysqli_prepare($conexion, $sql);
-            mysqli_stmt_bind_param($consulta, "sssssssi", 
-                $nombre, $apellido, $cedula, $fecha_nacimiento, $correo, $telefono, $rol, $id_usuario
-            );
+            
+            mysqli_stmt_bind_param($consulta, "sssssssi", $nombre, $apellido, $cedula, 
+                                $fecha_nacimiento, $correo, $telefono, $rol, $id_usuario);
         }
 
         mysqli_stmt_execute($consulta);

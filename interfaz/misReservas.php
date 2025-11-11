@@ -28,7 +28,7 @@ $reservas =  obtenerMisReservas($usuario['id_usuario'], $usuario['rol']);
 <head>
     <meta charset="UTF-8">
     <title>Mis Reservas</title>
-    <link rel="stylesheet" href="../Estilos/estilosTablas.css?v=2">
+    <link rel="stylesheet" href="../Estilos/estilosTablas.css?v=6">
 </head>
 <body>
 
@@ -50,6 +50,14 @@ $reservas =  obtenerMisReservas($usuario['id_usuario'], $usuario['rol']);
     </header>
 
     <main class="main">
+
+        <?php if (isset($_SESSION['mensaje'])): ?>
+            <p style="color:red; font-weight:bold;">
+                <?= $_SESSION['mensaje']['texto'] ?>
+            </p>
+            <?php unset($_SESSION['mensaje']); ?>
+        <?php endif; ?>
+
         <section class="tabla">
 
             <h2>Reservas Activas</h2>
@@ -62,6 +70,7 @@ $reservas =  obtenerMisReservas($usuario['id_usuario'], $usuario['rol']);
                         <th>Hora</th>
                         <th>Vehículo</th>
                         <th><?= ($usuario['rol'] === 'Chofer') ? 'Pasajero' : 'Chofer' ?></th>
+                        <th>Costo</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -71,9 +80,13 @@ $reservas =  obtenerMisReservas($usuario['id_usuario'], $usuario['rol']);
                     <tr>
                         <td><?= htmlspecialchars($r['salida']) ?></td>
                         <td><?= htmlspecialchars($r['llegada']) ?></td>
-                        <td><?= htmlspecialchars($r['dia']) ?></td>
-                        <td><?= htmlspecialchars($r['hora']) ?></td>
-                        <td><?= htmlspecialchars($r['numero_placa']) ?> (<?= htmlspecialchars($r['marca']) ?> <?= htmlspecialchars($r['modelo']) ?> <?= htmlspecialchars($r['anno']) ?>)</td>
+                        <td><?= date("d/m/Y", strtotime($r['dia'])) ?></td>
+                        <td><?= date("H:i", strtotime($r['hora'])) ?></td>
+                        <td><?= htmlspecialchars($r['vehiculo_placa']) ?> 
+                        (<?= htmlspecialchars($r['vehiculo_marca']) ?> 
+                        <?= htmlspecialchars($r['vehiculo_modelo']) ?> 
+                        <?= htmlspecialchars($r['vehiculo_anio']) ?>)
+                        </td>
                         <td>
                             <?php if ($usuario['rol'] === 'Chofer'): ?>
                                 <?= htmlspecialchars($r['pasajero_nombre'] . ' ' . $r['pasajero_apellido']) ?>
@@ -81,6 +94,9 @@ $reservas =  obtenerMisReservas($usuario['id_usuario'], $usuario['rol']);
                                 <?= htmlspecialchars($r['chofer_nombre'] . ' ' . $r['chofer_apellido']) ?>
                             <?php endif; ?>
                         </td>
+
+                        <td><?= htmlspecialchars($r['costo']) ?></td>
+
                         <td class="estado <?= strtolower($r['estado']) ?>"><?= htmlspecialchars($r['estado']) ?></td>
                         <td>
                             <?php if ($usuario['rol'] === 'Chofer' && $r['estado'] === 'Pendiente'): ?>
@@ -113,6 +129,7 @@ $reservas =  obtenerMisReservas($usuario['id_usuario'], $usuario['rol']);
                         <th>Hora</th>
                         <th>Vehículo</th>
                         <th><?= ($usuario['rol'] === 'Chofer') ? 'Pasajero' : 'Chofer' ?></th>
+                        <th>Costo</th>
                         <th>Estado</th>
                     </tr>
                 </thead>
@@ -121,10 +138,14 @@ $reservas =  obtenerMisReservas($usuario['id_usuario'], $usuario['rol']);
                     <tr>
                         <td><?= htmlspecialchars($r['salida']) ?></td>
                         <td><?= htmlspecialchars($r['llegada']) ?></td>
-                        <td><?= htmlspecialchars($r['dia']) ?></td>
-                        <td><?= htmlspecialchars($r['hora']) ?></td>
-
-                        <td><?= htmlspecialchars($r['numero_placa']) ?> (<?= htmlspecialchars($r['marca']) ?> <?= htmlspecialchars($r['modelo']) ?> <?= htmlspecialchars($r['anno']) ?>)</td>
+                        <td><?= date("d/m/Y", strtotime($r['dia'])) ?></td>
+                        <td><?= date("H:i", strtotime($r['hora'])) ?></td>
+                        <td><?= htmlspecialchars($r['vehiculo_placa']) ?> 
+                        (<?= htmlspecialchars($r['vehiculo_marca']) ?> 
+                        <?= htmlspecialchars($r['vehiculo_modelo']) ?> 
+                        <?= htmlspecialchars($r['vehiculo_anio']) ?>)
+                        </td>
+                        
                         <td>
                             <?php if ($usuario['rol'] === 'Chofer'): ?>
                                 <?= htmlspecialchars($r['pasajero_nombre'] . ' ' . $r['pasajero_apellido']) ?>
@@ -132,6 +153,9 @@ $reservas =  obtenerMisReservas($usuario['id_usuario'], $usuario['rol']);
                                 <?= htmlspecialchars($r['chofer_nombre'] . ' ' . $r['chofer_apellido']) ?>
                             <?php endif; ?>
                         </td>
+
+                        <td><?= htmlspecialchars($r['costo']) ?></td>
+
                         <td class="estado <?= strtolower($r['estado']) ?>"><?= htmlspecialchars($r['estado']) ?></td>
                     </tr>
                     <?php endforeach; ?>
